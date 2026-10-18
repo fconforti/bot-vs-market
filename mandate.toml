@@ -8,7 +8,7 @@ currency = "EUR"
 
 [limits]
 max_order_pct_of_nav = 0.25      # one order may not exceed 25% of NAV
-max_orders_per_day = 2           # orders attempted (previewed) per calendar day
+max_orders_per_day = 2           # orders sent for confirmation per calendar day (see trades.ATTEMPTED_STATUSES)
 max_position_pct_of_nav = 0.40   # resulting position may not exceed 40% of NAV
 min_order_eur = 25               # fees make smaller orders irrational
 cash_reserve_eur = 2.0           # keep at least this much cash after a buy (fees)

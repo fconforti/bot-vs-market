@@ -16,7 +16,7 @@ This section is kept current by whoever last worked on the repo (the build agent
 
 | Date | State |
 |---|---|
-| 2026-10-18 | Built. 48 tests pass. Two rehearsals (dry runs on fixture data, replayed as 2026-10-16 and 2026-10-15) completed end to end; the first one found two bugs that are now fixed. **Not yet live:** the Scalable CLI has never been logged in on the machine, so the real account's JSON shapes, the EIX venue code and the bitcoin ETP's appropriateness rules are unverified. Timers are not enabled. No real order has ever been placed. |
+| 2026-10-18 | Built and pushed. 48 tests pass. Two rehearsals (dry runs on fixture data, replayed as 2026-10-16 and 2026-10-15): the first aborted on a plumbing bug, now fixed; the second went end to end (two proposals, guardrails preview matched, no confirm). **Not yet live:** the Scalable CLI has never been logged in on the machine, so the real account's JSON shapes, the EIX venue code and the bitcoin ETP's appropriateness rules are unverified. Timers are not enabled. No real order has ever been placed. |
 
 ## What this is
 

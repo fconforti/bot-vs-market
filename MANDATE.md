@@ -31,7 +31,7 @@ questionnaire are rejected by the guardrails.
 | Rule | Value |
 |---|---|
 | Max order size | 25% of NAV |
-| Max orders per day | 2 attempted (previewed) orders |
+| Max orders per day | 2 orders sent for confirmation (executed, or confirm sent with unknown outcome); rejections before confirm and dry runs do not count |
 | Max resulting position | 40% of NAV |
 | Min order | EUR 25 |
 | Order types | market only (limit and stop disabled until open orders can be tracked) |

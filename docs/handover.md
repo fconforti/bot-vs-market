@@ -28,6 +28,26 @@ Written by the build session on 2026-10-18. Read this before the first live run.
   installed, not enabled. `bin/kill-switch.sh` disables them and writes `HALTED`.
 - **Docs**: `docs/cli-notes.md` (what `sc` really does, from its source), `docs/sc-capabilities.json`.
 
+## Rehearsals (dry runs on fixture data)
+
+Both ran on 2026-10-18, a Saturday, with `FINANCE_TODAY` replaying a weekday.
+
+- **2026-10-16 replay**: aborted at the algorithm step. `strategy/current.py`'s CLI entry
+  used the machine clock and the live snapshot, so it never saw the dry-run snapshot.
+  Fixed, with a regression test. The nested agent also hit the real `sc` binary on PATH
+  (D-Bus error); fixture mode now shadows it. Journal: `journal/2026-10-16-dryrun.md`.
+- **2026-10-15 replay**: complete. Two buys proposed (semiconductor ETF, ASML, EUR 240
+  each), both previewed through the guardrails with all checks passing, no confirm,
+  post-trade snapshot, site rebuilt, commit made. Journal: `journal/2026-10-15-dryrun.md`.
+  It raised three things worth knowing:
+  - the replay could see the next day's close; the algorithm now clips prices at the
+    session date;
+  - fractional **stock** buys (EUR 240 of ASML is about 0.16 shares) are accepted by the
+    fixture but unverified with the real broker. If the first live preview of a stock
+    is rejected, that is why; ETFs are the safer first trades;
+  - the two proposals overlap (ASML is a top holding of the semiconductor ETF). v001 has
+    no overlap rule; it is in the research inbox.
+
 ## What I could not verify (no `sc` login on this machine)
 
 1. **The real JSON shapes.** `holdings`, `overview`, `cash-breakdown`, `quote` and the

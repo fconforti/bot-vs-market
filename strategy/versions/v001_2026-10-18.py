@@ -181,9 +181,9 @@ def main() -> int:
     from strategy import data as data_mod
 
     params = load_params()
-    md = data_mod.market_data()
     dry_run = os.environ.get("FINANCE_DRY_RUN") == "1"
     today = clock.today()
+    md = data_mod.market_data(as_of=today)   # closes after the session date are never visible (replays)
     state = portfolio.latest_state(today, dry_run=dry_run)
     if state is None:
         print(f"no portfolio snapshot for {today}{' (dry run)' if dry_run else ''}; run bin/snapshot.py first", file=sys.stderr)
