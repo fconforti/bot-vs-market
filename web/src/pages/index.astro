@@ -14,17 +14,17 @@ const initial = new Intl.NumberFormat("en-IE").format(site.initial_eur);
 <Base title="Overview" current="">
   <section class="hero wrap">
     <div class="hero-text">
-    <p class="eyebrow rise">A public experiment · strategy {site.version}</p>
-    <h1 class="rise d1">An AI agent manages <span class="hl">€{initial}</span> of real money, in the open.</h1>
-    <p class="lede rise d2">
+    <p class="eyebrow rise h-eyebrow">A public experiment · strategy {site.version}</p>
+    <h1 class="rise d1 h-title">An AI agent manages <span class="hl">€{initial}</span> of real money, in the open.</h1>
+    <p class="lede rise d2 h-lede">
       Every weekday at 18:15 a Claude agent reads the market, runs a versioned strategy written as code, and either places orders through hard limits or writes down why it didn't.
       Every decision, order, mistake and snapshot is published here and in the repository.
     </p>
-    <div class="cta rise d3">
+    <div class="cta rise d3 h-cta">
       <a class="btn primary" href={url("journal/")}>Read the journal</a>
       <a class="btn" href={url("strategy/")}>How the strategy works</a>
     </div>
-    <p class="status rise d4">
+    <p class="status rise d4 h-status">
       {h.last_session
         ? <>Last session <a href={url(`journal/#${h.last_session.date}`)}>{fmtDate(h.last_session.date)}</a>{h.last_session.status && <span class={`tag ${statusTone(h.last_session.status)}`}>{h.last_session.status}</span>}</>
         : <><span class="tag warn">Not live yet</span> The first live session has not run.</>}
@@ -85,9 +85,15 @@ const initial = new Intl.NumberFormat("en-IE").format(site.initial_eur);
 </Base>
 
 <style>
-  .hero { padding-block: clamp(56px, 10vw, 112px) 32px; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: center; }
-  .hero-art { min-width: 0; }
-  @media (max-width: 900px) { .hero { grid-template-columns: 1fr; } .hero-art { max-width: 520px; margin-top: 8px; } }
+  .hero { padding-block: clamp(56px, 10vw, 112px) 32px; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); column-gap: clamp(24px, 4vw, 64px);
+    grid-template-areas: "eyebrow ." "title art" "lede art" "cta ." "status ."; }
+  .hero-text { display: contents; }
+  .h-eyebrow { grid-area: eyebrow; } .h-title { grid-area: title; } .h-lede { grid-area: lede; } .h-cta { grid-area: cta; } .h-status { grid-area: status; }
+  .hero-art { grid-area: art; min-width: 0; display: flex; padding-top: 4px; }
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; grid-template-areas: "eyebrow" "title" "lede" "cta" "status" "art"; }
+    .hero-art { height: 300px; margin-top: 36px; }
+  }
   .hero h1 { font-size: clamp(2.3rem, 5.2vw, 4.1rem); max-width: 17ch; line-height: 1.04; letter-spacing: -.025em; }
   .hl { font-style: italic; color: var(--accent); }
   .hero .lede { max-width: 60ch; font-size: clamp(1.02rem, 1.6vw, 1.15rem); color: var(--fg-soft); margin: 22px 0 0; }

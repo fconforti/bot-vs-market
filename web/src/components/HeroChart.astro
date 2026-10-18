@@ -1,9 +1,13 @@
 ---
 // Hero visual: portfolio (the bot) vs the benchmark (the market), drawn from real data.
 // Live curve once there are at least two live snapshots; until then the latest backtest,
-// labelled as such. Paths are computed at build time; each session rebuilds the site,
-// so the curves follow the data day by day. Animation: both lines rise from below and
-// draw left to right, the market first. Static for prefers-reduced-motion.
+// labelled as such. Every session rebuilds the site data, so the curves follow the
+// account day by day.
+//
+// The figure stretches to whatever height its parent gives it (the hero sizes it to the
+// headline and lede). Lines live in a 0..1000 SVG drawn with preserveAspectRatio="none"
+// and non-scaling strokes; dots and labels are HTML placed by percentage, so nothing
+// distorts. Animation: both lines rise and draw left to right, the market first.
 import { site } from "../lib/site";
 
 const short = (d: string) => new Date(d + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
@@ -14,10 +18,10 @@ const bt = site.strategy.backtests.at(-1);
 const isLive = live.length >= 2;
 const raw: Pt[] = isLive ? live : (bt?.equity_curve || []).filter((p: Pt) => p.nav != null && p.benchmark != null);
 
-const W = 560, H = 360, L = 24, R = 120, T = 40, B = 40;
-const MAX_POINTS = 90;
+const MAX_POINTS = 120;
 const step = Math.max(1, Math.ceil(raw.length / MAX_POINTS));
 const pts = raw.filter((_, i) => i % step === 0 || i === raw.length - 1);
+const ok = pts.length >= 2;
 
 // Log scale when values span a lot (a 13-year backtest); linear for a short live run.
 const all = pts.flatMap((p) => [p.nav!, p.benchmark!]);
@@ -26,11 +30,10 @@ const useLog = hi / lo > 2;
 const f = (v: number) => (useLog ? Math.log(v) : v);
 const pad = (f(hi) - f(lo)) * 0.06 || 1;
 const y0 = f(lo) - pad, y1 = f(hi) + pad;
-const X = (i: number) => L + (pts.length > 1 ? (i / (pts.length - 1)) * (W - L - R) : 0);
-const Y = (v: number) => T + (1 - (f(v) - y0) / (y1 - y0)) * (H - T - B);
+const X = (i: number) => (pts.length > 1 ? (i / (pts.length - 1)) * 1000 : 0);
+const Y = (v: number) => (1 - (f(v) - y0) / (y1 - y0)) * 1000;
 const path = (key: "nav" | "benchmark") => pts.map((p, i) => `${i ? "L" : "M"}${X(i).toFixed(1)} ${Y(p[key]!).toFixed(1)}`).join(" ");
 
-const ok = pts.length >= 2;
 const last = pts.at(-1)!, first = pts[0];
 // Live: from the curve itself. Backtest: the reported totals (the stored curve is sampled).
 const ret = (k: "nav" | "benchmark") => {
@@ -42,74 +45,75 @@ const ret = (k: "nav" | "benchmark") => {
   return last[k]! / first[k]! - 1;
 };
 const pct = (v: number) => `${v >= 0 ? "+" : ""}${(v * 100).toFixed(Math.abs(v) >= 1 ? 0 : 1)}%`;
-const botY = ok ? Y(last.nav!) : 0, mktY = ok ? Y(last.benchmark!) : 0;
-// Keep the end labels apart when the lines finish close together.
+const botY = ok ? Y(last.nav!) / 10 : 0, mktY = ok ? Y(last.benchmark!) / 10 : 0;   // percent of plot height
+// Keep the end labels apart when the lines finish close together (in % of height).
 let botLY = botY, mktLY = mktY;
-if (Math.abs(botY - mktY) < 34) {
+if (Math.abs(botY - mktY) < 9) {
   const mid = (botY + mktY) / 2, up = botY <= mktY;
-  botLY = mid + (up ? -17 : 17); mktLY = mid + (up ? 17 : -17);
+  botLY = mid + (up ? -4.5 : 4.5); mktLY = mid + (up ? 4.5 : -4.5);
 }
-const endX = X(pts.length - 1);
-const grid = [0, 1, 2, 3].map((k) => T + (k / 3) * (H - T - B));
 const caption = isLive
   ? `Live: portfolio vs €${site.initial_eur.toLocaleString("en-IE")} in the MSCI World. Since ${short(first.date)}, updated ${short(last.date)}`
   : bt ? `Backtest, not live yet: ${bt.version} vs MSCI World, ${first.date.slice(0, 4)} to ${last.date.slice(0, 4)}, fees included` : "";
 ---
 {ok && (
-<figure class="hero-chart">
-  <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet" role="img" aria-label={`${caption}. Bot ${pct(ret("nav"))}, market ${pct(ret("benchmark"))}.`}>
-    <defs>
-      <linearGradient id="hc-fade" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="var(--accent)" stop-opacity=".16" />
-        <stop offset="1" stop-color="var(--accent)" stop-opacity="0" />
-      </linearGradient>
-    </defs>
-    <g class="grid">{grid.map((y) => <line x1={L} x2={W - 24} y1={y} y2={y} />)}</g>
-    <g class="line market">
-      <path class="stroke" pathLength="1" d={path("benchmark")} />
-      <circle class="dot" cx={endX} cy={mktY} r="5" />
-      <text class="label" x={endX + 14} y={mktLY + 5}>Market <tspan class="val">{pct(ret("benchmark"))}</tspan></text>
-    </g>
-    <g class="line bot">
-      <path class="area" d={`${path("nav")} L${endX.toFixed(1)} ${H - B} L${L} ${H - B} Z`} />
-      <path class="stroke" pathLength="1" d={path("nav")} />
-      <circle class="dot" cx={endX} cy={botY} r="5.5" />
-      <text class="label" x={endX + 14} y={botLY + 5}>Bot <tspan class="val">{pct(ret("nav"))}</tspan></text>
-    </g>
-  </svg>
+<figure class="hero-chart" role="img" aria-label={`${caption}. Bot ${pct(ret("nav"))}, market ${pct(ret("benchmark"))}.`}>
+  <div class="plot">
+    <div class="grid" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <svg class="layer market" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
+      <path class="stroke" d={path("benchmark")} vector-effect="non-scaling-stroke" />
+    </svg>
+    <svg class="layer bot" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="hc-fade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="var(--accent)" stop-opacity=".16" />
+          <stop offset="1" stop-color="var(--accent)" stop-opacity="0" />
+        </linearGradient>
+      </defs>
+      <path class="area" d={`${path("nav")} L1000 1000 L0 1000 Z`} />
+      <path class="stroke" d={path("nav")} vector-effect="non-scaling-stroke" />
+    </svg>
+    <span class="dot market" style={`top:${mktY}%`}></span>
+    <span class="dot bot" style={`top:${botY}%`}></span>
+    <span class="label market" style={`top:${mktLY}%`} aria-hidden="true">Market <b>{pct(ret("benchmark"))}</b></span>
+    <span class="label bot" style={`top:${botLY}%`} aria-hidden="true">Bot <b>{pct(ret("nav"))}</b></span>
+  </div>
   <figcaption>{caption}</figcaption>
 </figure>
 )}
 
 <style>
-  .hero-chart { margin: 0; width: 100%; }
-  svg { display: block; width: 100%; height: auto; overflow: visible; }
-  figcaption { margin-top: 6px; padding-left: 4%; font-size: .78rem; color: var(--muted); }
-  .grid line { stroke: var(--line); stroke-width: 1; }
+  .hero-chart { margin: 0; width: 100%; height: 100%; min-height: 240px; display: flex; flex-direction: column; }
+  .plot { position: relative; flex: 1; margin: 10px 112px 6px 0; }
+  .layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .grid { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; }
+  .grid i { display: block; height: 1px; background: var(--line); margin-right: -88px; }
   .stroke { fill: none; stroke-linecap: round; stroke-linejoin: round; }
-  .market .stroke { stroke: var(--bench); stroke-width: 3; opacity: .8; }
-  .bot .stroke { stroke: var(--accent); stroke-width: 3.6; }
+  .market .stroke { stroke: var(--bench); stroke-width: 2.5; opacity: .85; }
+  .bot .stroke { stroke: var(--accent); stroke-width: 3; }
   .area { fill: url(#hc-fade); }
-  .market .dot { fill: var(--bench); }
-  .bot .dot { fill: var(--accent); }
-  .label { font-family: var(--font-serif); font-size: 19px; font-weight: 600; fill: var(--fg); }
-  .market .label { fill: var(--muted); font-weight: 500; }
-  .val { font-family: var(--font-mono); font-size: 15px; font-weight: 500; }
-  .bot .val { fill: var(--accent); }
+  .dot { position: absolute; left: 100%; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; }
+  .dot.market { background: var(--bench); }
+  .dot.bot { background: var(--accent); width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; }
+  .label { position: absolute; left: calc(100% + 14px); transform: translateY(-50%); white-space: nowrap; font-family: var(--font-serif); font-size: 1.1rem; font-weight: 600; color: var(--fg); line-height: 1; }
+  .label.market { color: var(--muted); font-weight: 500; }
+  .label b { font-family: var(--font-mono); font-size: .78rem; font-weight: 500; margin-left: 3px; }
+  .label.bot b { color: var(--accent); }
+  figcaption { font-size: .78rem; color: var(--muted); margin-top: 10px; }
 
   @media (prefers-reduced-motion: no-preference) {
-    .line { animation: rise 1.6s cubic-bezier(.2, .8, .2, 1) both; }
-    .stroke { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.6s cubic-bezier(.45, .05, .25, 1) both; }
+    /* rise from below while a left-to-right wipe draws the line */
+    .layer { animation: rise 1.6s cubic-bezier(.2, .8, .2, 1) both, wipe 1.6s cubic-bezier(.45, .05, .25, 1) both; }
     .area { animation: fade .8s ease-out both; }
-    .dot, .label { animation: pop .5s cubic-bezier(.2, .9, .3, 1.4) both; transform-box: fill-box; transform-origin: center; }
-    .market, .market .stroke { animation-delay: .15s; }
-    .market .dot, .market .label { animation-delay: 1.55s; }
-    .bot, .bot .stroke { animation-delay: .55s; animation-duration: 1.9s; }
+    .dot, .label { animation: pop .5s cubic-bezier(.2, .9, .3, 1.4) both; }
+    .layer.market { animation-delay: .15s; }
+    .dot.market, .label.market { animation-delay: 1.55s; }
+    .layer.bot { animation-delay: .55s; animation-duration: 1.9s; }
     .bot .area { animation-delay: 2.3s; }
-    .bot .dot, .bot .label { animation-delay: 2.3s; }
+    .dot.bot, .label.bot { animation-delay: 2.3s; }
     @keyframes rise { from { transform: translateY(70px); opacity: 0; } 30% { opacity: 1; } to { transform: none; opacity: 1; } }
-    @keyframes draw { to { stroke-dashoffset: 0; } }
+    @keyframes wipe { from { clip-path: inset(-12px 100% -12px -12px); } to { clip-path: inset(-12px -12px -12px -12px); } }
     @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes pop { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: none; } }
+    @keyframes pop { from { opacity: 0; scale: .4; } to { opacity: 1; scale: 1; } }
   }
 </style>
