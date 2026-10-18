@@ -25,8 +25,8 @@ import markdown
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from finance import mandate as mandate_mod, paths, portfolio, trades  # noqa: E402
 
-REPO_URL = "https://github.com/fconforti/finance"
-SITE_URL = "https://fconforti.github.io/finance/"
+REPO_URL = "https://github.com/fconforti/bot-vs-market"
+SITE_URL = "https://fconforti.github.io/bot-vs-market/"
 MD = markdown.Markdown(extensions=["tables", "fenced_code", "sane_lists"])
 MD_ANCHORS = markdown.Markdown(extensions=["tables", "fenced_code", "sane_lists", "toc"],
                                extension_configs={"toc": {"anchorlink": False, "toc_depth": "3-3"}})

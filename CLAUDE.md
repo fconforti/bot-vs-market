@@ -6,11 +6,11 @@ The build spec is `CLAUDE_BRIEF.md`. This file describes the machine as it actua
 
 - The repo lives at `~/personal/finance`, not `~/framework-trader`. Everything under `~/personal/` is a personal project and everything under `~/work/` is work.
 - The project is called `finance`. Use that name wherever the brief says `framework-trader`: systemd units (`finance.service`/`.timer`, `finance-research.service`/`.timer`), the state directory `~/.local/state/finance/`, and so on.
-- GitHub repo: `fconforti/finance` (public, so GitHub Pages works on a free account). Pages URL: `https://fconforti.github.io/finance/`.
+- GitHub repo: `fconforti/bot-vs-market` (public, so GitHub Pages works on a free account). Pages URL: `https://fconforti.github.io/bot-vs-market/`. The public name is "Bot vs Market"; locally the project is still `finance` (folder, units, state dir, secrets file).
 
 ## GitHub access (replaces the brief's SSH deploy key)
 
-- There is **no SSH deploy key and no `github-framework-trader` host alias**. The remote is HTTPS: `https://github.com/fconforti/finance.git`.
+- There is **no SSH deploy key and no `github-framework-trader` host alias**. The remote is HTTPS: `https://github.com/fconforti/bot-vs-market.git`.
 - Auth is a fine-grained token limited to this repo, stored in `~/.secrets/finance.env` as `GH_TOKEN`. The repo's `.envrc` (`dotenv ~/.secrets/finance.env`) loads it through direnv, and git uses it through `gh auth git-credential`. Never print, copy or commit the token.
 - `gh` has no global login on this machine. It works here only because `GH_TOKEN` is set.
 - The commit email is set automatically for everything under `~/personal/` (`filippo.conforti@gmail.com`). Don't set `user.email` in this repo.

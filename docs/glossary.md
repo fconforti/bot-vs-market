@@ -1,7 +1,7 @@
 # Glossary
 
 Plain-language definitions of the terms used on this site and in the journal. Each
-heading is a link target: `/finance/glossary/#nav`, `/finance/glossary/#drawdown`, and so on.
+heading is a link target: `/bot-vs-market/glossary/#nav`, `/bot-vs-market/glossary/#drawdown`, and so on.
 
 ### NAV
 
