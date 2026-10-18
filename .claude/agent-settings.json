@@ -11,18 +11,14 @@
       "Read(.env*)",
       "Read(~/.secrets/**)",
       "Read(**/.credentials*)",
-      "Write(mandate.toml)",
-      "Write(MANDATE.md)",
-      "Write(bin/**)",
-      "Write(finance/**)",
-      "Write(.claude/**)",
-      "Write(systemd/**)",
-      "Write(.github/**)",
       "Edit(mandate.toml)",
       "Edit(MANDATE.md)",
       "Edit(bin/**)",
       "Edit(finance/**)",
-      "Edit(.claude/**)"
+      "Edit(.claude/**)",
+      "Edit(systemd/**)",
+      "Edit(.github/**)",
+      "Edit(tests/**)"
     ]
   }
 }

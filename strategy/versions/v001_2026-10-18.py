@@ -176,20 +176,24 @@ def main() -> int:
     """`uv run python strategy/current.py` prints signals and proposals for the
     latest snapshot. Read-only; it never touches trade files."""
     import json
-    from datetime import date
-    from finance import portfolio
+    import os
+    from finance import clock, portfolio
     from strategy import data as data_mod
 
     params = load_params()
     md = data_mod.market_data()
-    state = portfolio.latest_state(date.today())
+    dry_run = os.environ.get("FINANCE_DRY_RUN") == "1"
+    today = clock.today()
+    state = portfolio.latest_state(today, dry_run=dry_run)
     if state is None:
-        print("no portfolio snapshot found; run bin/snapshot.py first", file=sys.stderr)
+        print(f"no portfolio snapshot for {today}{' (dry run)' if dry_run else ''}; run bin/snapshot.py first", file=sys.stderr)
         return 2
+    if state.as_of != today:
+        print(f"warning: latest snapshot is from {state.as_of}, not {today}", file=sys.stderr)
     sig = signals(md, params)
     orders = generate(state, md, params)
     print(json.dumps({"version": params.get("version", VERSION), "signals": sig,
-                      "state": {"as_of": state.as_of.isoformat(), "nav": state.nav, "cash": state.cash,
+                      "state": {"as_of": state.as_of.isoformat(), "dry_run": state.dry_run, "nav": state.nav, "cash": state.cash,
                                 "positions": [p.isin for p in state.positions]},
                       "proposed_orders": [o.to_dict() for o in orders]}, indent=2, default=str))
     return 0

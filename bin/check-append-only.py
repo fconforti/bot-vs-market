@@ -36,8 +36,8 @@ def main() -> int:
     exceptions = set(honesty.get("append_only_exceptions", []))
     problems = []
     for status, path in staged_changes():
-        if path in exceptions:
-            continue
+        if path in exceptions or "-dryrun" in path:
+            continue   # dry-run journals/snapshots are rehearsals and may be re-run
         if path.startswith(dirs) and status in ("M", "D", "R", "T"):
             problems.append(f"{status} {path}")
         if path == "site/mistakes.md" and status in ("M", "D"):

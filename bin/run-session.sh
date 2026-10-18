@@ -46,6 +46,7 @@ else
     export FINANCE_SC_MODE=fixture
     export SC_BIN="$ROOT/tests/fake_sc.py"
     export FINANCE_SC_FIXTURES="$ROOT/tests/fixtures/sc"
+    SHIM="$(mktemp -d)"; ln -s "$SC_BIN" "$SHIM/sc"; export PATH="$SHIM:$PATH"   # direct `sc` calls hit the fake too
   else
     export FINANCE_SC_MODE=none
     JOURNAL="journal/$TODAY.md"
@@ -71,8 +72,7 @@ fi
 PROMPT="$(cat prompts/daily.md)"
 ALLOWED=(
   "Read" "Glob" "Grep" "WebSearch" "WebFetch" "TodoWrite"
-  "Write(journal/**)" "Write(trades/**)" "Write(research/inbox.md)" "Write(site/mistakes.md)"
-  "Edit(journal/**)" "Edit(research/inbox.md)" "Edit(site/mistakes.md)"
+  "Edit(journal/**)" "Edit(trades/**)" "Edit(research/inbox.md)" "Edit(site/mistakes.md)"
   "Bash(uv run python bin/session-info.py:*)"
   "Bash(uv run python bin/snapshot.py:*)"
   "Bash(uv run python bin/guardrails.py:*)"

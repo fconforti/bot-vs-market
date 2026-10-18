@@ -69,7 +69,7 @@ def main() -> None:
         rel_s = rel.as_posix()
         today = os.environ.get("FINANCE_TODAY") or date.today().isoformat()
         append_only_ok = {"research/inbox.md", "site/mistakes.md"}
-        if rel_s in append_only_ok:
+        if rel_s in append_only_ok or "-dryrun" in p.name:
             return
         for d in ("journal/", "trades/", "portfolio/"):
             if rel_s.startswith(d) and p.exists() and not p.name.startswith(today):

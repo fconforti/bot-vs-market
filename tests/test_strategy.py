@@ -128,3 +128,25 @@ def test_insufficient_history_means_no_ranking():
     sig = current.signals(md, PARAMS)
     assert sig["trend_on"] is False and sig["ranking"] == []
     assert current.generate(state(), md, PARAMS) == []
+
+
+def test_current_main_finds_dry_run_snapshot(repo, fake_sc, monkeypatch, capsys):
+    """The daily session's entry point: snapshot --dry-run, then current.py, under
+    FINANCE_DRY_RUN=1 and a replayed date. This is the path the first dry run broke."""
+    import json as _json
+    from finance import paths, portfolio
+    from finance.clock import today
+    md = synthetic_market(date(2026, 10, 20))
+    u = data_mod.load_universe()
+    isin_to_ticker = dict(zip(u["isin"], u["ticker"]))
+    paths.PRICE_CACHE.mkdir(parents=True, exist_ok=True)
+    md.closes.rename(columns=isin_to_ticker).to_csv(paths.PRICE_CACHE / "closes.csv")
+    monkeypatch.setattr(data_mod, "CACHE", paths.PRICE_CACHE / "closes.csv")
+    monkeypatch.setenv("FINANCE_DRY_RUN", "1")
+    state, raw = portfolio.fetch_state(today(), dry_run=True)
+    portfolio.write_snapshot(state, raw)
+    assert current.main() == 0
+    out = _json.loads(capsys.readouterr().out)
+    assert out["state"]["dry_run"] is True and out["state"]["as_of"] == "2026-10-20"
+    assert out["signals"]["trend_on"] is True
+    assert len(out["proposed_orders"]) == PARAMS["sizing"]["max_orders_per_day"]
