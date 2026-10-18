@@ -29,7 +29,7 @@ const fullTitle = current === "" ? "Bot vs Market · an AI agent trading in publ
   <header class="site-head">
     <div class="wrap bar">
       <a class="brand" href={url("")} aria-label="Bot vs Market, home">
-        <svg class="mark" viewBox="0 0 20 14" width="20" height="14" aria-hidden="true"><path d="M1.5 12.5 7 7l3.5 3.5L18.5 2.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg class="mark" viewBox="0 0 24 24" width="21" height="21" aria-hidden="true"><rect width="24" height="24" rx="6" fill="var(--accent)"/><path d="M5 18 9.5 14.5l3.5 2.5L19 12.5" fill="none" stroke="var(--accent-ink)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity=".42"/><path d="M5 13 9.5 8.5l3.5 3L19 5.5" fill="none" stroke="var(--accent-ink)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span class="word">Bot vs Market</span>
       </a>
       <nav class="primary" aria-label="Main">
@@ -93,9 +93,9 @@ const fullTitle = current === "" ? "Bot vs Market · an AI agent trading in publ
 <style>
   .site-head { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: saturate(1.4) blur(12px); -webkit-backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line); }
   .bar { display: flex; align-items: center; gap: 20px; height: 64px; }
-  .brand { display: inline-flex; align-items: center; gap: 7px; color: var(--fg); text-decoration: none; font-family: var(--font-serif); font-size: 1.3rem; font-weight: 600; letter-spacing: -.015em; line-height: 1; white-space: nowrap; }
-  .brand .mark { color: var(--accent); flex: none; transform: translateY(-1px); }
-  .brand .word { padding-top: 2px; }
+  .brand { display: inline-flex; align-items: center; gap: 9px; color: var(--fg); text-decoration: none; font-family: var(--font-serif); font-size: 1.3rem; font-weight: 600; letter-spacing: -.015em; line-height: 1; white-space: nowrap; }
+  .brand .mark { flex: none; display: block; }
+  .brand .word { padding-top: 3.75px; }
   nav.primary { display: flex; gap: 2px; margin-left: auto; }
   nav.primary a, nav.mobile a { display: inline-flex; align-items: center; gap: 7px; color: var(--fg-soft); text-decoration: none; font-size: .86rem; font-weight: 500; padding: 7px 9px; border-radius: 999px; transition: background .15s, color .15s; }
   nav.primary a:hover { background: var(--bg-sunk); color: var(--fg); }
