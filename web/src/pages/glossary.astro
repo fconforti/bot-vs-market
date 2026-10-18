@@ -26,7 +26,7 @@ const terms = [...site.glossary.terms].sort((a: any, b: any) => a.title.localeCo
   .index a { display: block; padding: 5px 10px; border-radius: 8px; font-size: .86rem; color: var(--fg-soft); text-decoration: none; }
   .index a:hover { background: var(--bg-sunk); color: var(--fg); }
   .gloss { padding: clamp(24px, 4vw, 48px); }
-  .gloss :global(h3) { scroll-margin-top: 88px; font-size: 1.3rem; padding-top: 1.1em; margin-top: 1.1em; border-top: 1px solid var(--line); }
+  .gloss :global(h3) { font-size: 1.3rem; padding-top: 1.1em; margin-top: 1.1em; border-top: 1px solid var(--line); }
   .gloss :global(h3:target) { color: var(--accent); }
   .gloss :global(h3:target + p) { background: var(--accent-soft); box-shadow: 0 0 0 8px var(--accent-soft); border-radius: 4px; }
   .gloss :global(.hidden) { display: none; }
