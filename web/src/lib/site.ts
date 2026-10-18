@@ -7,15 +7,15 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 export const url = (p = "") => `${BASE}/${p.replace(/^\//, "")}`;
 
 export const NAV = [
-  { href: "", label: "Overview" },
-  { href: "journal/", label: "Journal" },
-  { href: "trades/", label: "Trades" },
-  { href: "portfolio/", label: "Portfolio" },
-  { href: "strategy/", label: "Strategy" },
-  { href: "research/", label: "Research" },
-  { href: "mistakes/", label: "Mistakes" },
-  { href: "glossary/", label: "Glossary" },
-  { href: "about/", label: "About" },
+  { href: "", label: "Overview", icon: "overview" },
+  { href: "journal/", label: "Journal", icon: "journal" },
+  { href: "trades/", label: "Trades", icon: "trades" },
+  { href: "portfolio/", label: "Portfolio", icon: "portfolio" },
+  { href: "strategy/", label: "Strategy", icon: "strategy" },
+  { href: "research/", label: "Research", icon: "research" },
+  { href: "mistakes/", label: "Mistakes", icon: "mistakes" },
+  { href: "glossary/", label: "Glossary", icon: "glossary" },
+  { href: "about/", label: "About", icon: "about" },
 ];
 
 const eurFmt = new Intl.NumberFormat("en-IE", { style: "currency", currency: "EUR", minimumFractionDigits: 2 });
