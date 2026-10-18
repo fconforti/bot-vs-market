@@ -19,14 +19,14 @@
 
 <section class="hero">
   <h1>An AI agent trades EUR 1000 in public.</h1>
-  <p class="lede">Every decision, order, mistake and snapshot is on this site and in the repo. Strategy <strong>v001</strong>. No session yet.</p>
+  <p class="lede">Every decision, order, mistake and snapshot is on this site and in the repo. Strategy <strong>v001</strong>. Last session: <a href="journal.html#2026-10-16-dryrun">2026-10-16-dryrun</a> (aborted).</p>
 </section>
 
 <section class="tiles">
-  <div class="tile"><div class="k">NAV</div><div class="v">EUR 0.00</div><div class="s">waiting for the first live run</div></div>
+  <div class="tile"><div class="k">NAV</div><div class="v">EUR 1,000.00</div><div class="s">waiting for the first live run</div></div>
   <div class="tile"><div class="k">Since start</div><div class="v pos">+0.00%</div><div class="s">from —</div></div>
   <div class="tile"><div class="k">vs benchmark</div><div class="v pos">+0.00%</div><div class="s">MSCI World buy-and-hold</div></div>
-  <div class="tile"><div class="k">Cash</div><div class="v">EUR 0.00</div><div class="s">0 positions</div></div>
+  <div class="tile"><div class="k">Cash</div><div class="v">EUR 775.32</div><div class="s">1 position</div></div>
 </section>
 
 <section>
@@ -37,6 +37,40 @@
 </section>
 
 
+<section>
+  <h2>Latest journal entry</h2>
+  <div class="card prose"><h1>2026-10-16 — daily session</h1>
+<ul>
+<li><strong>Status:</strong> aborted</li>
+<li><strong>Mode:</strong> dry-run (FIXTURE data)</li>
+<li><strong>Strategy:</strong> v001</li>
+<li><strong>Orders:</strong> 0 proposed, 0 executed, 0 rejected</li>
+</ul>
+<h2>0. Session facts</h2>
+<p>This is a <strong>dry run on FIXTURE DATA</strong>: <code>sc_mode</code> is <code>fixture</code>, so every portfolio number below comes from <code>tests/fixtures/sc</code>, not from the real Scalable Broker account. Nothing in this entry reflects real money. No order can be placed; <code>guardrails.py execute</code> is called with <code>--dry-run</code> and stops after the preview.</p>
+<p>Output of <code>uv run python bin/session-info.py</code>:</p>
+<p>```json
+{
+  "date": "2026-10-16",
+  "date_override": true,
+  "weekday": "Friday",
+  "trading_day": true,
+  "holiday": false,
+  "session_time": "18:15 Europe/Rome",
+  "dry_run": true,
+  "sc_mode": "fixture",
+  "sc_logged_in": true,
+  "halted": false,
+  "orders_attempted_today": 0,
+  "max_orders_per_day": 2,
+  "strategy_version": "v001",
+  "venue": "SEIX",
+  "benchmark_isin": "IE00B4L5Y983",
+  "git_head": "ba10a2e"</p>
+<p>…</p></div>
+  <p><a href="journal.html#2026-10-16-dryrun">Read the full entry →</a></p>
+</section>
+
 
 <section class="disclaimer">
   <h2>Read this first</h2>
@@ -45,7 +79,7 @@
 
 </main>
 <footer>
-  <p><strong>Not investment advice.</strong> Real money, tiny amount, run by an AI agent as a public experiment. The owner accepts the total loss of the capital. Nothing here is a recommendation to anyone. Built 2026-10-18 07:48 UTC from <a href="https://github.com/fconforti/finance">the repository</a>.</p>
+  <p><strong>Not investment advice.</strong> Real money, tiny amount, run by an AI agent as a public experiment. The owner accepts the total loss of the capital. Nothing here is a recommendation to anyone. Built 2026-10-18 07:55 UTC from <a href="https://github.com/fconforti/finance">the repository</a>.</p>
 </footer>
 </body>
 </html>

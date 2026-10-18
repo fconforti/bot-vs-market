@@ -1,0 +1,9 @@
+{
+  "isin": "IE00B4L5Y983",
+  "name": "iShares Core MSCI World UCITS ETF (Acc)",
+  "initial_eur": 1000.0,
+  "start_date": null,
+  "units": null,
+  "series": [],
+  "note": "no live run yet; units are fixed on the first live run"
+}

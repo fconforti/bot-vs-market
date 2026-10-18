@@ -1,0 +1,90 @@
+{
+  "as_of": "2026-10-16",
+  "nav": 1000.0,
+  "cash": 775.32,
+  "buying_power": 775.32,
+  "positions": [
+    {
+      "isin": "IE00B4L5Y983",
+      "name": "iShares Core MSCI World UCITS ETF (Acc)",
+      "quantity": 2.0,
+      "price": 112.34,
+      "value_eur": 224.68,
+      "fifo_price": 110.0,
+      "security_type": "ETF"
+    }
+  ],
+  "pending_buy_orders_eur": 0.0,
+  "dry_run": true,
+  "taken_at": "2026-10-18T07:50:41+00:00",
+  "post_trade": false,
+  "raw": {
+    "whoami": {
+      "_fixture": "FIXTURE DATA, not a real account",
+      "person_id": "fixture-person",
+      "env": "prod"
+    },
+    "overview": {
+      "_fixture": "FIXTURE DATA, not a real account",
+      "account_id": "fixture-account",
+      "portfolio_id": "fixture-portfolio",
+      "valuation": {
+        "total": "1000.00",
+        "securities": "224.68",
+        "crypto": "0"
+      },
+      "timestamps": {
+        "valuation_timestamp_utc": "2026-10-16T15:30:00.000Z",
+        "inventory_timestamp_utc": "2026-10-16T15:30:00.000Z"
+      },
+      "performance": [
+        {
+          "timeframe": "ONE_DAY",
+          "simpleAbsoluteReturn": "-1.20"
+        },
+        {
+          "timeframe": "ALL",
+          "simpleAbsoluteReturn": "0.00"
+        }
+      ]
+    },
+    "holdings": {
+      "_fixture": "FIXTURE DATA, not a real account",
+      "account_id": "fixture-account",
+      "portfolio_id": "fixture-portfolio",
+      "count": 1,
+      "items": [
+        {
+          "isin": "IE00B4L5Y983",
+          "name": "iShares Core MSCI World UCITS ETF (Acc)",
+          "security_type": "ETF",
+          "quantity": "2",
+          "pending_quantity": "0",
+          "blocked_quantity": "0",
+          "fifo_price": "110.00",
+          "valuation": "224.68",
+          "valuation_currency": "EUR",
+          "quote_mid_price": "112.34",
+          "quote_currency": "EUR",
+          "quote_timestamp_utc": "2026-10-16T15:30:00.000Z",
+          "quote_is_outdated": false
+        }
+      ]
+    },
+    "cash_breakdown": {
+      "_fixture": "FIXTURE DATA, not a real account",
+      "account_id": "fixture-account",
+      "portfolio_id": "fixture-portfolio",
+      "cash_balance": "775.32",
+      "buying_power": "775.32",
+      "buying_power_without_credit": "775.32",
+      "available_credit_line": "0",
+      "loaned": "0",
+      "pending_buy_orders_amount": "0",
+      "possible_taxes": "0",
+      "derivatives_buying_power": "0",
+      "available_for_derivatives": "0"
+    },
+    "reconciliation_gap_eur": 0.0
+  }
+}
