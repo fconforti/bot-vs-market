@@ -5,10 +5,10 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-WorkingDirectory=%h/personal/finance
+WorkingDirectory=%h/personal/bot-vs-market
 EnvironmentFile=%h/.secrets/finance.env
 Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
 Environment=XDG_STATE_HOME=%h/.local/state
-ExecStart=%h/personal/finance/bin/run-session.sh
+ExecStart=%h/personal/bot-vs-market/bin/run-session.sh
 TimeoutStartSec=2h
 Nice=5

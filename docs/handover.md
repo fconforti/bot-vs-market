@@ -72,7 +72,7 @@ Both ran on 2026-10-18, a Saturday, with `FINANCE_TODAY` replaying a weekday.
 ## Before the first live run (in this order)
 
 ```sh
-cd ~/personal/finance
+cd ~/personal/bot-vs-market
 uv sync && uv run pytest -q                      # must pass
 
 # Scalable CLI: file-backed session (keyring is unavailable here) + CLI-level caps

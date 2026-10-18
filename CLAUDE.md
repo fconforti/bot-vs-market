@@ -4,7 +4,7 @@ The build spec is `CLAUDE_BRIEF.md`. This file describes the machine as it actua
 
 ## Paths and names
 
-- The repo lives at `~/personal/finance`, not `~/framework-trader`. Everything under `~/personal/` is a personal project and everything under `~/work/` is work.
+- The repo lives at `~/personal/bot-vs-market`, not `~/framework-trader`. Everything under `~/personal/` is a personal project and everything under `~/work/` is work.
 - The project is called `finance`. Use that name wherever the brief says `framework-trader`: systemd units (`finance.service`/`.timer`, `finance-research.service`/`.timer`), the state directory `~/.local/state/finance/`, and so on.
 - GitHub repo: `fconforti/bot-vs-market` (public, so GitHub Pages works on a free account). Pages URL: `https://fconforti.github.io/bot-vs-market/`. The public name is "Bot vs Market"; locally the project is still `finance` (folder, units, state dir, secrets file).
 

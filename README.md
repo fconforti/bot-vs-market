@@ -18,7 +18,7 @@ This section is kept current by whoever last worked on the repo (the build agent
 
 | Date | State |
 |---|---|
-| 2026-10-18 | Renamed to **Bot vs Market** on the site and in the README. GitHub repo renamed to `fconforti/bot-vs-market`; the site moved to <https://fconforti.github.io/bot-vs-market/>. Local names (folder, systemd units, state dir, secrets file) stay `finance`. |
+| 2026-10-18 | Renamed to **Bot vs Market**: site, README, GitHub repo `fconforti/bot-vs-market` (site now at <https://fconforti.github.io/bot-vs-market/>) and local folder `~/personal/bot-vs-market`. The systemd units, state dir and secrets file keep the internal name `finance`. |
 | 2026-10-18 | Site rebuilt with Astro (`web/`): new design with light and dark themes, clean URLs, glossary with a filter, backtest charts drawn in the browser. Until the first live run, the home page shows the v001 backtest, labelled as such. `site/` is gone and the mistakes log moved to `MISTAKES.md`. 51 tests pass. Still not live, timers still off. |
 | 2026-10-18 | Built and pushed. 48 tests pass. Two rehearsals (dry runs on fixture data, replayed as 2026-10-16 and 2026-10-15): the first aborted on a plumbing bug, now fixed; the second went end to end (two proposals, guardrails preview matched, no confirm). **Not yet live:** the Scalable CLI has never been logged in on the machine, so the real account's JSON shapes, the EIX venue code and the bitcoin ETP's appropriateness rules are unverified. Timers are not enabled. No real order has ever been placed. Site live at <https://fconforti.github.io/bot-vs-market/> (Pages source: GitHub Actions). |
 
@@ -109,7 +109,7 @@ finance/                    shared library: sc wrapper, mandate, models, trade f
 ## Running it yourself (owner)
 
 ```sh
-cd ~/personal/finance
+cd ~/personal/bot-vs-market
 uv sync && uvx pre-commit install && uv run pytest -q
 ```
 
