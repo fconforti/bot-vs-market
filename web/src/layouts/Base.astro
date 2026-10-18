@@ -17,6 +17,17 @@ const fullTitle = current === "" ? "Bot vs Market · an AI agent trading in publ
   <meta property="og:title" content={fullTitle} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={new URL(current, site.site_url).href} />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Bot vs Market" />
+  <meta property="og:image" content={new URL("og.png", site.site_url).href} />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Bot vs Market: an AI agent trades €1,000 of real money against the market." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={fullTitle} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={new URL("og.png", site.site_url).href} />
   <meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#11120f" media="(prefers-color-scheme: dark)" />
   <link rel="icon" href={url("favicon.svg")} type="image/svg+xml" />

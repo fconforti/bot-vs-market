@@ -1,0 +1,51 @@
+<!doctype html>
+<!-- Source of web/public/og.png, the 1200x630 share image (WhatsApp, Slack, X...).
+     Deliberately data-free so it never goes stale. Re-render from the web/ folder with
+     any Chromium:
+       chromium --headless --hide-scrollbars --window-size=1200,630 \
+         --screenshot=public/og.png "file://$PWD/og/og.html"
+     Fonts load from node_modules, so run `npm ci` first. -->
+<html><head><meta charset="utf-8">
+<style>
+@font-face { font-family: News; src: url(../node_modules/@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2); font-weight: 200 800; }
+@font-face { font-family: News; font-style: italic; src: url(../node_modules/@fontsource-variable/newsreader/files/newsreader-latin-wght-italic.woff2); font-weight: 200 800; }
+@font-face { font-family: Inter; src: url(../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2); font-weight: 100 900; }
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+body { background: #f6f4ef; color: #1b1a17; font-family: Inter, sans-serif; position: relative; }
+.chart { position: absolute; right: 168px; top: 112px; width: 420px; height: 390px; }
+.chart svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.grid line { stroke: #e2ddd1; stroke-width: 2; vector-effect: non-scaling-stroke; }
+.m { fill: none; stroke: #9b9484; stroke-width: 5; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; opacity: .9; }
+.b { fill: none; stroke: #1f5f4a; stroke-width: 7; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.a { fill: url(#g); }
+.dot { position: absolute; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; left: 100%; }
+.lab { position: absolute; left: calc(100% + 22px); transform: translateY(-50%); font-family: News; font-weight: 600; font-size: 34px; white-space: nowrap; }
+.left { position: absolute; left: 80px; top: 78px; width: 560px; }
+.brand { display: flex; align-items: center; gap: 18px; font-family: News; font-weight: 600; font-size: 40px; letter-spacing: -.015em; }
+.eyebrow { margin: 64px 0 18px; font-size: 19px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #1f5f4a; }
+h1 { margin: 0; font-family: News; font-weight: 500; font-size: 66px; line-height: 1.04; letter-spacing: -.025em; }
+h1 em { color: #1f5f4a; }
+.url { position: absolute; left: 80px; bottom: 62px; font-size: 22px; color: #7a756a; }
+.url b { color: #46433c; font-weight: 600; }
+</style></head><body>
+<div class="left">
+  <div class="brand"><svg viewBox="0 0 24 24" width="50" height="50"><rect width="24" height="24" rx="6" fill="#1f5f4a"/><path d="M5 18 9.5 14.5l3.5 2.5L19 12.5" fill="none" stroke="#f6f4ef" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity=".42"/><path d="M5 13 9.5 8.5l3.5 3L19 5.5" fill="none" stroke="#f6f4ef" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Bot vs Market</span></div>
+  <p class="eyebrow">A public experiment</p>
+  <h1>An AI agent trades <em>€1,000</em> of real money against the market.</h1>
+</div>
+<div class="chart">
+  <svg viewBox="0 0 1000 1000" preserveAspectRatio="none">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f5f4a" stop-opacity=".16"/><stop offset="1" stop-color="#1f5f4a" stop-opacity="0"/></linearGradient></defs>
+    <g class="grid"><line x1="0" x2="1000" y1="0" y2="0"/><line x1="0" x2="1000" y1="333" y2="333"/><line x1="0" x2="1000" y1="666" y2="666"/><line x1="0" x2="1000" y1="1000" y2="1000"/></g>
+    <path class="a" d="M0.0 900.0 L71.4 883.7 L142.9 932.8 L214.3 826.3 L285.7 777.8 L357.1 706.3 L428.6 641.2 L500.0 598.0 L571.4 511.5 L642.9 423.5 L714.3 356.2 L785.7 284.0 L857.1 282.6 L928.6 232.8 L1000.0 140.0 L1000 1000 L0 1000 Z"/>
+    <path class="m" d="M0.0 900.0 L71.4 850.3 L142.9 832.6 L214.3 866.5 L285.7 755.6 L357.1 796.9 L428.6 709.3 L500.0 785.0 L571.4 732.4 L642.9 740.6 L714.3 657.8 L785.7 657.4 L857.1 608.8 L928.6 566.8 L1000.0 560.0"/>
+    <path class="b" d="M0.0 900.0 L71.4 883.7 L142.9 932.8 L214.3 826.3 L285.7 777.8 L357.1 706.3 L428.6 641.2 L500.0 598.0 L571.4 511.5 L642.9 423.5 L714.3 356.2 L785.7 284.0 L857.1 282.6 L928.6 232.8 L1000.0 140.0"/>
+  </svg>
+  <span class="dot" style="top:56.0%;background:#9b9484"></span>
+  <span class="dot" style="top:14.0%;background:#1f5f4a"></span>
+  <span class="lab" style="top:56.0%;color:#7a756a;font-weight:500">Market</span>
+  <span class="lab" style="top:14.0%">Bot</span>
+</div>
+<div class="url">Every decision, trade and mistake in public · <b>fconforti.github.io/bot-vs-market</b></div>
+</body></html>
