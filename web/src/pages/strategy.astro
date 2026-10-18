@@ -7,6 +7,27 @@ import YearBars from "../components/YearBars.astro";
 import { site, url } from "../lib/site";
 
 const bts = [...site.strategy.backtests].reverse();
+const S = site.strategy;
+const PR = S.params || {};
+const tr = PR.trend || {}, mo = PR.momentum || {}, se = PR.selection || {}, si = PR.sizing || {};
+const u = S.universe || {};
+const pc = (v: number) => `${Math.round(v * 100)}%`;
+const blob = (f: string) => `${site.repo_url}/blob/main/${f}`;
+const buyable = (u.etf || 0) + (u.stock || 0) + (u.etc || 0) + (u.crypto || 0);
+const decisions = [
+  { title: "What it can buy", fact: `${buyable} instruments`, term: "etf-etc-etp",
+    text: `A fixed list: ${u.etf || 0} ETFs, ${u.stock || 0} large-cap stocks, ${u.etc || 0} gold ETCs and ${u.crypto || 0} bitcoin ETP, all priced in EUR. The ${u.cash || 0} cash-like ETFs on the list are never bought.` },
+  { title: "When it invests", fact: "Only in an uptrend", term: "trend-filter",
+    text: `New buys only while the MSCI World is above its ${tr.sma_days}-day average. Everything is sold if it closes ${pc(tr.exit_band)} below it.` },
+  { title: "What it picks", fact: `The top ${se.top_n} by momentum`, term: "momentum-12-1",
+    text: `Everything is ranked by its ${Math.round(mo.lookback_days / 21)}-month return, skipping the latest month. It buys the best ${se.top_n} with positive momentum.` },
+  { title: "When it sells", fact: "Once a month", term: "rebalance-window",
+    text: `In the first ${se.rebalance_window_days} trading days of each month, a holding is sold if it drops out of the top ${se.hold_rank} or its momentum turns negative.` },
+  { title: "How much in each", fact: `${pc(si.target_weight)} per position`, term: "position-weight",
+    text: `Equal weights. One order is at most ${pc(si.order_cap_pct_of_nav)} of the portfolio and at least €${si.min_order_eur}, so fees stay small.` },
+  { title: "How fast it trades", fact: `${si.max_orders_per_day} orders a day`, term: "guardrails",
+    text: "Sells go first. A full rotation takes a few days, on purpose: slow and cheap beats fast and noisy." },
+];
 const P = (v: any) => (v == null ? "—" : `${(v * 100).toFixed(1)}%`);
 const N = (v: any, d = 2) => (v == null ? "—" : Number(v).toLocaleString("en-IE", { minimumFractionDigits: d, maximumFractionDigits: d }));
 const rows: [string, string | null, (v: any) => string][] = [
@@ -24,6 +45,32 @@ const termFor: Record<string, string> = { cagr: "cagr", max_drawdown: "drawdown"
   </PageHead>
 
   <div class="wrap">
+    <section class="block intro">
+      <p class="eyebrow">In one paragraph</p>
+      <h2>How {site.version} works</h2>
+      <p class="summary">{S.summary}</p>
+      <div class="files">
+        <a href={blob("strategy/current.py")}>Algorithm</a>
+        <a href={blob("strategy/params.toml")}>Parameters</a>
+        <a href={blob("strategy/universe.csv")}>Universe</a>
+        <a href={blob(`research/backtests/${site.version}.json`)}>Backtest data</a>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="block-head"><h2>Key decisions</h2><p>Numbers come straight from the live parameters</p></div>
+      <ol class="decisions">
+        {decisions.map((d, i) => (
+          <li class="card decision">
+            <span class="n num">{String(i + 1).padStart(2, "0")}</span>
+            <p class="t">{d.title}</p>
+            <p class="f">{d.fact}</p>
+            <p class="x">{d.text} <Term id={d.term}>More</Term></p>
+          </li>
+        ))}
+      </ol>
+    </section>
+
     {bts.map((b: any) => (
       <section class="block bt">
         <div class="block-head">
@@ -71,14 +118,39 @@ const termFor: Record<string, string> = { cagr: "cagr", max_drawdown: "drawdown"
       </section>
     ))}
 
-    <section class="block">
-      <article class="card pad prose wide doc" set:html={site.strategy.html} />
+    <section class="block details">
+      <div class="block-head"><h2>All the details</h2><p>The full write-up, as it is in <a href={blob("STRATEGY.md")}>STRATEGY.md</a></p></div>
+      <div class="details-grid">
+        <aside class="toc">
+          <p class="eyebrow">Sections</p>
+          <ol>{S.sections.map((x: any) => <li><a href={`#${x.slug}`}>{x.title}</a></li>)}</ol>
+        </aside>
+        <article class="card pad prose wide doc" set:html={S.html} />
+      </div>
     </section>
   </div>
 </Base>
 <style>
   .bt .grid.stats { margin-bottom: 16px; }
   .lbl { white-space: nowrap; }
+  .intro h2 { font-size: clamp(1.8rem, 3.6vw, 2.5rem); margin-bottom: 14px; }
+  .summary { font-size: clamp(1.05rem, 1.7vw, 1.2rem); color: var(--fg-soft); max-width: 70ch; margin: 0; line-height: 1.6; }
+  .files { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .files a { font-size: .82rem; font-weight: 500; color: var(--fg-soft); text-decoration: none; padding: 6px 12px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--bg-elev); }
+  .files a::after { content: " ↗"; color: var(--muted); }
+  .files a:hover { color: var(--fg); border-color: var(--fg-soft); }
+  .decisions { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; }
+  .decision { padding: 22px 24px 24px; display: flex; flex-direction: column; gap: 6px; }
+  .decision .n { font-size: .75rem; color: var(--accent); letter-spacing: .06em; }
+  .decision .t { margin: 0; font-size: .74rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .decision .f { margin: 2px 0 4px; font-family: var(--font-serif); font-size: 1.45rem; line-height: 1.2; color: var(--fg); }
+  .decision .x { margin: 0; font-size: .92rem; color: var(--fg-soft); line-height: 1.55; }
+  .details-grid { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 32px; align-items: start; }
+  .toc { position: sticky; top: 88px; }
+  .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .toc a { display: block; padding: 6px 10px; border-radius: 8px; font-size: .86rem; color: var(--fg-soft); text-decoration: none; line-height: 1.35; }
+  .toc a:hover { background: var(--bg-sunk); color: var(--fg); }
+  @media (max-width: 900px) { .details-grid { grid-template-columns: 1fr; } .toc { display: none; } }
   .split { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: start; }
   .metrics :global(th), .metrics :global(td) { padding-inline: 12px; }
   .metrics :global(th:first-child), .metrics :global(td:first-child) { padding-left: 20px; }

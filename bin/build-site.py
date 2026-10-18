@@ -28,6 +28,8 @@ from finance import mandate as mandate_mod, paths, portfolio, trades  # noqa: E4
 REPO_URL = "https://github.com/fconforti/bot-vs-market"
 SITE_URL = "https://fconforti.github.io/bot-vs-market/"
 MD = markdown.Markdown(extensions=["tables", "fenced_code", "sane_lists"])
+MD_SECTIONS = markdown.Markdown(extensions=["tables", "fenced_code", "sane_lists", "toc"],
+                                 extension_configs={"toc": {"anchorlink": False, "toc_depth": "2-2"}})
 MD_ANCHORS = markdown.Markdown(extensions=["tables", "fenced_code", "sane_lists", "toc"],
                                extension_configs={"toc": {"anchorlink": False, "toc_depth": "3-3"}})
 
@@ -78,6 +80,38 @@ def drop_rehearsal_sections(text: str) -> str:
 def excerpt(text: str, max_lines: int = 30) -> str:
     lines = text.splitlines()
     return md("\n".join(lines[:max_lines]) + ("\n\n…" if len(lines) > max_lines else ""))
+
+
+def strategy_doc(text: str) -> dict:
+    """STRATEGY.md for the Strategy page: the plain-language summary paragraph, the
+    full document with h2 anchors, and the list of h2 sections for a side index."""
+    import re as _re
+    body = strip_h1(text)
+    m = _re.search(r"^## [^\n]*plain language[^\n]*\n+(.+?)\n\n", body, _re.M | _re.S)
+    summary = " ".join(m.group(1).split()) if m else ""
+    MD_SECTIONS.reset()
+    html = MD_SECTIONS.convert(body)
+    sections = [{"title": t["name"], "slug": t["id"]} for t in MD_SECTIONS.toc_tokens if t["level"] == 2]
+    return {"summary": summary, "html": html, "sections": sections}
+
+
+def strategy_facts() -> dict:
+    """Parameters and universe counts, so the page's key-decision cards always show the
+    numbers the live algorithm actually uses."""
+    import csv
+    try:
+        with (paths.STRATEGY / "params.toml").open("rb") as fh:
+            params = tomllib.load(fh)
+    except OSError:
+        params = {}
+    counts: dict[str, int] = {}
+    try:
+        with (paths.STRATEGY / "universe.csv").open(encoding="utf-8") as fh:
+            for row in csv.DictReader(fh):
+                counts[row.get("type", "?")] = counts.get(row.get("type", "?"), 0) + 1
+    except OSError:
+        pass
+    return {"params": params, "universe": counts}
 
 
 def sections_only(text: str) -> str:
@@ -236,7 +270,7 @@ def build_data() -> dict:
             "benchmark": {"isin": man.benchmark_isin, "name": man.benchmark_name, "start_date": bench.get("start_date"),
                           "last": bench["series"][-1] if bench.get("series") else None},
         },
-        "strategy": {"html": md(strip_h1(strategy_md)), "backtests": backtests},
+        "strategy": {**strategy_doc(strategy_md), **strategy_facts(), "backtests": backtests},
         "mistakes_html": md(sections_only(mistakes_md)),
         "glossary": {"html": md(glossary_body(glossary_md), anchors=True), "terms": glossary_terms(glossary_md)},
         "mandate_html": md(strip_h1(mandate_md)),
