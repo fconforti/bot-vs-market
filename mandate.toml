@@ -1,0 +1,51 @@
+# Machine-readable mandate. bin/guardrails.py re-reads this file on every call.
+# MANDATE.md is the human-readable version of the same rules. Where they
+# disagree, this file is what the code enforces; fix the disagreement.
+
+[capital]
+currency = "EUR"
+# Never request more capital, never transfer out. Whatever is in the account is the budget.
+
+[limits]
+max_order_pct_of_nav = 0.25      # one order may not exceed 25% of NAV
+max_orders_per_day = 2           # orders attempted (previewed) per calendar day
+max_position_pct_of_nav = 0.40   # resulting position may not exceed 40% of NAV
+min_order_eur = 25               # fees make smaller orders irrational
+cash_reserve_eur = 2.0           # keep at least this much cash after a buy (fees)
+allow_market_orders = true
+allow_limit_orders = false       # the CLI has no open-orders listing; v001 is market-only
+allow_stop_orders = false
+reject_on_price_warning = true   # any price warning in the preview rejects the order
+reject_on_appropriateness = true # never acknowledge appropriateness warnings or questionnaires
+preview_amount_tolerance = 0.01  # buy: estimated volume must be within 1% of the proposal
+preview_confirm_max_age_seconds = 600  # confirm only while the phase-1 id has at least this long left is NOT required; we confirm immediately after preview, this is a sanity cap
+
+[venue]
+# SEIX = European Investor Exchange (EIX). Cheapest venue on the FREE plan
+# (EUR 0.99 per order; EUR 0 for PRIME ETF buys >= EUR 250). MUNC = gettex,
+# XETR = Xetra: both EUR 1.99 per order since 2026-09-01.
+code = "SEIX"
+require_selected_venue_match = true   # preview must come back on this venue, otherwise reject
+
+[schedule]
+trading_days = ["Mon", "Tue", "Wed", "Thu", "Fri"]
+session_time = "18:15"
+timezone = "Europe/Rome"
+holidays_file = "data/holidays.toml"
+
+[benchmark]
+isin = "IE00B4L5Y983"            # iShares Core MSCI World UCITS ETF (Acc)
+yfinance_ticker = "EUNL.DE"
+name = "iShares Core MSCI World UCITS ETF (Acc)"
+initial_eur = 1000.0
+
+[fees]
+# Scalable Capital FREE Broker, schedule effective 2026-09-01.
+plan = "FREE"
+order_fee_eur = 0.99
+prime_etf_buy_free_from_eur = 250.0
+crypto_etp_spread_surcharge = 0.0099
+
+[honesty]
+append_only_dirs = ["journal", "trades", "portfolio", "research"]
+append_only_exceptions = ["research/inbox.md"]

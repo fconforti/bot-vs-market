@@ -1,0 +1,29 @@
+# secrets and local config
+.env
+.env.*
+*.env
+.envrc
+env/
+.secrets/
+scalable-cli/
+config.toml
+.sc-session*
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# data caches (regenerated on every run)
+.cache/
+strategy/.cache/
+data/prices/
+
+# local state
+HALTED
+*.log
+.DS_Store

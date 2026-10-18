@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Journal</h1>
+<p class="muted">One entry per session, newest first. Entries are never edited after the day they were written; corrections appear in later entries and in <a href="mistakes.html">Mistakes</a>.</p>
+{% for e in entries %}
+<article class="entry card prose" id="{{ e.anchor }}">
+  <div class="meta"><a href="#{{ e.anchor }}">{{ e.date }}</a>{% if e.dry_run %} <span class="tag warn">dry run</span>{% endif %}{% if e.status %} <span class="tag">{{ e.status }}</span>{% endif %}</div>
+  {{ e.html|safe }}
+</article>
+{% else %}
+<p class="muted">No entries yet.</p>
+{% endfor %}
+{% endblock %}

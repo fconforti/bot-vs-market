@@ -1,0 +1,33 @@
+[project]
+name = "finance"
+version = "0.1.0"
+description = "An autonomous Claude agent managing a small real Scalable Broker portfolio, with strategy as code and a public journal."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "yfinance>=0.2.50",
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "jinja2>=3.1",
+    "markdown>=3.6",
+    "matplotlib>=3.9",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["finance", "strategy"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.uv]
+package = true

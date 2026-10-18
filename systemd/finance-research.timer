@@ -1,0 +1,10 @@
+[Unit]
+Description=finance: run the research session Saturdays at 10:00 Europe/Rome
+
+[Timer]
+OnCalendar=Sat 10:00 Europe/Rome
+Persistent=true
+Unit=finance-research.service
+
+[Install]
+WantedBy=timers.target

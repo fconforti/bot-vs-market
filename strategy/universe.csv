@@ -1,0 +1,45 @@
+isin,ticker,name,type,prime
+IE00B4L5Y983,EUNL.DE,iShares Core MSCI World UCITS ETF (Acc),etf,true
+IE00B5BMR087,SXR8.DE,iShares Core S&P 500 UCITS ETF (Acc),etf,true
+IE00BKM4GZ66,IS3N.DE,iShares Core MSCI EM IMI UCITS ETF (Acc),etf,true
+IE00B53SZB19,SXRV.DE,iShares NASDAQ 100 UCITS ETF (Acc),etf,true
+DE0005933931,EXS1.DE,iShares Core DAX UCITS ETF,etf,true
+DE0002635307,EXSA.DE,iShares STOXX Europe 600 UCITS ETF,etf,true
+IE00B53L3W79,SXRT.DE,iShares Core EURO STOXX 50 UCITS ETF (Acc),etf,true
+IE00BF4RFH31,IUSN.DE,iShares MSCI World Small Cap UCITS ETF,etf,true
+DE000A0H08D2,EXX7.DE,iShares Nikkei 225 UCITS ETF,etf,true
+IE00BM67HT60,XDWT.DE,Xtrackers MSCI World Information Technology UCITS ETF,etf,true
+IE00BM67HK77,XDWH.DE,Xtrackers MSCI World Health Care UCITS ETF,etf,true
+IE00BM67HN09,XDWF.DE,Xtrackers MSCI World Financials UCITS ETF,etf,true
+IE00BM67HM91,XDW0.DE,Xtrackers MSCI World Energy UCITS ETF,etf,true
+IE00BL25JP72,XDEM.DE,Xtrackers MSCI World Momentum UCITS ETF,etf,true
+IE00BL25JL35,XDEQ.DE,Xtrackers MSCI World Quality UCITS ETF,etf,true
+IE00BL25JM42,XDEV.DE,Xtrackers MSCI World Value UCITS ETF,etf,true
+IE00BL25JN58,XDEB.DE,Xtrackers MSCI World Minimum Volatility UCITS ETF,etf,true
+IE00B3WJKG14,QDVE.DE,iShares S&P 500 Information Technology Sector UCITS ETF,etf,true
+IE00B43HR379,QDVG.DE,iShares S&P 500 Health Care Sector UCITS ETF,etf,true
+IE00B4JNQZ49,QDVH.DE,iShares S&P 500 Financials Sector UCITS ETF,etf,true
+IE00B42NKQ00,QDVF.DE,iShares S&P 500 Energy Sector UCITS ETF,etf,true
+IE00B1XNHC34,IQQH.DE,iShares Global Clean Energy UCITS ETF,etf,true
+IE00B6R52036,IS0E.DE,iShares Gold Producers UCITS ETF,etf,true
+IE00BMC38736,VVSM.DE,VanEck Semiconductor UCITS ETF,etf,false
+DE000A0S9GB0,4GLD.DE,Xetra-Gold,etc,false
+IE00B4ND3602,PPFB.DE,iShares Physical Gold ETC,etc,false
+DE000A27Z304,BTCE.DE,ETC Group Physical Bitcoin,crypto,false
+LU0290358497,XEON.DE,Xtrackers II EUR Overnight Rate Swap UCITS ETF,cash,true
+DE000A0Q4RZ9,EXVM.DE,iShares eb.rexx Government Germany 0-1yr UCITS ETF,cash,true
+DE0007164600,SAP.DE,SAP SE,stock,false
+DE0007236101,SIE.DE,Siemens AG,stock,false
+DE0008404005,ALV.DE,Allianz SE,stock,false
+DE0007030009,RHM.DE,Rheinmetall AG,stock,false
+DE000ENER6Y0,ENR.DE,Siemens Energy AG,stock,false
+NL0010273215,ASME.DE,ASML Holding NV,stock,false
+NL0000235190,AIR.DE,Airbus SE,stock,false
+FR0000121014,MOH.DE,LVMH Moet Hennessy Louis Vuitton SE,stock,false
+DE0005557508,DTE.DE,Deutsche Telekom AG,stock,false
+US0378331005,APC.DE,Apple Inc,stock,false
+US5949181045,MSF.DE,Microsoft Corp,stock,false
+US67066G1040,NVD.DE,NVIDIA Corp,stock,false
+US0231351067,AMZ.DE,Amazon.com Inc,stock,false
+US02079K3059,ABEA.DE,Alphabet Inc Class A,stock,false
+US88160R1014,TL0.DE,Tesla Inc,stock,false

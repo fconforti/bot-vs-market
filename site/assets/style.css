@@ -1,0 +1,50 @@
+:root {
+  --bg: #fafafa; --fg: #1f2328; --muted: #6b7280; --card: #ffffff; --line: #e5e7eb;
+  --accent: #2563eb; --pos: #15803d; --neg: #b91c1c; --warn: #b45309; --tagbg: #eef2ff;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0f1115; --fg: #e5e7eb; --muted: #9ca3af; --card: #171a21; --line: #2a2f3a; --accent: #60a5fa; --pos: #4ade80; --neg: #f87171; --warn: #fbbf24; --tagbg: #1e293b; }
+}
+* { box-sizing: border-box; }
+html { font-size: 16px; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.55; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+header.top { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; padding: .75rem 1rem; border-bottom: 1px solid var(--line); background: var(--card); position: sticky; top: 0; z-index: 2; }
+header .brand { font-weight: 700; font-size: 1.1rem; color: var(--fg); margin-right: .5rem; }
+header nav { display: flex; flex-wrap: wrap; gap: .25rem .9rem; font-size: .95rem; }
+header nav a.active { font-weight: 600; color: var(--fg); border-bottom: 2px solid var(--accent); }
+main { max-width: 1040px; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
+footer { max-width: 1040px; margin: 0 auto; padding: 1rem; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); }
+h1 { font-size: 1.7rem; margin: .5rem 0 1rem; line-height: 1.2; }
+h2 { font-size: 1.25rem; margin: 2rem 0 .75rem; }
+h3 { font-size: 1.05rem; margin: 1.25rem 0 .5rem; }
+.lede { font-size: 1.05rem; color: var(--muted); }
+.muted { color: var(--muted); }
+.small { font-size: .85rem; }
+.pos { color: var(--pos); } .neg { color: var(--neg); }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.25rem; margin: 1rem 0; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .75rem; margin: 1rem 0; }
+.tile { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: .9rem 1rem; }
+.tile .k { font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.tile .v { font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.tile .s { font-size: .8rem; color: var(--muted); }
+.chart { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: .75rem; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .45rem .6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tag { display: inline-block; font-size: .72rem; padding: .05rem .45rem; border-radius: 999px; background: var(--tagbg); color: var(--fg); text-transform: uppercase; letter-spacing: .03em; }
+.tag.executed { background: rgba(21,128,61,.15); color: var(--pos); }
+.tag.rejected, .tag.aborted, .tag.unknown { background: rgba(185,28,28,.15); color: var(--neg); }
+.tag.warn, .tag.dry_run { background: rgba(180,83,9,.15); color: var(--warn); }
+.entry .meta { font-size: .85rem; color: var(--muted); margin-bottom: .5rem; }
+.prose h1 { font-size: 1.35rem; } .prose h2 { font-size: 1.1rem; margin-top: 1.25rem; } .prose h3 { font-size: 1rem; }
+.prose pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: .75rem; overflow-x: auto; font-size: .82rem; }
+.prose code { font-size: .88em; background: var(--bg); padding: .05em .3em; border-radius: 4px; }
+.prose pre code { background: none; padding: 0; }
+.prose table { font-size: .85rem; }
+.prose img { max-width: 100%; height: auto; }
+.disclaimer { border-left: 4px solid var(--warn); background: var(--card); padding: .75rem 1rem; border-radius: 6px; margin: 1.5rem 0; }
+img { max-width: 100%; height: auto; border-radius: 8px; }
+@media (max-width: 600px) { html { font-size: 15px; } h1 { font-size: 1.4rem; } .tile .v { font-size: 1.25rem; } }

@@ -1,0 +1,1 @@
+{"ok":true,"command":"broker.chart","data":{"_fixture":"FIXTURE DATA","isin":"","timeframe":"1m","currency":"EUR","source":"FIXTURE","closing_reference_point":{"mid_price":"100.0","timestamp_utc":"2026-10-16T15:30:00.000Z"},"data_points":[],"point_count":0}}

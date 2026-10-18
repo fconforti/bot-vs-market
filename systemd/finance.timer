@@ -1,0 +1,11 @@
+[Unit]
+Description=finance: run the daily session Mon-Fri at 18:15 Europe/Rome
+
+[Timer]
+OnCalendar=Mon..Fri 18:15 Europe/Rome
+Persistent=true
+RandomizedDelaySec=120
+Unit=finance.service
+
+[Install]
+WantedBy=timers.target
