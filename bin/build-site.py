@@ -34,10 +34,15 @@ MD_ANCHORS = markdown.Markdown(extensions=["tables", "fenced_code", "sane_lists"
                                extension_configs={"toc": {"anchorlink": False, "toc_depth": "3-3"}})
 
 
+def scroll_tables(html: str) -> str:
+    """Wrap tables so wide ones scroll sideways on phones instead of widening the page."""
+    return html.replace("<table>", '<div class="table-scroll"><table>').replace("</table>", "</table></div>")
+
+
 def md(text: str, anchors: bool = False) -> str:
     conv = MD_ANCHORS if anchors else MD
     conv.reset()
-    return conv.convert(text)
+    return scroll_tables(conv.convert(text))
 
 
 def strip_h1(text: str) -> str:
@@ -90,7 +95,7 @@ def strategy_doc(text: str) -> dict:
     m = _re.search(r"^## [^\n]*plain language[^\n]*\n+(.+?)\n\n", body, _re.M | _re.S)
     summary = " ".join(m.group(1).split()) if m else ""
     MD_SECTIONS.reset()
-    html = MD_SECTIONS.convert(body)
+    html = scroll_tables(MD_SECTIONS.convert(body))
     sections = [{"title": t["name"], "slug": t["id"]} for t in MD_SECTIONS.toc_tokens if t["level"] == 2]
     return {"summary": summary, "html": html, "sections": sections}
 

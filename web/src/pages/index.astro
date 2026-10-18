@@ -91,7 +91,7 @@ const initial = new Intl.NumberFormat("en-IE").format(site.initial_eur);
   .h-eyebrow { grid-area: eyebrow; } .h-title { grid-area: title; } .h-lede { grid-area: lede; } .h-cta { grid-area: cta; } .h-status { grid-area: status; }
   .hero-art { grid-area: art; min-width: 0; display: flex; padding-top: 4px; }
   @media (max-width: 900px) {
-    .hero { grid-template-columns: 1fr; grid-template-areas: "eyebrow" "title" "lede" "cta" "status" "art"; }
+    .hero { grid-template-columns: minmax(0, 1fr); grid-template-areas: "eyebrow" "title" "lede" "cta" "status" "art"; }
     .hero-art { height: 300px; margin-top: 36px; }
   }
   .hero h1 { font-size: clamp(2.3rem, 5.2vw, 4.1rem); max-width: 17ch; line-height: 1.04; letter-spacing: -.025em; }

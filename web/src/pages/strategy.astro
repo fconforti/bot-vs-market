@@ -150,12 +150,12 @@ const termFor: Record<string, string> = { cagr: "cagr", max_drawdown: "drawdown"
   .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
   .toc a { display: block; padding: 6px 10px; border-radius: 8px; font-size: .86rem; color: var(--fg-soft); text-decoration: none; line-height: 1.35; }
   .toc a:hover { background: var(--bg-sunk); color: var(--fg); }
-  @media (max-width: 900px) { .details-grid { grid-template-columns: 1fr; } .toc { display: none; } }
+  @media (max-width: 900px) { .details-grid { grid-template-columns: minmax(0, 1fr); } .toc { display: none; } }
   .split { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: start; }
   .metrics :global(th), .metrics :global(td) { padding-inline: 12px; }
   .metrics :global(th:first-child), .metrics :global(td:first-child) { padding-left: 20px; }
   .metrics :global(th:last-child), .metrics :global(td:last-child) { padding-right: 20px; }
-  @media (max-width: 1100px) { .split { grid-template-columns: 1fr; } }
+  @media (max-width: 1100px) { .split { grid-template-columns: minmax(0, 1fr); } }
   .kpi { padding: 18px 20px; display: grid; gap: 4px; }
   .kpi .k { font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
   .kpi .v { font-size: 1.7rem; letter-spacing: -.02em; }

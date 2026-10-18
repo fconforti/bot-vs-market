@@ -30,7 +30,7 @@ const terms = [...site.glossary.terms].sort((a: any, b: any) => a.title.localeCo
   .gloss :global(h3:target) { color: var(--accent); }
   .gloss :global(h3:target + p) { background: var(--accent-soft); box-shadow: 0 0 0 8px var(--accent-soft); border-radius: 4px; }
   .gloss :global(.hidden) { display: none; }
-  @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } .index { position: static; } .index ul { display: flex; flex-wrap: wrap; gap: 6px; max-height: none; } .index a { border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; } }
+  @media (max-width: 860px) { .layout { grid-template-columns: minmax(0, 1fr); } .index { position: static; } .index ul { display: flex; flex-wrap: wrap; gap: 6px; max-height: none; } .index a { border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; } }
 </style>
 <script>
   const q = document.getElementById("q") as HTMLInputElement | null;

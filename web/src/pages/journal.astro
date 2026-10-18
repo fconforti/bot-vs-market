@@ -46,5 +46,5 @@ const entries = site.journal;
   .entry { padding: clamp(20px, 3.4vw, 40px); }
   .meta { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
   .date { font-weight: 600; color: var(--fg); text-decoration: none; }
-  @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } .toc { display: none; } }
+  @media (max-width: 860px) { .layout { grid-template-columns: minmax(0, 1fr); } .toc { display: none; } }
 </style>

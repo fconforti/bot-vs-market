@@ -145,7 +145,10 @@ table.data .sub { display: block; font-size: .78rem; color: var(--muted); margin
 .prose code { font-family: var(--font-mono); font-size: .84em; background: var(--bg-sunk); border: 1px solid var(--line); padding: .08em .35em; border-radius: 5px; overflow-wrap: anywhere; }
 .prose pre { background: var(--bg-sunk); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 14px 16px; overflow-x: auto; font-size: .8rem; line-height: 1.55; }
 .prose pre code { background: none; border: 0; padding: 0; overflow-wrap: normal; }
-.prose table { width: 100%; border-collapse: collapse; font-size: .86rem; margin: 1.2em 0; }
+.prose .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1.2em 0; }
+.prose table { width: 100%; border-collapse: collapse; font-size: .86rem; margin: 0; }
+.prose .table-scroll table { min-width: 34rem; }
+.prose .table-scroll:has(th:nth-child(3):last-child) table, .prose .table-scroll:has(th:nth-child(2):last-child) table { min-width: 0; }
 .prose th, .prose td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
 .prose :is(th, td):first-child { padding-left: 0; }
 .prose :is(th, td):last-child { padding-right: 0; }
