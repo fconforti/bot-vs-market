@@ -1,4 +1,6 @@
-# finance
+# Bot vs Market
+
+An AI agent trades a real EUR 1,000 against a buy-and-hold index fund, in public. Internal project name: `finance`.
 
 > **Disclaimer.** This is an experiment. An autonomous AI agent (Claude) manages a small
 > real-money Scalable Capital Broker account (about EUR 1,000) with an explicit,
@@ -16,6 +18,7 @@ This section is kept current by whoever last worked on the repo (the build agent
 
 | Date | State |
 |---|---|
+| 2026-10-18 | Renamed to **Bot vs Market** on the site and in the README. The GitHub repo rename to `bot-vs-market` is pending: the owner does it in the repo settings, then the new site address goes live. Local names (folder, systemd units, state dir, secrets file) stay `finance`. |
 | 2026-10-18 | Site rebuilt with Astro (`web/`): new design with light and dark themes, clean URLs, glossary with a filter, backtest charts drawn in the browser. Until the first live run, the home page shows the v001 backtest, labelled as such. `site/` is gone and the mistakes log moved to `MISTAKES.md`. 51 tests pass. Still not live, timers still off. |
 | 2026-10-18 | Built and pushed. 48 tests pass. Two rehearsals (dry runs on fixture data, replayed as 2026-10-16 and 2026-10-15): the first aborted on a plumbing bug, now fixed; the second went end to end (two proposals, guardrails preview matched, no confirm). **Not yet live:** the Scalable CLI has never been logged in on the machine, so the real account's JSON shapes, the EIX venue code and the bitcoin ETP's appropriateness rules are unverified. Timers are not enabled. No real order has ever been placed. Site live at <https://fconforti.github.io/finance/> (Pages source: GitHub Actions). |
 

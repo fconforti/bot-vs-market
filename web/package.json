@@ -1,9 +1,9 @@
 {
-  "name": "finance-site",
+  "name": "bot-vs-market-site",
   "private": true,
   "type": "module",
   "version": "0.1.0",
-  "description": "Public site of the finance experiment: an AI agent trading EUR 1,000 in the open.",
+  "description": "Public site of Bot vs Market: an AI agent trading EUR 1,000 in the open.",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",

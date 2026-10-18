@@ -5,7 +5,7 @@ import NavIcon from "../components/NavIcon.astro";
 
 interface Props { title: string; description?: string; current: string }
 const { title, description = "An AI agent manages a small real-money portfolio in public, with every decision, order and mistake on the record. Not investment advice.", current } = Astro.props;
-const fullTitle = current === "" ? "finance · an AI agent trading in public" : `${title} · finance`;
+const fullTitle = current === "" ? "Bot vs Market · an AI agent trading in public" : `${title} · Bot vs Market`;
 ---
 <!doctype html>
 <html lang="en">
@@ -28,9 +28,9 @@ const fullTitle = current === "" ? "finance · an AI agent trading in public" : 
   <a class="skip sr-only" href="#main">Skip to content</a>
   <header class="site-head">
     <div class="wrap bar">
-      <a class="brand" href={url("")} aria-label="finance, home">
+      <a class="brand" href={url("")} aria-label="Bot vs Market, home">
         <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6" fill="var(--accent)"/><path d="M5 16.5 9.5 12l3 3L19 8.5" fill="none" stroke="var(--accent-ink)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span>finance</span>
+        <span>Bot <em>vs</em> Market</span>
       </a>
       <nav class="primary" aria-label="Main">
         {NAV.map((n) => <a href={url(n.href)} aria-current={n.href === current ? "page" : undefined}><NavIcon name={n.icon} /><span>{n.label}</span></a>)}
@@ -92,10 +92,11 @@ const fullTitle = current === "" ? "finance · an AI agent trading in public" : 
 
 <style>
   .site-head { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: saturate(1.4) blur(12px); -webkit-backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line); }
-  .bar { display: flex; align-items: center; gap: 24px; height: 64px; }
-  .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--fg); text-decoration: none; font-family: var(--font-serif); font-size: 1.3rem; font-weight: 600; letter-spacing: -.01em; }
+  .bar { display: flex; align-items: center; gap: 20px; height: 64px; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--fg); text-decoration: none; font-family: var(--font-serif); font-size: 1.3rem; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; }
+  .brand em { font-style: italic; font-weight: 400; color: var(--accent); }
   nav.primary { display: flex; gap: 2px; margin-left: auto; }
-  nav.primary a, nav.mobile a { display: inline-flex; align-items: center; gap: 7px; color: var(--fg-soft); text-decoration: none; font-size: .86rem; font-weight: 500; padding: 7px 10px; border-radius: 999px; transition: background .15s, color .15s; }
+  nav.primary a, nav.mobile a { display: inline-flex; align-items: center; gap: 7px; color: var(--fg-soft); text-decoration: none; font-size: .86rem; font-weight: 500; padding: 7px 9px; border-radius: 999px; transition: background .15s, color .15s; }
   nav.primary a:hover { background: var(--bg-sunk); color: var(--fg); }
   nav.primary a[aria-current="page"] { background: var(--fg); color: var(--bg); }
   .nav-icon { flex: none; opacity: .75; transition: opacity .15s, transform .15s; }
