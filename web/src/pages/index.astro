@@ -4,6 +4,7 @@ import Stat from "../components/Stat.astro";
 import Term from "../components/Term.astro";
 import Empty from "../components/Empty.astro";
 import LineChart from "../components/LineChart.astro";
+import HeroChart from "../components/HeroChart.astro";
 import { site, url, eur, pct, tone, fmtDate, statusTone } from "../lib/site";
 
 const h = site.home;
@@ -12,6 +13,7 @@ const initial = new Intl.NumberFormat("en-IE").format(site.initial_eur);
 ---
 <Base title="Overview" current="">
   <section class="hero wrap">
+    <div class="hero-text">
     <p class="eyebrow rise">A public experiment · strategy {site.version}</p>
     <h1 class="rise d1">An AI agent manages <span class="hl">€{initial}</span> of real money, in the open.</h1>
     <p class="lede rise d2">
@@ -27,6 +29,8 @@ const initial = new Intl.NumberFormat("en-IE").format(site.initial_eur);
         ? <>Last session <a href={url(`journal/#${h.last_session.date}`)}>{fmtDate(h.last_session.date)}</a>{h.last_session.status && <span class={`tag ${statusTone(h.last_session.status)}`}>{h.last_session.status}</span>}</>
         : <><span class="tag warn">Not live yet</span> The first live session has not run.</>}
     </p>
+    </div>
+    <div class="hero-art"><HeroChart /></div>
   </section>
 
   <section class="wrap block">
@@ -81,8 +85,10 @@ const initial = new Intl.NumberFormat("en-IE").format(site.initial_eur);
 </Base>
 
 <style>
-  .hero { padding-block: clamp(56px, 10vw, 112px) 32px; }
-  .hero h1 { font-size: clamp(2.3rem, 6.4vw, 4.4rem); max-width: 17ch; line-height: 1.04; letter-spacing: -.025em; }
+  .hero { padding-block: clamp(56px, 10vw, 112px) 32px; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: center; }
+  .hero-art { min-width: 0; }
+  @media (max-width: 900px) { .hero { grid-template-columns: 1fr; } .hero-art { max-width: 520px; margin-top: 8px; } }
+  .hero h1 { font-size: clamp(2.3rem, 5.2vw, 4.1rem); max-width: 17ch; line-height: 1.04; letter-spacing: -.025em; }
   .hl { font-style: italic; color: var(--accent); }
   .hero .lede { max-width: 60ch; font-size: clamp(1.02rem, 1.6vw, 1.15rem); color: var(--fg-soft); margin: 22px 0 0; }
   .cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
