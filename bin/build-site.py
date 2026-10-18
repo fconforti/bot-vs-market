@@ -280,6 +280,10 @@ def build_data() -> dict:
         "glossary": {"html": md(glossary_body(glossary_md), anchors=True), "terms": glossary_terms(glossary_md)},
         "mandate_html": md(strip_h1(mandate_md)),
         "venue": man.venue if hasattr(man, "venue") else None,
+        "limits": {"max_order_pct": man.limits.max_order_pct_of_nav, "max_orders_per_day": man.limits.max_orders_per_day,
+                   "max_position_pct": man.limits.max_position_pct_of_nav, "min_order_eur": man.limits.min_order_eur,
+                   "order_types": sorted(man.limits.allowed_order_types()), "session_time": man.session_time,
+                   "order_fee_eur": man.order_fee_eur},
     }
 
 

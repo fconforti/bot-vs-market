@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-18 16:16 UTC",
+ "built_at": "2026-10-18 17:29 UTC",
  "repo_url": "https://github.com/fconforti/bot-vs-market",
  "site_url": "https://fconforti.github.io/bot-vs-market/",
  "version": "v001",
@@ -2598,5 +2598,16 @@
   ]
  },
  "mandate_html": "<p>This is the human-readable mandate for the <code>finance</code> agent. <code>mandate.toml</code> holds the\nsame limits in machine-readable form and is what <code>bin/guardrails.py</code> enforces. The\nagent reads this file at the start of every run. The owner may edit both files; the\nrunner re-reads them every run.</p>\n<h2>Capital</h2>\n<ul>\n<li>The budget is whatever is in the Scalable Broker account. Never request more. Never\n  transfer anything out.</li>\n<li>The owner accepts the risk of losing the entire amount. Total loss is an accepted\n  outcome. The guardrails exist to protect the capital from bugs, misreads and\n  prompt-level drift, not from the strategy.</li>\n</ul>\n<h2>Objective</h2>\n<p>Maximise the total return of the portfolio, measured in EUR, against a buy-and-hold\nbenchmark of the same starting amount in the iShares Core MSCI World UCITS ETF\n(<code>IE00B4L5Y983</code>), from the date of the first live run.</p>\n<h2>Instruments</h2>\n<p>Anything tradable through the Scalable Broker and the <code>sc</code> CLI: stocks, ETFs, ETCs and\nETPs including crypto ETPs. Derivatives, margin and securities lending are out of\nscope. Instruments that require an appropriateness warning acknowledgement or a\nquestionnaire are rejected by the guardrails.</p>\n<h2>Limits (enforced in code by <code>bin/guardrails.py</code>)</h2>\n<div class=\"table-scroll\"><table>\n<thead>\n<tr>\n<th>Rule</th>\n<th>Value</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Max order size</td>\n<td>25% of NAV</td>\n</tr>\n<tr>\n<td>Max orders per day</td>\n<td>2 orders sent for confirmation (executed, or confirm sent with unknown outcome); rejections before confirm and dry runs do not count</td>\n</tr>\n<tr>\n<td>Max resulting position</td>\n<td>40% of NAV</td>\n</tr>\n<tr>\n<td>Min order</td>\n<td>EUR 25</td>\n</tr>\n<tr>\n<td>Order types</td>\n<td>market only (limit and stop disabled until open orders can be tracked)</td>\n</tr>\n<tr>\n<td>Venue</td>\n<td>European Investor Exchange (<code>SEIX</code>)</td>\n</tr>\n<tr>\n<td>Trading days</td>\n<td>Monday to Friday, Xetra holidays excluded</td>\n</tr>\n<tr>\n<td>Session</td>\n<td>18:15 Europe/Rome</td>\n</tr>\n</tbody>\n</table></div>\n<h2>Hard stops</h2>\n<p>Any CLI error, auth failure, malformed JSON, or a preview that does not match the\nproposed order aborts the run. The journal explains the abort. No order is placed.\nA confirm is never retried. If <code>HALTED</code> exists in the repo root, the run exits\nimmediately.</p>\n<h2>Honesty rules</h2>\n<ul>\n<li>Past journal entries, trade files and snapshots are never edited. Corrections go in\n  a new entry. A pre-commit hook rejects commits that modify them.</li>\n<li>The public site shows the full history of live runs, including rejected orders and\n  aborted runs. Rehearsals (dry runs) are kept in the repository but are not published.</li>\n<li>The agent writes for a smart reader who will check the numbers.</li>\n</ul>\n<h2>What the daily session may and may not do</h2>\n<ul>\n<li>It executes the current strategy version. It may refuse to trade and must explain\n  why. It may not change the strategy, its parameters or the universe.</li>\n<li>It may append observations to <code>research/inbox.md</code> for the next research session.</li>\n<li>Prefer doing nothing over doing something unjustified.</li>\n</ul>\n<h2>What the research session may do</h2>\n<ul>\n<li>Form at most one testable hypothesis per week, backtest it against the current\n  version, and adopt it only with a written argument covering overfitting and regime\n  risk. Bias toward not changing things.</li>\n</ul>",
- "venue": "SEIX"
+ "venue": "SEIX",
+ "limits": {
+  "max_order_pct": 0.25,
+  "max_orders_per_day": 2,
+  "max_position_pct": 0.4,
+  "min_order_eur": 25.0,
+  "order_types": [
+   "market"
+  ],
+  "session_time": "18:15",
+  "order_fee_eur": 0.99
+ }
 }

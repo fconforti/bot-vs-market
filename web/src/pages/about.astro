@@ -3,32 +3,134 @@ import Base from "../layouts/Base.astro";
 import PageHead from "../components/PageHead.astro";
 import Term from "../components/Term.astro";
 import { site, url } from "../lib/site";
+
 const initial = new Intl.NumberFormat("en-IE").format(site.initial_eur);
+const L = site.limits || {};
+const pc = (v: number) => `${Math.round(v * 100)}%`;
+const types = (L.order_types || ["market"]).join(" and ");
+
+const layers = [
+  { name: "Broker controls", text: "The Scalable CLI can enforce its own order-size cap and instrument allow-list, set outside this repository, so even a bug in this code would be stopped there." },
+  { name: "Mandate", term: "mandate", text: `Hard limits, re-read on every order: at most ${pc(L.max_order_pct)} of the portfolio per order, ${pc(L.max_position_pct)} in any one position, ${L.max_orders_per_day} orders a day, €${L.min_order_eur} minimum, ${types} orders only.` },
+  { name: "Guardrails", term: "guardrails", text: "The only code that can place an order. It validates the order, asks the broker for a preview, compares it with what was intended and confirms once. Any mismatch, warning or error means no order, and it never retries." },
+  { name: "Agent permissions", text: "The AI cannot call the broker's trade commands. It can only write its journal, trade proposals and research notes, and it cannot edit past entries or the rules." },
+  { name: "Append-only history", text: "Journal entries, trade files and snapshots are never changed after the day they are written. A pre-commit hook rejects any commit that tries." },
+  { name: "Kill switch", term: "kill-switch", text: "One command disables both schedules and leaves a HALTED file that every session checks before doing anything." },
+];
+
+const faq = [
+  { q: "Can I copy the trades?", a: `Please don't. This is not advice, the amount is tiny on purpose, and the rules are public and mechanical: a crowd copying them would be easy to trade against. In the thinnest instruments a few hundred copies would already move prices.` },
+  { q: "What happens if it loses money?", a: "It loses money, in public. The owner accepted in writing that the whole amount may be lost. Losses are reported like gains, and wrong decisions go on the Mistakes page." },
+  { q: "Does it use leverage, short selling or derivatives?", a: "No. The mandate allows stocks, ETFs, ETCs and ETPs only, bought with cash. No margin, no shorting, no derivatives, no securities lending." },
+  { q: "Who runs it?", a: `A private individual (GitHub: <a href="https://github.com/fconforti">fconforti</a>) as a personal experiment. The agent is Claude, run through Claude Code on the owner's machine. The broker is Scalable Capital; neither company is involved beyond providing its product.` },
+  { q: "Why only €1,000?", a: "Because the point is the process, not the profit. A small amount keeps the stakes honest but bounded, and every order costs real fees, so the strategy has to be cheap to run." },
+  { q: "How can I check any of this?", a: `Everything is in the <a href="${site.repo_url}">repository</a>: the strategy code, every journal entry, every trade file with the broker's preview, and every portfolio snapshot. The git history shows when each one was written, and past entries cannot be edited.` },
+];
 ---
 <Base title="About" current="about/">
   <PageHead eyebrow="The experiment" title="About">
-    An AI agent, Claude run headless through Claude Code, manages a Scalable Capital Broker account of about €{initial} with an explicit strategy written as code.
+    An AI agent, Claude run headless through Claude Code, manages a Scalable Capital Broker account of about €{initial} with an explicit strategy written as code. Every decision, order and mistake is published.
   </PageHead>
   <div class="wrap">
     <div class="callout"><p><strong>Not investment advice. Real money. The owner accepts total loss.</strong> Nothing here is a recommendation. Do not copy these trades.</p></div>
 
-    <section class="block grid cards">
-      <div class="card pad"><p class="eyebrow">Weekdays · 18:15</p><h3>Daily session</h3><p>Snapshots the account, refreshes prices, writes a market view, runs the strategy, and either executes its orders through the <Term id="guardrails">guardrails</Term> or refuses with a written reason.</p></div>
-      <div class="card pad"><p class="eyebrow">Saturdays</p><h3>Research session</h3><p>Reviews the week, tests at most one hypothesis against the <Term id="backtest">backtest</Term>, and may adopt a new <Term id="strategy-version">strategy version</Term> with a written argument.</p></div>
-      <div class="card pad"><p class="eyebrow">Every order</p><h3>Preview, then confirm</h3><p>Orders go through the official Scalable CLI in a two-phase <Term id="preview-and-confirm">preview and confirm</Term> flow. Any mismatch between preview and proposal stops the order. There are no retries.</p></div>
-      <div class="card pad"><p class="eyebrow">Always</p><h3>Append-only history</h3><p>Journal entries, trade files and snapshots are never edited after the fact. A pre-commit hook rejects commits that try. The <Term id="kill-switch">kill switch</Term> stops everything.</p></div>
+    <section class="block">
+      <div class="block-head"><h2>How it runs</h2><p>Two scheduled sessions, no human approval</p></div>
+      <div class="grid cards">
+        <div class="card pad"><p class="eyebrow">Weekdays · {L.session_time}</p><h3>Daily session</h3><p>Snapshots the account, refreshes prices, writes a market view, runs the strategy, and either executes its orders through the <Term id="guardrails">guardrails</Term> or refuses with a written reason.</p></div>
+        <div class="card pad"><p class="eyebrow">Saturdays</p><h3>Research session</h3><p>Reviews the week, tests at most one hypothesis against the <Term id="backtest">backtest</Term>, and may adopt a new <Term id="strategy-version">strategy version</Term> with a written argument.</p></div>
+        <div class="card pad"><p class="eyebrow">Every order</p><h3>Preview, then confirm</h3><p>Orders go through the official Scalable CLI in a two-step <Term id="preview-and-confirm">preview and confirm</Term> flow. Any mismatch between preview and proposal stops the order. There are no retries.</p></div>
+        <div class="card pad"><p class="eyebrow">Always</p><h3>Everything on the record</h3><p>Journal entries, trade files and snapshots are committed to a public repository after every session and never edited afterwards.</p></div>
+      </div>
     </section>
 
     <section class="block">
-      <div class="block-head"><h2>Mandate</h2><p>The rules the agent cannot change. See also <Term id="mandate">mandate</Term> and <Term id="guardrails">guardrails</Term>.</p></div>
+      <div class="block-head"><h2>What the agent looks at</h2><p>Prices make the decisions; news only informs them</p></div>
+      <div class="grid cards">
+        <div class="card pad"><p class="eyebrow">The rules</p><h3>Prices only</h3><p>The strategy reads daily closing prices for a fixed list of instruments: whether the MSCI World is above its <Term id="sma">200-day average</Term>, and each instrument's <Term id="momentum-12-1">12-month momentum</Term>. No volume, valuations, earnings, macro data or sentiment goes into any signal.</p></div>
+        <div class="card pad"><p class="eyebrow">The judgement</p><h3>News, never orders</h3><p>The daily session reads the market wrap, the coming week's economic calendar and news on each holding. With that it can refuse to trade, with a written reason, or leave a note for the weekly review. It cannot change an order.</p></div>
+        <div class="card pad"><p class="eyebrow">The changes</p><h3>Once a week, from evidence</h3><p>Only the Saturday session may change the strategy. It reviews real fills, slippage and fees, the notes and the <a href={url("mistakes/")}>mistakes</a>, and adopts a change only if it also holds on the most recent, <Term id="in-sample-and-out-of-sample">out-of-sample</Term> part of the history. Its default is no change.</p></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="block-head"><h2>Safety layers</h2><p>From the outside in. The AI never sends an order itself.</p></div>
+      <ol class="layers card">
+        {layers.map((l, i) => (
+          <li>
+            <span class="n num">{i + 1}</span>
+            <div><h3>{l.term ? <Term id={l.term}>{l.name}</Term> : l.name}</h3><p>{l.text}</p></div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="block grid two">
+      <div class="card pad">
+        <p class="eyebrow">Autonomy</p>
+        <h2 class="h2s">Where a human is still involved</h2>
+        <ul class="list">
+          <li><strong>Nobody approves orders.</strong> The guardrails preview and confirm on their own.</li>
+          <li><strong>Broker login.</strong> Scalable's login is a device code a person has to enter. When the session expires, the daily run stops before trading and says so in the journal until the owner logs in again.</li>
+          <li><strong>The rules.</strong> The mandate, the guardrails and the infrastructure belong to the owner. The agent can change only the strategy, and only through the weekly review.</li>
+          <li><strong>The off switch.</strong> The owner can stop everything at any time with the kill switch.</li>
+        </ul>
+      </div>
+      <div class="card pad">
+        <p class="eyebrow">Honesty</p>
+        <h2 class="h2s">Why to be sceptical of the numbers</h2>
+        <ul class="list">
+          <li><strong>The backtest flatters itself.</strong> The instrument list was chosen today, so it includes stocks that are big because they won. That is <Term id="survivorship-bias">survivorship bias</Term>, and live results should be expected to be worse.</li>
+          <li><strong>The sample is tiny.</strong> A few months of a €{initial} account say almost nothing about whether the strategy is any good.</li>
+          <li><strong>A backtest is not trading.</strong> Real fills, evening spreads and €{L.order_fee_eur} fees on small orders all cost more than a model assumes.</li>
+          <li><strong>The agent can be wrong.</strong> Its market views and refusals are judgement, not proof. When they turn out wrong, they go on the <a href={url("mistakes/")}>Mistakes</a> page.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="block-head"><h2>Questions</h2></div>
+      <div class="faq card">
+        {faq.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <p set:html={f.a} />
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="block-head"><h2>Mandate</h2><p>The full rules, as the agent reads them. See also <Term id="mandate">mandate</Term> and <Term id="guardrails">guardrails</Term>.</p></div>
       <article class="card pad prose wide doc" set:html={site.mandate_html} />
     </section>
     <p class="muted">Source and full history: <a href={site.repo_url}>{site.repo_url.replace("https://", "")}</a>. Terms: <a href={url("glossary/")}>glossary</a>.</p>
   </div>
 </Base>
 <style>
-  .cards { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .cards { grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
   .cards h3 { margin-bottom: 8px; }
   .cards p:last-child { margin: 0; color: var(--fg-soft); font-size: .94rem; }
   .doc { padding: clamp(24px, 4vw, 48px); }
+
+  .layers { list-style: none; margin: 0; padding: 8px clamp(16px, 3vw, 32px); }
+  .layers li { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 16px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+  .layers li:last-child { border-bottom: 0; }
+  .layers .n { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-size: .9rem; font-weight: 600; }
+  .layers h3 { font-size: 1.15rem; margin: 6px 0 6px; }
+  .layers p { margin: 0; color: var(--fg-soft); font-size: .95rem; }
+
+  .h2s { font-size: 1.45rem; margin-bottom: 14px; }
+  .list { margin: 0; padding-left: 1.1em; display: grid; gap: 12px; color: var(--fg-soft); font-size: .95rem; }
+  .list li::marker { color: var(--muted); }
+  .list strong { color: var(--fg); }
+
+  .faq { padding: 0 clamp(16px, 3vw, 32px); }
+  .faq details { border-bottom: 1px solid var(--line); }
+  .faq details:last-child { border-bottom: 0; }
+  .faq summary { cursor: pointer; list-style: none; padding: 20px 32px 20px 0; position: relative; font-family: var(--font-serif); font-size: 1.15rem; color: var(--fg); }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; position: absolute; right: 4px; top: 50%; transform: translateY(-50%); font-family: var(--font-sans); font-size: 1.3rem; color: var(--muted); transition: transform .2s; }
+  .faq details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+  .faq p { margin: -6px 0 20px; color: var(--fg-soft); max-width: 75ch; }
 </style>
