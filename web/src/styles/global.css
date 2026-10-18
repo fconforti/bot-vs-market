@@ -89,7 +89,8 @@ section.block { margin-block: 48px; }
 .card.pad { padding: clamp(20px, 3vw, 32px); }
 
 .grid { display: grid; gap: 16px; }
-.grid.stats { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+.grid.stats { grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); }
+@media (max-width: 520px) { .grid.stats { gap: 10px; } }
 .grid.two { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
 
 /* ---------- tags ---------- */
@@ -144,8 +145,12 @@ table.data .sub { display: block; font-size: .78rem; color: var(--muted); margin
 .prose code { font-family: var(--font-mono); font-size: .84em; background: var(--bg-sunk); border: 1px solid var(--line); padding: .08em .35em; border-radius: 5px; overflow-wrap: anywhere; }
 .prose pre { background: var(--bg-sunk); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 14px 16px; overflow-x: auto; font-size: .8rem; line-height: 1.55; }
 .prose pre code { background: none; border: 0; padding: 0; overflow-wrap: normal; }
-.prose table { display: block; overflow-x: auto; border-collapse: collapse; font-size: .86rem; margin: 1.2em 0; }
-.prose th, .prose td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.prose table { width: 100%; border-collapse: collapse; font-size: .86rem; margin: 1.2em 0; }
+.prose th, .prose td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.prose :is(th, td):first-child { padding-left: 0; }
+.prose :is(th, td):last-child { padding-right: 0; }
+.prose :is(h1, h2, h3, h4) code { font-size: .72em; vertical-align: .1em; }
+.prose.wide > :is(p, ul, ol, blockquote, h1, h2, h3, h4) { max-width: 80ch; }
 .prose th { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); border-bottom-color: var(--line-strong); }
 .prose blockquote { margin: 1em 0; padding: .2em 0 .2em 1em; border-left: 3px solid var(--line-strong); color: var(--muted); }
 .prose hr { border: 0; border-top: 1px solid var(--line); margin: 2em 0; }

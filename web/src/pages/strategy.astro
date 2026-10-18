@@ -14,6 +14,8 @@ const rows: [string, string | null, (v: any) => string][] = [
   ["volatility", "Volatility", P], ["trades", "Trades", (v) => (v == null ? "—" : String(v))], ["fees_eur", "Fees (EUR)", (v) => N(v)],
   ["turnover_per_year", "Turnover / year", (v) => (v == null ? "—" : `${N(v)}×`)], ["end_nav", "End NAV (EUR)", (v) => N(v)],
 ];
+// Trade counts, fees and turnover are only computed for the full period.
+const OOS_NA = new Set(["trades", "fees_eur", "turnover_per_year"]);
 const termFor: Record<string, string> = { cagr: "cagr", max_drawdown: "drawdown", sharpe: "sharpe-ratio", volatility: "volatility", turnover_per_year: "turnover", end_nav: "nav" };
 ---
 <Base title="Strategy" current="strategy/">
@@ -40,18 +42,18 @@ const termFor: Record<string, string> = { cagr: "cagr", max_drawdown: "drawdown"
           <p class="caption">Growth of €1,000, log scale. Same-day close execution, fees and spreads included.</p>
         </div>
 
-        <div class="grid two">
-          <div class="card table-wrap">
+        <div class="grid split">
+          <div class="card table-wrap metrics">
             <table class="data">
               <thead><tr><th></th><th class="r">Strategy</th><th class="r">Benchmark</th><th class="r">Strategy OOS</th><th class="r">Bench. OOS</th></tr></thead>
               <tbody>
                 {rows.map(([k, label, f]) => (
                   <tr>
-                    <td>{termFor[k] ? <Term id={termFor[k]}>{label}</Term> : label}</td>
+                    <td class="lbl">{termFor[k] ? <Term id={termFor[k]}>{label}</Term> : label}</td>
                     <td class="r num">{f(b.strategy?.[k])}</td>
                     <td class="r num muted">{f(b.benchmark?.[k])}</td>
-                    <td class="r num">{f(b.out_of_sample?.strategy?.[k])}</td>
-                    <td class="r num muted">{f(b.out_of_sample?.benchmark?.[k])}</td>
+                    <td class="r num">{OOS_NA.has(k) ? "—" : f(b.out_of_sample?.strategy?.[k])}</td>
+                    <td class="r num muted">{OOS_NA.has(k) ? "—" : f(b.out_of_sample?.benchmark?.[k])}</td>
                   </tr>
                 ))}
               </tbody>
@@ -76,6 +78,12 @@ const termFor: Record<string, string> = { cagr: "cagr", max_drawdown: "drawdown"
 </Base>
 <style>
   .bt .grid.stats { margin-bottom: 16px; }
+  .lbl { white-space: nowrap; }
+  .split { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: start; }
+  .metrics :global(th), .metrics :global(td) { padding-inline: 12px; }
+  .metrics :global(th:first-child), .metrics :global(td:first-child) { padding-left: 20px; }
+  .metrics :global(th:last-child), .metrics :global(td:last-child) { padding-right: 20px; }
+  @media (max-width: 1100px) { .split { grid-template-columns: 1fr; } }
   .kpi { padding: 18px 20px; display: grid; gap: 4px; }
   .kpi .k { font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
   .kpi .v { font-size: 1.7rem; letter-spacing: -.02em; }

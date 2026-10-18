@@ -8,7 +8,7 @@ const w = (v: number) => `${(Math.abs(v) / max) * 50}%`;
 const p = (v: number) => `${v > 0 ? "+" : ""}${(v * 100).toFixed(1)}%`;
 ---
 <div class="years">
-  <div class="legend"><span class="sw s"></span>Strategy <span class="sw b"></span>Benchmark</div>
+  <div class="legend"><span class="sw s"></span>Strategy <span class="sw b"></span>Benchmark <span class="beat">▲</span> beat the benchmark</div>
   {years.map((y) => {
     const s = yearly.strategy[y], b = yearly.benchmark[y];
     return (
@@ -18,7 +18,7 @@ const p = (v: number) => `${v > 0 ? "+" : ""}${(v * 100).toFixed(1)}%`;
           <span class={`bar s ${s < 0 ? "neg" : ""}`} style={`width:${w(s)}`}></span>
           <span class={`bar b ${b < 0 ? "neg" : ""}`} style={`width:${w(b)}`}></span>
         </div>
-        <span class={`val num ${s >= b ? "pos" : "neg"}`} title="Strategy, then benchmark">{p(s)} <span class="muted">/ {p(b)}</span></span>
+        <span class="val num" title="Strategy, then benchmark"><span class={s >= 0 ? "pos" : "neg"}>{p(s)}</span> <span class="muted">/ {p(b)}</span>{s >= b ? <span class="beat" title="Beat the benchmark">▲</span> : <span class="lag" title="Lagged the benchmark">▼</span>}</span>
       </div>
     );
   })}
@@ -28,7 +28,7 @@ const p = (v: number) => `${v > 0 ? "+" : ""}${(v * 100).toFixed(1)}%`;
   .legend { display: flex; align-items: center; gap: 8px; font-size: .8rem; color: var(--muted); margin-bottom: 6px; }
   .sw { width: 12px; height: 8px; border-radius: 2px; display: inline-block; margin-left: 8px; }
   .sw.s { background: var(--accent); } .sw.b { background: var(--bench); }
-  .row { display: grid; grid-template-columns: 44px 1fr 140px; align-items: center; gap: 12px; font-size: .82rem; }
+  .row { display: grid; grid-template-columns: 44px 1fr 160px; align-items: center; gap: 12px; font-size: .82rem; }
   .yr { color: var(--muted); }
   .track { position: relative; height: 18px; background: linear-gradient(var(--line-strong), var(--line-strong)) center / 1px 100% no-repeat; }
   .bar { position: absolute; left: 50%; height: 7px; border-radius: 0 3px 3px 0; }
@@ -36,5 +36,7 @@ const p = (v: number) => `${v > 0 ? "+" : ""}${(v * 100).toFixed(1)}%`;
   .bar.b { bottom: 1px; background: var(--bench); }
   .bar.neg { left: auto; right: 50%; border-radius: 3px 0 0 3px; }
   .val { text-align: right; white-space: nowrap; }
+  .beat, .lag { font-size: .62rem; margin-left: 6px; vertical-align: .15em; }
+  .beat { color: var(--pos); } .lag { color: var(--muted); }
   @media (max-width: 520px) { .row { grid-template-columns: 38px 1fr 92px; } .val .muted { display: none; } }
 </style>

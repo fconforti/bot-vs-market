@@ -80,6 +80,18 @@ def excerpt(text: str, max_lines: int = 30) -> str:
     return md("\n".join(lines[:max_lines]) + ("\n\n…" if len(lines) > max_lines else ""))
 
 
+def sections_only(text: str) -> str:
+    """Entries only ('## ...' sections); the page header already carries the intro."""
+    i = text.find("\n## ")
+    return text[i + 1:] if i >= 0 else ""
+
+
+def glossary_body(text: str) -> str:
+    """The terms only: the page header already carries the intro above the first term."""
+    i = text.find("\n### ")
+    return text[i + 1:] if i >= 0 else strip_h1(text)
+
+
 def glossary_terms(text: str) -> list[dict]:
     """Term index for the glossary page: one entry per '### Heading', with the same slug
     python-markdown's toc extension generates for the heading id."""
@@ -225,8 +237,8 @@ def build_data() -> dict:
                           "last": bench["series"][-1] if bench.get("series") else None},
         },
         "strategy": {"html": md(strip_h1(strategy_md)), "backtests": backtests},
-        "mistakes_html": md(strip_h1(mistakes_md)),
-        "glossary": {"html": md(strip_h1(glossary_md), anchors=True), "terms": glossary_terms(glossary_md)},
+        "mistakes_html": md(sections_only(mistakes_md)),
+        "glossary": {"html": md(glossary_body(glossary_md), anchors=True), "terms": glossary_terms(glossary_md)},
         "mandate_html": md(strip_h1(mandate_md)),
         "venue": man.venue if hasattr(man, "venue") else None,
     }

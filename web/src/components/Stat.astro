@@ -14,4 +14,5 @@ const { label, value, tone = "", note, termHref, delay = 0 } = Astro.props;
   .value { font-size: clamp(1.5rem, 3vw, 1.9rem); font-weight: 500; letter-spacing: -.02em; color: var(--fg); }
   .value.pos { color: var(--pos); } .value.neg { color: var(--neg); }
   .note { font-size: .84rem; color: var(--muted); }
+  @media (max-width: 520px) { .stat { padding: 16px; } .note { font-size: .78rem; } }
 </style>

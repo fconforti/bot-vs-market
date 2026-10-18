@@ -56,8 +56,8 @@ const initial = new Intl.NumberFormat("en-IE").format(site.initial_eur);
     <section class="block">
       <div class="card pad bench">
         <p class="eyebrow">The yardstick</p>
-        <h2><Term id="benchmark">Benchmark</Term></h2>
-        <p>{pf.benchmark.name} <span class="mono muted">{pf.benchmark.isin}</span>. €{initial} bought and held from {pf.benchmark.start_date ? fmtDate(pf.benchmark.start_date) : "the first live run"}, with no fees after the purchase.{pf.benchmark.last && <> Last value <strong class="num">{eur(pf.benchmark.last.value)}</strong> on {fmtDate(pf.benchmark.last.date)}.</>}</p>
+        <h2>Benchmark</h2>
+        <p>The <Term id="benchmark">benchmark</Term> is {pf.benchmark.name} <span class="mono muted">{pf.benchmark.isin}</span>. €{initial} bought and held from {pf.benchmark.start_date ? fmtDate(pf.benchmark.start_date) : "the first live run"}, with no fees after the purchase.{pf.benchmark.last && <> Last value <strong class="num">{eur(pf.benchmark.last.value)}</strong> on {fmtDate(pf.benchmark.last.date)}.</>}</p>
       </div>
     </section>
   </div>

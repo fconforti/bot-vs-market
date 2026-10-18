@@ -25,6 +25,9 @@ const payload = JSON.stringify({ points, labels, log });
     document.querySelectorAll<HTMLCanvasElement>("canvas[data-chart]").forEach((cv) => {
       const { points, labels, log } = JSON.parse(cv.dataset.chart || "{}");
       const ctx = cv.getContext("2d")!;
+      const narrow = cv.parentElement!.clientWidth < 560;
+      const span = points.length > 1 ? (Date.parse(points.at(-1).date) - Date.parse(points[0].date)) / 864e5 : 0;
+      const long = span > 400;
       const accent = css("--accent"), bench = css("--bench"), muted = css("--muted"), line = css("--line");
       const grad = ctx.createLinearGradient(0, 0, 0, cv.parentElement!.clientHeight);
       grad.addColorStop(0, accent + "38");
@@ -47,7 +50,7 @@ const payload = JSON.stringify({ points, labels, log });
               callbacks: { label: (c: any) => ` ${c.dataset.label}: ${c.parsed.y == null ? "—" : eur.format(c.parsed.y)}` } },
           },
           scales: {
-            x: { grid: { display: false }, border: { color: line }, ticks: { color: muted, maxTicksLimit: 7, maxRotation: 0, font: { family: "JetBrains Mono Variable", size: 11 }, callback(v: any) { const l = this.getLabelForValue(v) as string; return l.slice(0, 7); } } },
+            x: { grid: { display: false }, border: { color: line }, ticks: { color: muted, maxTicksLimit: narrow ? 4 : 8, maxRotation: 0, autoSkipPadding: 16, font: { family: "JetBrains Mono Variable", size: 11 }, callback(v: any) { const l = this.getLabelForValue(v) as string; return long ? l.slice(0, 4) : l.slice(5); } } },
             y: { type: log ? "logarithmic" : "linear", grid: { color: line }, border: { display: false }, ticks: { color: muted, maxTicksLimit: 6, font: { family: "JetBrains Mono Variable", size: 11 }, callback: (v: any) => eur.format(v) } },
           },
         },
