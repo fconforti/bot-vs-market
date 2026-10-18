@@ -27,7 +27,7 @@ const fullTitle = current === "" ? "finance · an AI agent trading in public" : 
 <body>
   <a class="skip sr-only" href="#main">Skip to content</a>
   <header class="site-head">
-    <div class="wrap bar head-wrap">
+    <div class="wrap bar">
       <a class="brand" href={url("")} aria-label="finance, home">
         <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6" fill="var(--accent)"/><path d="M5 16.5 9.5 12l3 3L19 8.5" fill="none" stroke="var(--accent-ink)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span>finance</span>
@@ -98,7 +98,6 @@ const fullTitle = current === "" ? "finance · an AI agent trading in public" : 
   nav.primary a, nav.mobile a { display: inline-flex; align-items: center; gap: 7px; color: var(--fg-soft); text-decoration: none; font-size: .86rem; font-weight: 500; padding: 7px 10px; border-radius: 999px; transition: background .15s, color .15s; }
   nav.primary a:hover { background: var(--bg-sunk); color: var(--fg); }
   nav.primary a[aria-current="page"] { background: var(--fg); color: var(--bg); }
-  .head-wrap { max-width: 1340px; }
   .nav-icon { flex: none; opacity: .75; transition: opacity .15s, transform .15s; }
   nav a:hover .nav-icon { opacity: 1; transform: translateY(-1px); }
   nav a[aria-current="page"] .nav-icon { opacity: 1; }
