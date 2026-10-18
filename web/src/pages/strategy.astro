@@ -1,0 +1,87 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHead from "../components/PageHead.astro";
+import Term from "../components/Term.astro";
+import LineChart from "../components/LineChart.astro";
+import YearBars from "../components/YearBars.astro";
+import { site, url } from "../lib/site";
+
+const bts = [...site.strategy.backtests].reverse();
+const P = (v: any) => (v == null ? "—" : `${(v * 100).toFixed(1)}%`);
+const N = (v: any, d = 2) => (v == null ? "—" : Number(v).toLocaleString("en-IE", { minimumFractionDigits: d, maximumFractionDigits: d }));
+const rows: [string, string | null, (v: any) => string][] = [
+  ["cagr", "CAGR", P], ["max_drawdown", "Max drawdown", P], ["sharpe", "Sharpe ratio", (v) => N(v)],
+  ["volatility", "Volatility", P], ["trades", "Trades", (v) => (v == null ? "—" : String(v))], ["fees_eur", "Fees (EUR)", (v) => N(v)],
+  ["turnover_per_year", "Turnover / year", (v) => (v == null ? "—" : `${N(v)}×`)], ["end_nav", "End NAV (EUR)", (v) => N(v)],
+];
+const termFor: Record<string, string> = { cagr: "cagr", max_drawdown: "drawdown", sharpe: "sharpe-ratio", volatility: "volatility", turnover_per_year: "turnover", end_nav: "nav" };
+---
+<Base title="Strategy" current="strategy/">
+  <PageHead eyebrow={`Current version · ${site.version}`} title="Strategy">
+    The rules the agent follows, written as code and versioned. A change needs a written argument and a <Term id="backtest">backtest</Term>, and it shows up in the changelog below.
+  </PageHead>
+
+  <div class="wrap">
+    {bts.map((b: any) => (
+      <section class="block bt">
+        <div class="block-head">
+          <h2>Backtest {b.version}</h2>
+          <p class="num">{b.period.start} → {b.period.end}</p>
+        </div>
+        <div class="grid stats">
+          <div class="card kpi"><span class="k"><Term id="cagr">CAGR</Term></span><span class="v num">{P(b.strategy.cagr)}</span><span class="c">benchmark {P(b.benchmark.cagr)}</span></div>
+          <div class="card kpi"><span class="k"><Term id="drawdown">Max drawdown</Term></span><span class="v num">{P(b.strategy.max_drawdown)}</span><span class="c">benchmark {P(b.benchmark.max_drawdown)}</span></div>
+          <div class="card kpi"><span class="k"><Term id="in-sample-and-out-of-sample">Out-of-sample</Term> CAGR</span><span class="v num">{P(b.out_of_sample?.strategy?.cagr)}</span><span class="c">benchmark {P(b.out_of_sample?.benchmark?.cagr)}</span></div>
+          <div class="card kpi"><span class="k">Fees paid</span><span class="v num">€{N(b.strategy.fees_eur, 0)}</span><span class="c">{b.strategy.trades} trades over {b.strategy.years} years</span></div>
+        </div>
+
+        <div class="card pad chart">
+          <LineChart id={`bt-${b.version}`} points={b.equity_curve} labels={[`${b.version}`, "MSCI World"]} log height={380} />
+          <p class="caption">Growth of €1,000, log scale. Same-day close execution, fees and spreads included.</p>
+        </div>
+
+        <div class="grid two">
+          <div class="card table-wrap">
+            <table class="data">
+              <thead><tr><th></th><th class="r">Strategy</th><th class="r">Benchmark</th><th class="r">Strategy OOS</th><th class="r">Bench. OOS</th></tr></thead>
+              <tbody>
+                {rows.map(([k, label, f]) => (
+                  <tr>
+                    <td>{termFor[k] ? <Term id={termFor[k]}>{label}</Term> : label}</td>
+                    <td class="r num">{f(b.strategy?.[k])}</td>
+                    <td class="r num muted">{f(b.benchmark?.[k])}</td>
+                    <td class="r num">{f(b.out_of_sample?.strategy?.[k])}</td>
+                    <td class="r num muted">{f(b.out_of_sample?.benchmark?.[k])}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {b.yearly && <div class="card pad"><p class="eyebrow">Calendar years</p><YearBars yearly={b.yearly} /></div>}
+        </div>
+
+        <p class="fine">
+          Frictions: €{b.frictions.fee_eur} per order, spreads {(b.frictions.spread.etf * 100).toFixed(2)}% ETF and {(b.frictions.spread.stock * 100).toFixed(2)}% stock, crypto surcharge {(b.frictions.crypto_surcharge * 100).toFixed(2)}%, {b.frictions.execution}.
+          <Term id="in-sample-and-out-of-sample">Out-of-sample</Term> means the last 30% of the period, and the parameters were not fitted to it.
+          Mind <Term id="survivorship-bias">survivorship bias</Term>: the universe was chosen today.
+          Data: {b.data.source}, {b.data.instruments} instruments.
+        </p>
+      </section>
+    ))}
+
+    <section class="block">
+      <article class="card pad prose wide doc" set:html={site.strategy.html} />
+    </section>
+  </div>
+</Base>
+<style>
+  .bt .grid.stats { margin-bottom: 16px; }
+  .kpi { padding: 18px 20px; display: grid; gap: 4px; }
+  .kpi .k { font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  .kpi .v { font-size: 1.7rem; letter-spacing: -.02em; }
+  .kpi .c { font-size: .82rem; color: var(--muted); }
+  .chart { margin-bottom: 16px; }
+  .caption { margin: 10px 0 0; font-size: .82rem; color: var(--muted); }
+  .fine { font-size: .82rem; color: var(--muted); max-width: 90ch; margin-top: 16px; }
+  .doc { padding: clamp(24px, 4vw, 48px); }
+</style>

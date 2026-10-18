@@ -1,0 +1,128 @@
+---
+import "../styles/global.css";
+import { NAV, site, url } from "../lib/site";
+
+interface Props { title: string; description?: string; current: string }
+const { title, description = "An AI agent manages a small real-money portfolio in public, with every decision, order and mistake on the record. Not investment advice.", current } = Astro.props;
+const fullTitle = current === "" ? "finance · an AI agent trading in public" : `${title} · finance`;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={new URL(current, site.site_url).href} />
+  <meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#11120f" media="(prefers-color-scheme: dark)" />
+  <link rel="icon" href={url("favicon.svg")} type="image/svg+xml" />
+  <script is:inline>
+    try { const t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body>
+  <a class="skip sr-only" href="#main">Skip to content</a>
+  <header class="site-head">
+    <div class="wrap bar">
+      <a class="brand" href={url("")} aria-label="finance, home">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6" fill="var(--accent)"/><path d="M5 16.5 9.5 12l3 3L19 8.5" fill="none" stroke="var(--accent-ink)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>finance</span>
+      </a>
+      <nav class="primary" aria-label="Main">
+        {NAV.map((n) => <a href={url(n.href)} aria-current={n.href === current ? "page" : undefined}>{n.label}</a>)}
+      </nav>
+      <div class="tools">
+        <button class="theme" type="button" aria-label="Toggle colour theme" title="Toggle theme">
+          <svg class="sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></g></svg>
+          <svg class="moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" fill="currentColor"/></svg>
+        </button>
+        <button class="menu" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+    <nav id="mobile-nav" class="mobile" aria-label="Main" hidden>
+      <div class="wrap">
+        {NAV.map((n) => <a href={url(n.href)} aria-current={n.href === current ? "page" : undefined}>{n.label}</a>)}
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <slot />
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap foot-grid">
+      <div>
+        <p class="foot-title">Not investment advice.</p>
+        <p>Real money, a deliberately small amount, managed by an AI agent as a public experiment. The owner accepts the total loss of the capital. Nothing here is a recommendation to anyone. Do not copy these trades.</p>
+      </div>
+      <div class="foot-meta">
+        <p>Strategy <span class="mono">{site.version}</span></p>
+        <p>Built <span class="mono">{site.built_at}</span></p>
+        <p><a href={site.repo_url}>Source and full history on GitHub</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const root = document.documentElement;
+    document.querySelector(".theme")?.addEventListener("click", () => {
+      const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+      const next = dark ? "light" : "dark";
+      root.dataset.theme = next;
+      try { localStorage.setItem("theme", next); } catch (e) {}
+      window.dispatchEvent(new CustomEvent("themechange"));
+    });
+    const btn = document.querySelector<HTMLButtonElement>(".menu");
+    const mob = document.getElementById("mobile-nav");
+    btn?.addEventListener("click", () => {
+      const open = btn.getAttribute("aria-expanded") === "true";
+      btn.setAttribute("aria-expanded", String(!open));
+      if (mob) mob.hidden = open;
+    });
+  </script>
+</body>
+</html>
+
+<style>
+  .site-head { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: saturate(1.4) blur(12px); -webkit-backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line); }
+  .bar { display: flex; align-items: center; gap: 24px; height: 64px; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--fg); text-decoration: none; font-family: var(--font-serif); font-size: 1.3rem; font-weight: 600; letter-spacing: -.01em; }
+  nav.primary { display: flex; gap: 2px; margin-left: auto; }
+  nav.primary a, nav.mobile a { color: var(--fg-soft); text-decoration: none; font-size: .88rem; font-weight: 500; padding: 7px 11px; border-radius: 999px; transition: background .15s, color .15s; }
+  nav.primary a:hover { background: var(--bg-sunk); color: var(--fg); }
+  nav.primary a[aria-current="page"] { background: var(--fg); color: var(--bg); }
+  .tools { display: flex; gap: 6px; }
+  .tools button { display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg-elev); color: var(--fg-soft); cursor: pointer; }
+  .tools button:hover { color: var(--fg); border-color: var(--line-strong); }
+  .theme .moon { display: none; }
+  :global(:root[data-theme="dark"]) .theme .sun { display: none; }
+  :global(:root[data-theme="dark"]) .theme .moon { display: block; }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme="light"])) .theme .sun { display: none; }
+    :global(:root:not([data-theme="light"])) .theme .moon { display: block; }
+  }
+  .menu { display: none !important; }
+  nav.mobile { border-top: 1px solid var(--line); padding: 10px 0 14px; }
+  nav.mobile .wrap { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; }
+  nav.mobile a { padding: 10px 12px; border-radius: 10px; }
+  nav.mobile a[aria-current="page"] { background: var(--fg); color: var(--bg); }
+  @media (max-width: 980px) {
+    nav.primary { display: none; }
+    .tools { margin-left: auto; }
+    .menu { display: inline-grid !important; }
+  }
+  .skip:focus { position: fixed; left: 12px; top: 12px; width: auto; height: auto; clip: auto; padding: 8px 12px; background: var(--fg); color: var(--bg); border-radius: 8px; z-index: 50; }
+  main { min-height: 60vh; padding-bottom: 72px; }
+  .site-foot { border-top: 1px solid var(--line); background: var(--bg-sunk); color: var(--muted); font-size: .88rem; padding: 40px 0 48px; }
+  .foot-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 32px; }
+  .foot-grid p { margin: 0 0 6px; }
+  .foot-title { font-family: var(--font-serif); font-size: 1.15rem; color: var(--fg); }
+  .foot-meta { text-align: right; }
+  @media (max-width: 720px) { .foot-grid { grid-template-columns: 1fr; } .foot-meta { text-align: left; } }
+</style>

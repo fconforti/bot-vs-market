@@ -1,0 +1,76 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHead from "../components/PageHead.astro";
+import Empty from "../components/Empty.astro";
+import Stat from "../components/Stat.astro";
+import Term from "../components/Term.astro";
+import { site, url, eur, pct, tone, fmtDate } from "../lib/site";
+const pf = site.portfolio;
+const s = pf.state;
+const invested = s ? s.nav - s.cash : null;
+const initial = new Intl.NumberFormat("en-IE").format(site.initial_eur);
+---
+<Base title="Portfolio" current="portfolio/">
+  <PageHead eyebrow="Holdings" title="Portfolio">
+    {s ? <>Latest <Term id="snapshot">snapshot</Term> from {fmtDate(s.as_of)}.</> : <>Positions as recorded in the latest live <Term id="snapshot">snapshot</Term> of the account.</>}
+  </PageHead>
+  <div class="wrap">
+    {s ? (
+      <>
+        <div class="grid stats">
+          <Stat label="NAV" termHref={url("glossary/#nav")} value={eur(s.nav)} delay={1} />
+          <Stat label="Invested" value={eur(invested)} note={s.nav ? pct(invested! / s.nav, 0, false) + " of NAV" : undefined} delay={2} />
+          <Stat label="Cash" value={eur(s.cash)} delay={3} />
+          <Stat label="Buying power" termHref={url("glossary/#buying-power")} value={eur(s.buying_power)} delay={4} />
+        </div>
+        {pf.positions.length > 0 && (
+          <div class="card pad weights">
+            <div class="bar">{pf.positions.map((p: any, i: number) => <span style={`flex:${p.weight};--i:${i}`} title={`${p.name} ${pct(p.weight, 1, false)}`}></span>)}<span class="cash" style={`flex:${s.cash / s.nav}`} title="Cash"></span></div>
+            <ul class="legend">{pf.positions.map((p: any, i: number) => <li><i style={`--i:${i}`}></i>{p.name} <span class="num muted">{pct(p.weight, 1, false)}</span></li>)}<li><i class="cash"></i>Cash <span class="num muted">{pct(s.cash / s.nav, 1, false)}</span></li></ul>
+          </div>
+        )}
+        <div class="card table-wrap">
+          <table class="data">
+            <thead><tr><th>Instrument</th><th class="r">Qty</th><th class="r">Price</th><th class="r">Value</th><th class="r"><Term id="position-weight">Weight</Term></th><th class="r"><Term id="fifo-price">Entry</Term></th><th class="r">Unrealised</th><th>Entry thesis</th></tr></thead>
+            <tbody>
+              {pf.positions.length ? pf.positions.map((p: any) => (
+                <tr>
+                  <td>{p.name}<span class="sub mono">{p.isin}</span></td>
+                  <td class="r num">{p.quantity}</td>
+                  <td class="r num">{eur(p.price)}</td>
+                  <td class="r num">{eur(p.value_eur)}</td>
+                  <td class="r num">{pct(p.weight, 1, false)}</td>
+                  <td class="r num">{eur(p.fifo_price)}</td>
+                  <td class={`r num ${tone(p.unrealised)}`}>{pct(p.unrealised)}</td>
+                  <td class="why">{p.thesis || "—"}{p.trade_id && <span class="sub"><a href={url("trades/")}>{p.trade_id}</a></span>}</td>
+                </tr>
+              )) : <tr><td colspan="8" class="muted">All cash.</td></tr>}
+            </tbody>
+          </table>
+        </div>
+      </>
+    ) : (
+      <Empty title="No live snapshot yet">Holdings appear after the first live session records the account.</Empty>
+    )}
+
+    <section class="block">
+      <div class="card pad bench">
+        <p class="eyebrow">The yardstick</p>
+        <h2><Term id="benchmark">Benchmark</Term></h2>
+        <p>{pf.benchmark.name} <span class="mono muted">{pf.benchmark.isin}</span>. €{initial} bought and held from {pf.benchmark.start_date ? fmtDate(pf.benchmark.start_date) : "the first live run"}, with no fees after the purchase.{pf.benchmark.last && <> Last value <strong class="num">{eur(pf.benchmark.last.value)}</strong> on {fmtDate(pf.benchmark.last.date)}.</>}</p>
+      </div>
+    </section>
+  </div>
+</Base>
+<style>
+  .grid.stats { margin-bottom: 16px; }
+  .weights { margin-bottom: 16px; }
+  .bar { display: flex; height: 14px; border-radius: 999px; overflow: hidden; gap: 2px; }
+  .bar span, .legend i { background: color-mix(in srgb, var(--accent) calc(100% - var(--i) * 14%), var(--bg-elev)); }
+  .bar .cash, .legend i.cash { background: var(--line-strong); }
+  .legend { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: .85rem; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 7px; vertical-align: -1px; }
+  .why { min-width: 240px; max-width: 380px; font-size: .84rem; color: var(--fg-soft); }
+  .bench h2 { margin-bottom: 10px; }
+  .bench p:last-child { margin: 0; color: var(--fg-soft); }
+</style>

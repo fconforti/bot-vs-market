@@ -1,0 +1,52 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHead from "../components/PageHead.astro";
+import Empty from "../components/Empty.astro";
+import Term from "../components/Term.astro";
+import { site, url, eur, pct, tone, statusTone } from "../lib/site";
+const trades = site.trades;
+const count = (s: string) => trades.filter((t: any) => t.status === s).length;
+---
+<Base title="Trades" current="trades/">
+  <PageHead eyebrow="Order log" title="Trades">
+    Every order ever proposed, including rejected ones and aborted runs. Status comes from the <Term id="guardrails">guardrails</Term>, the only code path that can <Term id="preview-and-confirm">confirm</Term> an order.
+  </PageHead>
+  <div class="wrap">
+    {trades.length ? (
+      <>
+        <div class="summary">
+          <span class="tag good">{count("executed")} executed</span>
+          <span class="tag bad">{count("rejected") + count("aborted") + count("unknown")} rejected or aborted</span>
+          <span class="tag info">{count("proposed")} proposed</span>
+        </div>
+        <div class="card table-wrap">
+          <table class="data">
+            <thead><tr><th>Date</th><th>Side</th><th>Instrument</th><th class="r">Size</th><th>Status</th><th class="r">Est. price</th><th class="r">P&amp;L since</th><th>Reason</th></tr></thead>
+            <tbody>
+              {trades.map((t: any) => (
+                <tr>
+                  <td><a href={url(`journal/#${t.journal_anchor}`)} class="num">{t.date}</a><span class="sub mono">{t.id}</span></td>
+                  <td><span class={`side ${t.side}`}>{t.side}</span></td>
+                  <td>{t.name || t.isin}<span class="sub mono">{t.isin}</span></td>
+                  <td class="r num">{t.eur_amount != null ? eur(t.eur_amount) : t.quantity != null ? `${t.quantity} sh` : "—"}</td>
+                  <td><span class={`tag ${statusTone(t.status)}`}>{t.status}</span></td>
+                  <td class="r num">{t.est_price != null ? t.est_price.toFixed(2) : "—"}</td>
+                  <td class={`r num ${tone(t.pnl_pct)}`}>{pct(t.pnl_pct)}</td>
+                  <td class="why">{t.reason || t.thesis}{t.rejection && <span class="sub">{t.rejection}</span>}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </>
+    ) : (
+      <Empty title="No trades yet">Orders appear here from the first live session, whether they were executed, rejected by the guardrails, or aborted.</Empty>
+    )}
+  </div>
+</Base>
+<style>
+  .summary { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .side { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+  .side.buy { color: var(--pos); } .side.sell { color: var(--neg); }
+  .why { min-width: 260px; max-width: 420px; font-size: .84rem; color: var(--fg-soft); }
+</style>

@@ -15,7 +15,7 @@ record. Your default outcome is "no change, here is why".
   or `bin/snapshot.py --post-trade`.
 - Never edit past journal, trade, portfolio or research entries. `research/inbox.md`
   is cleared only by you, in step 6, after its content has been addressed in your
-  entry. `site/mistakes.md` is append-only.
+  entry. `MISTAKES.md` is append-only.
 - Frozen versions in `strategy/versions/` are immutable. A new version is a new file.
 - `mandate.toml`, `MANDATE.md`, `bin/`, `finance/`, `tests/` are the owner's. Do not
   touch them. If a limit seems wrong, say so in the research entry.
@@ -52,7 +52,7 @@ file still holds. Compare the week's realised NAV path with what the backtest's 
 numbers imply (`research/backtests/<current version>.json`). Be quantitative.
 
 ### 2. Inbox and mistakes
-Read `research/inbox.md` and `site/mistakes.md`. List each item and what you will do
+Read `research/inbox.md` and `MISTAKES.md`. List each item and what you will do
 with it: test now, defer, or dismiss with a reason.
 
 ### 3. One hypothesis

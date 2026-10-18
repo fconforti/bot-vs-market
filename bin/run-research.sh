@@ -38,7 +38,7 @@ if sc whoami --json >/dev/null 2>&1; then export FINANCE_SC_MODE=live; else expo
 PROMPT="$(cat prompts/research.md)"
 ALLOWED=(
   "Read" "Glob" "Grep" "WebSearch" "WebFetch" "TodoWrite"
-  "Edit(research/**)" "Edit(strategy/**)" "Edit(STRATEGY.md)" "Edit(site/mistakes.md)"
+  "Edit(research/**)" "Edit(strategy/**)" "Edit(STRATEGY.md)" "Edit(MISTAKES.md)"
   "Bash(uv run python bin/session-info.py:*)"
   "Bash(uv run python bin/build-site.py:*)"
   "Bash(uv run python strategy/data.py:*)"

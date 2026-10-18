@@ -7,7 +7,7 @@
 > the entire amount. Nothing here is investment advice or a recommendation to anyone.
 > Do not copy these trades.
 
-Site: <https://fconforti.github.io/finance/> · Glossary: [`docs/glossary.md`](docs/glossary.md) · Strategy: [`STRATEGY.md`](STRATEGY.md) ·
+Site: <https://fconforti.github.io/finance/> · Glossary: [`docs/glossary.md`](docs/glossary.md) · Mistakes: [`MISTAKES.md`](MISTAKES.md) · Strategy: [`STRATEGY.md`](STRATEGY.md) ·
 Rules: [`MANDATE.md`](MANDATE.md) · First-run checklist: [`docs/handover.md`](docs/handover.md)
 
 ## Status
@@ -16,6 +16,7 @@ This section is kept current by whoever last worked on the repo (the build agent
 
 | Date | State |
 |---|---|
+| 2026-10-18 | Site rebuilt with Astro (`web/`): new design with light and dark themes, clean URLs, glossary with a filter, backtest charts drawn in the browser. Until the first live run, the home page shows the v001 backtest, labelled as such. `site/` is gone and the mistakes log moved to `MISTAKES.md`. 51 tests pass. Still not live, timers still off. |
 | 2026-10-18 | Built and pushed. 48 tests pass. Two rehearsals (dry runs on fixture data, replayed as 2026-10-16 and 2026-10-15): the first aborted on a plumbing bug, now fixed; the second went end to end (two proposals, guardrails preview matched, no confirm). **Not yet live:** the Scalable CLI has never been logged in on the machine, so the real account's JSON shapes, the EIX venue code and the bitcoin ETP's appropriateness rules are unverified. Timers are not enabled. No real order has ever been placed. Site live at <https://fconforti.github.io/finance/> (Pages source: GitHub Actions). |
 
 ## What this is
@@ -94,7 +95,8 @@ bin/                        run-session.sh, run-research.sh, guardrails.py, snap
                             session-info.py, build-site.py, check-append-only.py, kill-switch.sh
 prompts/                    daily.md, research.md
 journal/ trades/ portfolio/ research/    append-only history (dry runs suffixed -dryrun, not published)
-site/                       generated static site (committed, deployed by GitHub Pages)
+web/                        Astro site; src/data/site.json is exported by bin/build-site.py
+MISTAKES.md                 append-only log of what went wrong (published on the site)
 systemd/                    user units (not enabled)
 tests/                      pytest, with a fake `sc` that serves fixtures
 docs/                       cli-notes.md (what the Scalable CLI really does), handover.md, glossary.md
@@ -126,7 +128,8 @@ uv run python strategy/data.py --refresh       # price cache (yfinance)
 uv run python strategy/data.py --check-live    # cached closes vs broker quotes
 uv run python strategy/current.py              # signals and proposed orders, read-only
 uv run python strategy/backtest.py --version current
-uv run python bin/build-site.py && python -m http.server -d site 8000
+uv run python bin/build-site.py               # exports web/src/data/site.json
+(cd web && npm ci && npm run dev)              # http://localhost:4321/finance/
 
 ./bin/run-session.sh --dry-run                 # full session, preview only, never confirms
 ./bin/run-session.sh                           # live
@@ -160,7 +163,9 @@ loginctl enable-linger filippo     # currently off; needed for unattended runs
 The services load `~/.secrets/finance.env` (`GH_TOKEN` for pushing). Logs go to
 `~/.local/state/finance/`. `claude -p` uses this machine's Claude Code login.
 GitHub Pages must be set to "GitHub Actions" once in the repo settings; the workflow
-in `.github/workflows/pages.yml` deploys `site/` on every push that touches it.
+in `.github/workflows/pages.yml` builds `web/` with Astro and deploys it on every push
+that touches `web/`. The runner commits the exported `site.json` after each session,
+so every session redeploys the site.
 
 ## Kill switch
 

@@ -16,7 +16,7 @@ parameters or the universe. Prefer doing nothing over doing something unjustifie
   Never call `sc broker trade ...` yourself, never use `--confirm`. The hooks will block
   you, and trying is itself a reportable mistake.
 - Never edit past journal entries, trade files, snapshots or research entries. If
-  something was wrong, write the correction in today's entry and in `site/mistakes.md`.
+  something was wrong, write the correction in today's entry and in `MISTAKES.md`.
 - Any CLI error, auth failure, malformed output, or a guardrails `aborted`/`unknown`
   status means: stop trading for today, write what happened, finish the journal.
   Never retry a confirm. Never work around a failing check.
@@ -35,7 +35,7 @@ the broker data is live or FIXTURE (`sc_mode`). In a dry run:
 - `guardrails.py execute` must be called with `--dry-run` (it previews and stops);
 - if `sc_mode` is `fixture`, say in the first paragraph of the journal that the
   portfolio numbers are FIXTURE DATA from `tests/fixtures/sc`, not the real account;
-- rehearsals are not published on the site. If you append to `site/mistakes.md` during a
+- rehearsals are not published on the site. If you append to `MISTAKES.md` during a
   dry run, the entry's `##` heading must contain "(dry run)" so the site builder skips it;
 - do not push. The runner commits.
 
@@ -70,7 +70,7 @@ and skip to step 10.
 
 ### 2. Memory
 Read the last 10 entries in `journal/`, `STRATEGY.md`, `research/inbox.md` and
-`site/mistakes.md`. Note every open thesis (from the trade files of current positions,
+`MISTAKES.md`. Note every open thesis (from the trade files of current positions,
 field `thesis`) whose conditions have changed, and anything a previous session said to
 watch today.
 
@@ -134,7 +134,7 @@ report fills, new cash and positions. For executed orders, note the estimated or
 volume from the preview and the quote at the time.
 
 ### 10. Mistakes and inbox
-If any past decision now looks wrong, append to `site/mistakes.md` (append-only: add a
+If any past decision now looks wrong, append to `MISTAKES.md` (append-only: add a
 dated entry at the end, never remove lines) what was wrong, what it cost, and what
 rule would have prevented it. Put strategy ideas and observations for the weekly
 research session into `research/inbox.md` (append, dated). Not every day has a

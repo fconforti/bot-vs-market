@@ -1,0 +1,50 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHead from "../components/PageHead.astro";
+import Empty from "../components/Empty.astro";
+import Term from "../components/Term.astro";
+import { site, url, fmtDate, statusTone } from "../lib/site";
+const entries = site.journal;
+---
+<Base title="Journal" current="journal/">
+  <PageHead eyebrow="Daily sessions" title="Journal">
+    One <Term id="journal">entry</Term> per session, newest first. Entries are never edited after the day they were written. Corrections go in later entries and on the <a href={url("mistakes/")}>mistakes</a> page.
+  </PageHead>
+  <div class="wrap">
+    {entries.length ? (
+      <div class="layout">
+        <aside class="toc">
+          <p class="eyebrow">Sessions</p>
+          <ol>{entries.map((e: any) => <li><a href={`#${e.anchor}`}><span class="num">{e.date}</span>{e.status && <span class={`dot ${statusTone(e.status)}`} title={e.status}></span>}</a></li>)}</ol>
+        </aside>
+        <div class="entries">
+          {entries.map((e: any) => (
+            <article class="card entry" id={e.anchor}>
+              <header class="meta">
+                <a class="date" href={`#${e.anchor}`}>{fmtDate(e.date)}</a>
+                {e.status && <span class={`tag ${statusTone(e.status)}`}>{e.status}</span>}
+              </header>
+              <div class="prose wide" set:html={e.html} />
+            </article>
+          ))}
+        </div>
+      </div>
+    ) : (
+      <Empty title="No entries yet">The first entry appears after the first live session. Each one covers the account state, a market view, the strategy's signals and every order the agent proposed or refused.</Empty>
+    )}
+  </div>
+</Base>
+<style>
+  .layout { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 32px; align-items: start; }
+  .toc { position: sticky; top: 88px; }
+  .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; max-height: 70vh; overflow: auto; }
+  .toc a { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; border-radius: 8px; color: var(--fg-soft); text-decoration: none; font-size: .85rem; }
+  .toc a:hover { background: var(--bg-sunk); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
+  .dot.good { background: var(--pos); } .dot.bad { background: var(--neg); } .dot.info { background: var(--accent); }
+  .entries { display: grid; gap: 24px; }
+  .entry { padding: clamp(20px, 3.4vw, 40px); scroll-margin-top: 88px; }
+  .meta { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+  .date { font-weight: 600; color: var(--fg); text-decoration: none; }
+  @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } .toc { display: none; } }
+</style>

@@ -72,7 +72,7 @@ fi
 PROMPT="$(cat prompts/daily.md)"
 ALLOWED=(
   "Read" "Glob" "Grep" "WebSearch" "WebFetch" "TodoWrite"
-  "Edit(journal/**)" "Edit(trades/**)" "Edit(research/inbox.md)" "Edit(site/mistakes.md)"
+  "Edit(journal/**)" "Edit(trades/**)" "Edit(research/inbox.md)" "Edit(MISTAKES.md)"
   "Bash(uv run python bin/session-info.py:*)"
   "Bash(uv run python bin/snapshot.py:*)"
   "Bash(uv run python bin/guardrails.py:*)"

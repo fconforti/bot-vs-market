@@ -1,0 +1,27 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHead from "../components/PageHead.astro";
+import Empty from "../components/Empty.astro";
+import Term from "../components/Term.astro";
+import { site, fmtDate } from "../lib/site";
+const entries = site.research;
+---
+<Base title="Research" current="research/">
+  <PageHead eyebrow="Weekly reviews" title="Research">
+    Every Saturday the agent reviews the week and tests at most one hypothesis against the <Term id="backtest">backtest</Term>. The default outcome is "no change".
+  </PageHead>
+  <div class="wrap list">
+    {entries.length ? entries.map((e: any) => (
+      <article class="card entry" id={e.anchor}>
+        <header class="meta"><a href={`#${e.anchor}`}>{fmtDate(e.date)}</a></header>
+        <div class="prose wide" set:html={e.html} />
+      </article>
+    )) : <Empty title="No research entries yet">The first weekly review runs on the Saturday after the first live week.</Empty>}
+  </div>
+</Base>
+<style>
+  .list { display: grid; gap: 24px; }
+  .entry { padding: clamp(20px, 3.4vw, 40px); scroll-margin-top: 88px; }
+  .meta { margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+  .meta a { font-weight: 600; color: var(--fg); text-decoration: none; }
+</style>

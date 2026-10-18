@@ -1,0 +1,17 @@
+---
+interface Props { label: string; value: string; tone?: string; note?: string; termHref?: string; delay?: number }
+const { label, value, tone = "", note, termHref, delay = 0 } = Astro.props;
+---
+<div class={`stat card rise d${delay}`}>
+  <div class="label">{termHref ? <a class="term" href={termHref}>{label}</a> : label}</div>
+  <div class={`value num ${tone}`}>{value}</div>
+  {note && <div class="note">{note}</div>}
+  <slot />
+</div>
+<style>
+  .stat { padding: 20px 22px; display: flex; flex-direction: column; gap: 6px; }
+  .label { font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  .value { font-size: clamp(1.5rem, 3vw, 1.9rem); font-weight: 500; letter-spacing: -.02em; color: var(--fg); }
+  .value.pos { color: var(--pos); } .value.neg { color: var(--neg); }
+  .note { font-size: .84rem; color: var(--muted); }
+</style>

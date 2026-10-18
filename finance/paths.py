@@ -10,18 +10,19 @@ JOURNAL = ROOT / "journal"
 TRADES = ROOT / "trades"
 PORTFOLIO = ROOT / "portfolio"
 RESEARCH = ROOT / "research"
-SITE = ROOT / "site"
+WEB = ROOT / "web"
+SITE_DATA = WEB / "src" / "data" / "site.json"
 STRATEGY = ROOT / "strategy"
 DATA = ROOT / "data"
 DOCS = ROOT / "docs"
 MANDATE_TOML = ROOT / "mandate.toml"
 HALTED = ROOT / "HALTED"
 INBOX = RESEARCH / "inbox.md"
-MISTAKES = SITE / "mistakes.md"
+MISTAKES = ROOT / "MISTAKES.md"
 BENCHMARK = PORTFOLIO / "benchmark.json"
 PRICE_CACHE = DATA / "prices"
 
 
 def ensure_dirs() -> None:
-    for d in (JOURNAL, TRADES, PORTFOLIO, RESEARCH, SITE, DATA, PRICE_CACHE):
+    for d in (JOURNAL, TRADES, PORTFOLIO, RESEARCH, DATA, PRICE_CACHE):
         d.mkdir(parents=True, exist_ok=True)

@@ -1,0 +1,2539 @@
+{
+ "built_at": "2026-10-18 14:47 UTC",
+ "repo_url": "https://github.com/fconforti/finance",
+ "site_url": "https://fconforti.github.io/finance/",
+ "version": "v001",
+ "initial_eur": 1000.0,
+ "live": false,
+ "home": {
+  "nav": null,
+  "cash": null,
+  "n_positions": 0,
+  "live_days": 0,
+  "start_date": null,
+  "ret_total": null,
+  "ret_vs_bench": null,
+  "last_session": null
+ },
+ "curve": [],
+ "journal": [],
+ "research": [],
+ "trades": [],
+ "portfolio": {
+  "state": null,
+  "positions": [],
+  "benchmark": {
+   "isin": "IE00B4L5Y983",
+   "name": "iShares Core MSCI World UCITS ETF (Acc)",
+   "start_date": null,
+   "last": null
+  }
+ },
+ "strategy": {
+  "html": "<p>Current version: <strong>v001</strong> (2026-10-18). Live algorithm: <code>strategy/current.py</code>, parameters:\n<code>strategy/params.toml</code>, universe: <code>strategy/universe.csv</code>. Frozen copy:\n<code>strategy/versions/v001_2026-10-18.py</code> / <code>.toml</code>. Backtest: <code>research/backtests/v001.json</code>.</p>\n<h2>v001 in plain language</h2>\n<p>A slow, trend-filtered momentum rotation over a fixed list of 44 liquid instruments\n(24 ETFs, 2 gold ETCs, 1 bitcoin ETP, 15 large-cap stocks, 2 cash-like ETFs that are\nnever bought). Everything is priced in EUR on Xetra/gettex listings.</p>\n<ol>\n<li><strong>Trend filter with a band.</strong> New positions are only opened while the MSCI World\n   ETF (<code>IE00B4L5Y983</code>) closes above its 200-day simple moving average. Everything is\n   sold once it closes more than 3% <em>below</em> that average. In between, nothing changes.\n   The band exists because the index crosses its average many times a year; without\n   it the strategy sold and re-bought the whole book on every wobble.</li>\n<li><strong>Ranking.</strong> 12-1 month momentum: <code>close[t-21] / close[t-252] - 1</code>, computed after\n   each close on the risk sleeve (everything except the two cash ETFs). Instruments\n   with fewer than 260 days of history are not ranked.</li>\n<li><strong>Holding rule.</strong> Hold up to 4 positions, equal target weight 25% of NAV each.\n   Free slots are filled, any day, with the best-ranked instruments not already held,\n   provided their momentum is positive.</li>\n<li><strong>Exits.</strong> Only in the first 3 trading days of each month: a held instrument is sold\n   if its momentum is negative or its rank is worse than 7. Outside that window, only\n   the trend filter can sell. This hysteresis (enter at rank 4 or better, leave at rank\n   8 or worse) is what keeps turnover down.</li>\n<li><strong>Sizing.</strong> Each buy is <code>min(target - current, 24% of NAV, spendable cash)</code>, rounded\n   down to cents; buys under EUR 100 are skipped (the mandate allows EUR 25, but at\n   EUR 0.99 per order that is a 4% fee). Sells are whole positions. There are no top-ups.</li>\n<li><strong>Two orders a day</strong>, sells first. A full rotation takes a few days by design.</li>\n</ol>\n<p>What it is not: it does not use volatility targeting (pointless on four positions and\nEUR 1,000), it does not short, it does not use limit orders (the CLI cannot list open\norders), and it does not look at news. The daily session reads news and may refuse to\ntrade, but may not change the orders.</p>\n<h2>Costs assumed</h2>\n<p>Scalable FREE plan on EIX: EUR 0.99 per order. Spread model: 0.25% for ETFs/ETCs,\n0.50% for single stocks, plus 0.99% on the bitcoin ETP. Execution at the same day's\nclose plus half the spread, which is closer to an 18:15 fill on EIX than the usual\n\"next open\" assumption.</p>\n<h2>Backtest, 2013-01-18 to 2026-10-16 (EUR 1,000 start)</h2>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>v001</th>\n<th>MSCI World buy-and-hold</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>CAGR</td>\n<td>17.5%</td>\n<td>13.1%</td>\n</tr>\n<tr>\n<td>Max drawdown</td>\n<td>-30.1%</td>\n<td>-33.6%</td>\n</tr>\n<tr>\n<td>Sharpe (daily, rf 0)</td>\n<td>0.82</td>\n<td>0.87</td>\n</tr>\n<tr>\n<td>Volatility</td>\n<td>21%</td>\n<td>15%</td>\n</tr>\n<tr>\n<td>Trades</td>\n<td>262</td>\n<td>1</td>\n</tr>\n<tr>\n<td>Fees paid</td>\n<td>EUR 259</td>\n<td>EUR 1</td>\n</tr>\n<tr>\n<td>Turnover per year</td>\n<td>3.7x NAV</td>\n<td>0</td>\n</tr>\n<tr>\n<td>In-sample CAGR (first 70%)</td>\n<td>16.9%</td>\n<td>12.2%</td>\n</tr>\n<tr>\n<td>Out-of-sample CAGR (last 30%)</td>\n<td>19.5%</td>\n<td>15.2%</td>\n</tr>\n</tbody>\n</table>\n<p>Chart: <code>research/backtests/v001.png</code>.</p>\n<h3>Why these numbers should not be trusted much</h3>\n<ul>\n<li><strong>Survivorship bias, the big one.</strong> The universe is a list written in October 2026.\n  It contains NVIDIA, Tesla, Rheinmetall, ASML and a semiconductor ETF because they\n  are large <em>today</em>. A momentum rule run over the last decade on that list will\n  \"discover\" them. The honest expectation for live performance is far below 17.5%.\n  The ETF-only part of the universe is less affected; a research session should\n  measure the strategy on ETFs only.</li>\n<li><strong>One regime.</strong> 2013 to 2026 was mostly a long equity bull market with two sharp\n  crashes (2020, 2022). Trend following looks good in exactly that. It bleeds in\n  sideways, choppy markets (2015 to 2016 in this very backtest, in-sample CAGR 7%\n  in the first variants).</li>\n<li><strong>Costs are modelled, not measured.</strong> Spreads at 18:15 on EIX for single stocks may\n  be wider than 0.5%. The first weeks of live fills will tell.</li>\n<li><strong>Variants were looked at.</strong> Before fixing v001 I ran five structural variants on the\n  same data (see changelog). v001 is the one with the two mechanism-justified fixes,\n  not the one with the best number.</li>\n</ul>\n<h2>What the daily session should watch</h2>\n<ul>\n<li>Trend filter state and distance from the SMA. A close within 1% of the exit level\n  means the whole book may be sold tomorrow.</li>\n<li>Fills versus preview: slippage above 0.5% on an ETF is a data point for the inbox.</li>\n<li>Rejections by the guardrails (<code>trades/*.json</code> with status <code>rejected</code>): they mean the\n  algorithm and the account disagree about something.</li>\n</ul>\n<h2>Changelog</h2>\n<h3>v001 (2026-10-18) initial version</h3>\n<p>Written by the build session. Design history, in order, all on the same data and\nfrictions (CAGR / max drawdown / trades / out-of-sample CAGR):</p>\n<table>\n<thead>\n<tr>\n<th>Variant</th>\n<th>Change</th>\n<th>CAGR</th>\n<th>MaxDD</th>\n<th>Trades</th>\n<th>OOS CAGR</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>A</td>\n<td>exits checked daily, trend filter without band</td>\n<td>8.8%</td>\n<td>-40%</td>\n<td>582</td>\n<td>20.0%</td>\n</tr>\n<tr>\n<td>B</td>\n<td>exits only in the monthly window</td>\n<td>10.6%</td>\n<td>-35%</td>\n<td>506</td>\n<td>18.9%</td>\n</tr>\n<tr>\n<td><strong>C = v001</strong></td>\n<td>B plus 3% trend exit band</td>\n<td><strong>17.5%</strong></td>\n<td><strong>-30%</strong></td>\n<td><strong>262</strong></td>\n<td><strong>19.5%</strong></td>\n</tr>\n<tr>\n<td>D</td>\n<td>C with 3 positions, hold rank 6</td>\n<td>13.9%</td>\n<td>-29%</td>\n<td>201</td>\n<td>20.3%</td>\n</tr>\n<tr>\n<td>E</td>\n<td>C with hold rank 10</td>\n<td>23.0%</td>\n<td>-28%</td>\n<td>196</td>\n<td>22.6%</td>\n</tr>\n</tbody>\n</table>\n<p>A and B showed that the trend filter, not the ranking, caused most of the churn: the\nindex crossed its 200-day average dozens of times and each cross sold and re-bought\nfour positions. The band (C) halved the number of trades. D and E are parameter\nchoices made after seeing results, so they are <em>not</em> adopted; E is the first\ncandidate for the research loop, with the explicit warning that a wider hold band\nmostly means \"hold the winners longer\", which on a survivor universe is exactly\nwhere look-ahead hides. Benchmark over the same period: 13.1% CAGR, -33.6% max drawdown.</p>",
+  "backtests": [
+   {
+    "version": "v001",
+    "period": {
+     "start": "2013-01-18",
+     "end": "2026-10-16",
+     "days": 3490
+    },
+    "generated_at": "2026-10-18T07:48:08Z",
+    "strategy": {
+     "start": "2013-01-18",
+     "end": "2026-10-16",
+     "years": 13.74,
+     "start_nav": 996.83,
+     "end_nav": 9144.82,
+     "total_return": 8.1739,
+     "cagr": 0.175,
+     "max_drawdown": -0.3013,
+     "volatility": 0.2266,
+     "sharpe": 0.82,
+     "calmar": 0.58,
+     "worst_day": -0.1259,
+     "best_day": 0.0857,
+     "trades": 262,
+     "fees_eur": 259.38,
+     "turnover_per_year": 3.73,
+     "time_invested_pct": 0.889
+    },
+    "benchmark": {
+     "start": "2013-01-18",
+     "end": "2026-10-16",
+     "years": 13.74,
+     "start_nav": 997.76,
+     "end_nav": 5382.15,
+     "total_return": 4.3942,
+     "cagr": 0.1305,
+     "max_drawdown": -0.3363,
+     "volatility": 0.1535,
+     "sharpe": 0.87,
+     "calmar": 0.39,
+     "worst_day": -0.0965,
+     "best_day": 0.0822,
+     "trades": 1,
+     "fees_eur": 0.99,
+     "turnover_per_year": 0.0
+    },
+    "in_sample": {
+     "strategy": {
+      "start": "2013-01-18",
+      "end": "2022-09-06",
+      "years": 9.63,
+      "start_nav": 996.83,
+      "end_nav": 4470.85,
+      "total_return": 3.4851,
+      "cagr": 0.1686,
+      "max_drawdown": -0.2789,
+      "volatility": 0.2196,
+      "sharpe": 0.82,
+      "calmar": 0.6,
+      "worst_day": -0.0846,
+      "best_day": 0.0857,
+      "trades": 0,
+      "fees_eur": 0.0,
+      "turnover_per_year": 0.0
+     },
+     "benchmark": {
+      "start": "2013-01-18",
+      "end": "2022-09-06",
+      "years": 9.63,
+      "start_nav": 997.76,
+      "end_nav": 3022.89,
+      "total_return": 2.0297,
+      "cagr": 0.122,
+      "max_drawdown": -0.3363,
+      "volatility": 0.1624,
+      "sharpe": 0.79,
+      "calmar": 0.36,
+      "worst_day": -0.0965,
+      "best_day": 0.0822,
+      "trades": 0,
+      "fees_eur": 0.0,
+      "turnover_per_year": 0.0
+     }
+    },
+    "out_of_sample": {
+     "strategy": {
+      "start": "2022-09-07",
+      "end": "2026-10-16",
+      "years": 4.11,
+      "start_nav": 4393.91,
+      "end_nav": 9144.82,
+      "total_return": 1.0812,
+      "cagr": 0.1954,
+      "max_drawdown": -0.1814,
+      "volatility": 0.2422,
+      "sharpe": 0.85,
+      "calmar": 1.08,
+      "worst_day": -0.1259,
+      "best_day": 0.0725,
+      "trades": 0,
+      "fees_eur": 0.0,
+      "turnover_per_year": 0.0
+     },
+     "benchmark": {
+      "start": "2022-09-07",
+      "end": "2026-10-16",
+      "years": 4.11,
+      "start_nav": 3012.67,
+      "end_nav": 5382.15,
+      "total_return": 0.7865,
+      "cagr": 0.1518,
+      "max_drawdown": -0.2173,
+      "volatility": 0.1306,
+      "sharpe": 1.14,
+      "calmar": 0.7,
+      "worst_day": -0.0492,
+      "best_day": 0.0405,
+      "trades": 0,
+      "fees_eur": 0.0,
+      "turnover_per_year": 0.0
+     }
+    },
+    "yearly": {
+     "strategy": {
+      "2013": 0.2122,
+      "2014": 0.1767,
+      "2015": -0.0465,
+      "2016": 0.0099,
+      "2017": 0.0715,
+      "2018": 0.0434,
+      "2019": 0.2157,
+      "2020": 0.7886,
+      "2021": 0.462,
+      "2022": -0.1578,
+      "2023": 0.0283,
+      "2024": 0.6233,
+      "2025": 0.1477,
+      "2026": 0.1649
+     },
+     "benchmark": {
+      "2013": 0.1781,
+      "2014": 0.2038,
+      "2015": 0.1081,
+      "2016": 0.1091,
+      "2017": 0.0771,
+      "2018": -0.0513,
+      "2019": 0.3134,
+      "2020": 0.0548,
+      "2021": 0.3271,
+      "2022": -0.1359,
+      "2023": 0.2013,
+      "2024": 0.2593,
+      "2025": 0.079,
+      "2026": 0.1679
+     }
+    },
+    "frictions": {
+     "enabled": true,
+     "fee_eur": 0.99,
+     "spread": {
+      "etf": 0.0025,
+      "etc": 0.0025,
+      "cash": 0.001,
+      "stock": 0.005,
+      "crypto": 0.0025
+     },
+     "crypto_surcharge": 0.0099,
+     "execution": "same-day close +/- half spread"
+    },
+    "data": {
+     "source": "yfinance daily closes (EUR listings)",
+     "instruments": 44,
+     "first_close": "2012-01-02",
+     "last_close": "2026-10-16"
+    },
+    "equity_curve": [
+     {
+      "date": "2013-01-18",
+      "nav": 996.83,
+      "benchmark": 997.76
+     },
+     {
+      "date": "2013-01-30",
+      "nav": 1019.92,
+      "benchmark": 997.76
+     },
+     {
+      "date": "2013-02-11",
+      "nav": 1007.41,
+      "benchmark": 1006.83
+     },
+     {
+      "date": "2013-02-21",
+      "nav": 1007.06,
+      "benchmark": 1010.96
+     },
+     {
+      "date": "2013-03-05",
+      "nav": 1051.94,
+      "benchmark": 1049.71
+     },
+     {
+      "date": "2013-03-15",
+      "nav": 1060.19,
+      "benchmark": 1062.08
+     },
+     {
+      "date": "2013-03-27",
+      "nav": 1024.94,
+      "benchmark": 1074.86
+     },
+     {
+      "date": "2013-04-10",
+      "nav": 1013.64,
+      "benchmark": 1070.33
+     },
+     {
+      "date": "2013-04-22",
+      "nav": 1011.39,
+      "benchmark": 1051.36
+     },
+     {
+      "date": "2013-05-03",
+      "nav": 1058.97,
+      "benchmark": 1095.89
+     },
+     {
+      "date": "2013-05-15",
+      "nav": 1116.25,
+      "benchmark": 1135.06
+     },
+     {
+      "date": "2013-05-27",
+      "nav": 1101.88,
+      "benchmark": 1117.74
+     },
+     {
+      "date": "2013-06-06",
+      "nav": 1059.17,
+      "benchmark": 1062.49
+     },
+     {
+      "date": "2013-06-18",
+      "nav": 1068.88,
+      "benchmark": 1074.86
+     },
+     {
+      "date": "2013-06-28",
+      "nav": 1056.18,
+      "benchmark": 1072.39
+     },
+     {
+      "date": "2013-07-10",
+      "nav": 1103.24,
+      "benchmark": 1111.14
+     },
+     {
+      "date": "2013-07-22",
+      "nav": 1120.79,
+      "benchmark": 1118.98
+     },
+     {
+      "date": "2013-08-01",
+      "nav": 1137.93,
+      "benchmark": 1118.98
+     },
+     {
+      "date": "2013-08-13",
+      "nav": 1163.37,
+      "benchmark": 1118.15
+     },
+     {
+      "date": "2013-08-23",
+      "nav": 1167.71,
+      "benchmark": 1092.59
+     },
+     {
+      "date": "2013-09-04",
+      "nav": 1174.83,
+      "benchmark": 1101.66
+     },
+     {
+      "date": "2013-09-16",
+      "nav": 1204.7,
+      "benchmark": 1130.94
+     },
+     {
+      "date": "2013-09-26",
+      "nav": 1240.86,
+      "benchmark": 1123.93
+     },
+     {
+      "date": "2013-10-09",
+      "nav": 1183.15,
+      "benchmark": 1092.59
+     },
+     {
+      "date": "2013-10-21",
+      "nav": 1208.19,
+      "benchmark": 1140.01
+     },
+     {
+      "date": "2013-10-31",
+      "nav": 1199.29,
+      "benchmark": 1154.02
+     },
+     {
+      "date": "2013-11-12",
+      "nav": 1151.57,
+      "benchmark": 1162.27
+     },
+     {
+      "date": "2013-11-22",
+      "nav": 1119.1,
+      "benchmark": 1170.52
+     },
+     {
+      "date": "2013-12-04",
+      "nav": 1165.66,
+      "benchmark": 1157.32
+     },
+     {
+      "date": "2013-12-16",
+      "nav": 1175.11,
+      "benchmark": 1137.53
+     },
+     {
+      "date": "2014-01-02",
+      "nav": 1221.37,
+      "benchmark": 1177.52
+     },
+     {
+      "date": "2014-01-14",
+      "nav": 1179.72,
+      "benchmark": 1180.0
+     },
+     {
+      "date": "2014-01-24",
+      "nav": 1224.87,
+      "benchmark": 1157.32
+     },
+     {
+      "date": "2014-02-05",
+      "nav": 1164.17,
+      "benchmark": 1135.47
+     },
+     {
+      "date": "2014-02-17",
+      "nav": 1255.84,
+      "benchmark": 1182.47
+     },
+     {
+      "date": "2014-02-27",
+      "nav": 1354.1,
+      "benchmark": 1189.89
+     },
+     {
+      "date": "2014-03-11",
+      "nav": 1302.18,
+      "benchmark": 1184.12
+     },
+     {
+      "date": "2014-03-21",
+      "nav": 1288.69,
+      "benchmark": 1180.0
+     },
+     {
+      "date": "2014-04-02",
+      "nav": 1262.26,
+      "benchmark": 1204.32
+     },
+     {
+      "date": "2014-04-14",
+      "nav": 1182.4,
+      "benchmark": 1172.58
+     },
+     {
+      "date": "2014-04-28",
+      "nav": 1157.26,
+      "benchmark": 1189.07
+     },
+     {
+      "date": "2014-05-09",
+      "nav": 1171.38,
+      "benchmark": 1203.09
+     },
+     {
+      "date": "2014-05-21",
+      "nav": 1211.0,
+      "benchmark": 1217.93
+     },
+     {
+      "date": "2014-06-02",
+      "nav": 1262.12,
+      "benchmark": 1247.2
+     },
+     {
+      "date": "2014-06-12",
+      "nav": 1285.87,
+      "benchmark": 1261.63
+     },
+     {
+      "date": "2014-06-24",
+      "nav": 1343.09,
+      "benchmark": 1271.12
+     },
+     {
+      "date": "2014-07-04",
+      "nav": 1335.56,
+      "benchmark": 1282.25
+     },
+     {
+      "date": "2014-07-16",
+      "nav": 1308.64,
+      "benchmark": 1279.78
+     },
+     {
+      "date": "2014-07-28",
+      "nav": 1303.08,
+      "benchmark": 1285.13
+     },
+     {
+      "date": "2014-08-07",
+      "nav": 1316.08,
+      "benchmark": 1252.15
+     },
+     {
+      "date": "2014-08-19",
+      "nav": 1331.52,
+      "benchmark": 1290.08
+     },
+     {
+      "date": "2014-08-29",
+      "nav": 1385.05,
+      "benchmark": 1318.12
+     },
+     {
+      "date": "2014-09-10",
+      "nav": 1409.46,
+      "benchmark": 1331.72
+     },
+     {
+      "date": "2014-09-22",
+      "nav": 1378.55,
+      "benchmark": 1337.91
+     },
+     {
+      "date": "2014-10-02",
+      "nav": 1367.72,
+      "benchmark": 1300.8
+     },
+     {
+      "date": "2014-10-15",
+      "nav": 1263.27,
+      "benchmark": 1232.36
+     },
+     {
+      "date": "2014-10-27",
+      "nav": 1327.46,
+      "benchmark": 1303.28
+     },
+     {
+      "date": "2014-11-06",
+      "nav": 1429.41,
+      "benchmark": 1367.18
+     },
+     {
+      "date": "2014-11-18",
+      "nav": 1472.77,
+      "benchmark": 1373.78
+     },
+     {
+      "date": "2014-11-28",
+      "nav": 1464.59,
+      "benchmark": 1397.28
+     },
+     {
+      "date": "2014-12-10",
+      "nav": 1356.06,
+      "benchmark": 1369.24
+     },
+     {
+      "date": "2014-12-22",
+      "nav": 1408.6,
+      "benchmark": 1401.82
+     },
+     {
+      "date": "2015-01-08",
+      "nav": 1425.03,
+      "benchmark": 1433.56
+     },
+     {
+      "date": "2015-01-20",
+      "nav": 1377.01,
+      "benchmark": 1450.05
+     },
+     {
+      "date": "2015-01-30",
+      "nav": 1461.85,
+      "benchmark": 1487.16
+     },
+     {
+      "date": "2015-02-11",
+      "nav": 1496.54,
+      "benchmark": 1524.27
+     },
+     {
+      "date": "2015-02-23",
+      "nav": 1546.54,
+      "benchmark": 1560.96
+     },
+     {
+      "date": "2015-03-05",
+      "nav": 1531.69,
+      "benchmark": 1602.6
+     },
+     {
+      "date": "2015-03-17",
+      "nav": 1568.09,
+      "benchmark": 1638.47
+     },
+     {
+      "date": "2015-03-27",
+      "nav": 1494.45,
+      "benchmark": 1602.6
+     },
+     {
+      "date": "2015-04-10",
+      "nav": 1545.75,
+      "benchmark": 1683.0
+     },
+     {
+      "date": "2015-04-22",
+      "nav": 1551.46,
+      "benchmark": 1667.34
+     },
+     {
+      "date": "2015-05-05",
+      "nav": 1493.49,
+      "benchmark": 1594.77
+     },
+     {
+      "date": "2015-05-15",
+      "nav": 1494.1,
+      "benchmark": 1588.59
+     },
+     {
+      "date": "2015-05-28",
+      "nav": 1569.78,
+      "benchmark": 1653.32
+     },
+     {
+      "date": "2015-06-09",
+      "nav": 1475.17,
+      "benchmark": 1567.97
+     },
+     {
+      "date": "2015-06-19",
+      "nav": 1487.37,
+      "benchmark": 1582.81
+     },
+     {
+      "date": "2015-07-01",
+      "nav": 1505.15,
+      "benchmark": 1592.71
+     },
+     {
+      "date": "2015-07-13",
+      "nav": 1515.86,
+      "benchmark": 1613.74
+     },
+     {
+      "date": "2015-07-23",
+      "nav": 1558.74,
+      "benchmark": 1625.28
+     },
+     {
+      "date": "2015-08-04",
+      "nav": 1536.92,
+      "benchmark": 1622.81
+     },
+     {
+      "date": "2015-08-14",
+      "nav": 1500.37,
+      "benchmark": 1583.23
+     },
+     {
+      "date": "2015-08-26",
+      "nav": 1341.58,
+      "benchmark": 1407.59
+     },
+     {
+      "date": "2015-09-07",
+      "nav": 1341.58,
+      "benchmark": 1455.83
+     },
+     {
+      "date": "2015-09-17",
+      "nav": 1341.58,
+      "benchmark": 1482.63
+     },
+     {
+      "date": "2015-09-29",
+      "nav": 1341.58,
+      "benchmark": 1400.17
+     },
+     {
+      "date": "2015-10-09",
+      "nav": 1341.58,
+      "benchmark": 1494.58
+     },
+     {
+      "date": "2015-10-21",
+      "nav": 1341.58,
+      "benchmark": 1502.42
+     },
+     {
+      "date": "2015-11-02",
+      "nav": 1365.69,
+      "benchmark": 1575.39
+     },
+     {
+      "date": "2015-11-12",
+      "nav": 1388.23,
+      "benchmark": 1584.05
+     },
+     {
+      "date": "2015-11-24",
+      "nav": 1428.53,
+      "benchmark": 1618.27
+     },
+     {
+      "date": "2015-12-04",
+      "nav": 1410.97,
+      "benchmark": 1578.69
+     },
+     {
+      "date": "2015-12-16",
+      "nav": 1361.2,
+      "benchmark": 1542.0
+     },
+     {
+      "date": "2015-12-29",
+      "nav": 1357.59,
+      "benchmark": 1575.39
+     },
+     {
+      "date": "2016-01-12",
+      "nav": 1305.02,
+      "benchmark": 1459.95
+     },
+     {
+      "date": "2016-01-22",
+      "nav": 1305.02,
+      "benchmark": 1442.63
+     },
+     {
+      "date": "2016-02-03",
+      "nav": 1305.02,
+      "benchmark": 1407.18
+     },
+     {
+      "date": "2016-02-15",
+      "nav": 1305.02,
+      "benchmark": 1387.39
+     },
+     {
+      "date": "2016-02-25",
+      "nav": 1305.02,
+      "benchmark": 1429.03
+     },
+     {
+      "date": "2016-03-08",
+      "nav": 1305.02,
+      "benchmark": 1476.85
+     },
+     {
+      "date": "2016-03-18",
+      "nav": 1305.02,
+      "benchmark": 1492.52
+     },
+     {
+      "date": "2016-04-01",
+      "nav": 1305.02,
+      "benchmark": 1474.79
+     },
+     {
+      "date": "2016-04-13",
+      "nav": 1301.48,
+      "benchmark": 1514.79
+     },
+     {
+      "date": "2016-04-25",
+      "nav": 1262.72,
+      "benchmark": 1528.8
+     },
+     {
+      "date": "2016-05-05",
+      "nav": 1245.99,
+      "benchmark": 1482.21
+     },
+     {
+      "date": "2016-05-18",
+      "nav": 1251.97,
+      "benchmark": 1502.0
+     },
+     {
+      "date": "2016-05-30",
+      "nav": 1303.68,
+      "benchmark": 1553.95
+     },
+     {
+      "date": "2016-06-09",
+      "nav": 1272.7,
+      "benchmark": 1533.75
+     },
+     {
+      "date": "2016-06-21",
+      "nav": 1252.42,
+      "benchmark": 1526.33
+     },
+     {
+      "date": "2016-07-01",
+      "nav": 1258.15,
+      "benchmark": 1538.29
+     },
+     {
+      "date": "2016-07-13",
+      "nav": 1289.95,
+      "benchmark": 1574.16
+     },
+     {
+      "date": "2016-07-25",
+      "nav": 1347.47,
+      "benchmark": 1600.96
+     },
+     {
+      "date": "2016-08-04",
+      "nav": 1378.57,
+      "benchmark": 1584.88
+     },
+     {
+      "date": "2016-08-16",
+      "nav": 1358.84,
+      "benchmark": 1589.0
+     },
+     {
+      "date": "2016-08-26",
+      "nav": 1334.93,
+      "benchmark": 1595.18
+     },
+     {
+      "date": "2016-09-07",
+      "nav": 1346.24,
+      "benchmark": 1607.55
+     },
+     {
+      "date": "2016-09-19",
+      "nav": 1320.27,
+      "benchmark": 1582.4
+     },
+     {
+      "date": "2016-09-29",
+      "nav": 1349.99,
+      "benchmark": 1593.95
+     },
+     {
+      "date": "2016-10-12",
+      "nav": 1311.04,
+      "benchmark": 1599.31
+     },
+     {
+      "date": "2016-10-24",
+      "nav": 1363.87,
+      "benchmark": 1627.76
+     },
+     {
+      "date": "2016-11-03",
+      "nav": 1299.45,
+      "benchmark": 1561.37
+     },
+     {
+      "date": "2016-11-15",
+      "nav": 1286.9,
+      "benchmark": 1645.9
+     },
+     {
+      "date": "2016-11-25",
+      "nav": 1319.14,
+      "benchmark": 1686.71
+     },
+     {
+      "date": "2016-12-07",
+      "nav": 1316.41,
+      "benchmark": 1682.18
+     },
+     {
+      "date": "2016-12-19",
+      "nav": 1337.27,
+      "benchmark": 1754.33
+     },
+     {
+      "date": "2016-12-30",
+      "nav": 1369.06,
+      "benchmark": 1739.08
+     },
+     {
+      "date": "2017-01-11",
+      "nav": 1398.41,
+      "benchmark": 1759.28
+     },
+     {
+      "date": "2017-01-23",
+      "nav": 1415.78,
+      "benchmark": 1725.88
+     },
+     {
+      "date": "2017-02-02",
+      "nav": 1440.44,
+      "benchmark": 1732.89
+     },
+     {
+      "date": "2017-02-14",
+      "nav": 1526.33,
+      "benchmark": 1795.56
+     },
+     {
+      "date": "2017-02-24",
+      "nav": 1491.73,
+      "benchmark": 1810.82
+     },
+     {
+      "date": "2017-03-08",
+      "nav": 1496.44,
+      "benchmark": 1819.89
+     },
+     {
+      "date": "2017-03-20",
+      "nav": 1500.26,
+      "benchmark": 1809.17
+     },
+     {
+      "date": "2017-03-30",
+      "nav": 1526.65,
+      "benchmark": 1814.94
+     },
+     {
+      "date": "2017-04-11",
+      "nav": 1531.18,
+      "benchmark": 1812.46
+     },
+     {
+      "date": "2017-04-25",
+      "nav": 1533.81,
+      "benchmark": 1802.57
+     },
+     {
+      "date": "2017-05-08",
+      "nav": 1548.31,
+      "benchmark": 1817.82
+     },
+     {
+      "date": "2017-05-18",
+      "nav": 1526.09,
+      "benchmark": 1777.42
+     },
+     {
+      "date": "2017-05-30",
+      "nav": 1527.55,
+      "benchmark": 1795.97
+     },
+     {
+      "date": "2017-06-09",
+      "nav": 1544.9,
+      "benchmark": 1815.76
+     },
+     {
+      "date": "2017-06-21",
+      "nav": 1498.72,
+      "benchmark": 1814.11
+     },
+     {
+      "date": "2017-07-03",
+      "nav": 1460.68,
+      "benchmark": 1786.08
+     },
+     {
+      "date": "2017-07-13",
+      "nav": 1466.81,
+      "benchmark": 1791.85
+     },
+     {
+      "date": "2017-07-25",
+      "nav": 1465.09,
+      "benchmark": 1774.53
+     },
+     {
+      "date": "2017-08-04",
+      "nav": 1464.59,
+      "benchmark": 1765.88
+     },
+     {
+      "date": "2017-08-16",
+      "nav": 1486.26,
+      "benchmark": 1763.4
+     },
+     {
+      "date": "2017-08-28",
+      "nav": 1440.79,
+      "benchmark": 1715.57
+     },
+     {
+      "date": "2017-09-07",
+      "nav": 1429.7,
+      "benchmark": 1725.47
+     },
+     {
+      "date": "2017-09-19",
+      "nav": 1429.7,
+      "benchmark": 1761.75
+     },
+     {
+      "date": "2017-09-29",
+      "nav": 1434.98,
+      "benchmark": 1789.79
+     },
+     {
+      "date": "2017-10-11",
+      "nav": 1470.39,
+      "benchmark": 1807.93
+     },
+     {
+      "date": "2017-10-23",
+      "nav": 1479.71,
+      "benchmark": 1835.14
+     },
+     {
+      "date": "2017-11-02",
+      "nav": 1482.54,
+      "benchmark": 1853.69
+     },
+     {
+      "date": "2017-11-14",
+      "nav": 1457.59,
+      "benchmark": 1826.9
+     },
+     {
+      "date": "2017-11-24",
+      "nav": 1479.49,
+      "benchmark": 1829.78
+     },
+     {
+      "date": "2017-12-06",
+      "nav": 1469.7,
+      "benchmark": 1854.52
+     },
+     {
+      "date": "2017-12-18",
+      "nav": 1521.34,
+      "benchmark": 1892.04
+     },
+     {
+      "date": "2018-01-02",
+      "nav": 1471.1,
+      "benchmark": 1861.24
+     },
+     {
+      "date": "2018-01-12",
+      "nav": 1510.14,
+      "benchmark": 1912.78
+     },
+     {
+      "date": "2018-01-24",
+      "nav": 1552.83,
+      "benchmark": 1911.46
+     },
+     {
+      "date": "2018-02-05",
+      "nav": 1511.47,
+      "benchmark": 1839.18
+     },
+     {
+      "date": "2018-02-15",
+      "nav": 1483.54,
+      "benchmark": 1803.44
+     },
+     {
+      "date": "2018-02-27",
+      "nav": 1516.06,
+      "benchmark": 1869.61
+     },
+     {
+      "date": "2018-03-09",
+      "nav": 1518.53,
+      "benchmark": 1853.49
+     },
+     {
+      "date": "2018-03-21",
+      "nav": 1570.2,
+      "benchmark": 1837.66
+     },
+     {
+      "date": "2018-04-04",
+      "nav": 1507.66,
+      "benchmark": 1773.3
+     },
+     {
+      "date": "2018-04-16",
+      "nav": 1543.15,
+      "benchmark": 1810.11
+     },
+     {
+      "date": "2018-04-26",
+      "nav": 1579.72,
+      "benchmark": 1844.09
+     },
+     {
+      "date": "2018-05-09",
+      "nav": 1702.56,
+      "benchmark": 1895.46
+     },
+     {
+      "date": "2018-05-21",
+      "nav": 1705.26,
+      "benchmark": 1932.57
+     },
+     {
+      "date": "2018-05-31",
+      "nav": 1724.02,
+      "benchmark": 1927.13
+     },
+     {
+      "date": "2018-06-12",
+      "nav": 1782.49,
+      "benchmark": 1952.03
+     },
+     {
+      "date": "2018-06-22",
+      "nav": 1781.96,
+      "benchmark": 1954.69
+     },
+     {
+      "date": "2018-07-04",
+      "nav": 1707.64,
+      "benchmark": 1923.62
+     },
+     {
+      "date": "2018-07-16",
+      "nav": 1800.92,
+      "benchmark": 1957.59
+     },
+     {
+      "date": "2018-07-26",
+      "nav": 1867.29,
+      "benchmark": 1995.69
+     },
+     {
+      "date": "2018-08-07",
+      "nav": 1884.3,
+      "benchmark": 2010.7
+     },
+     {
+      "date": "2018-08-17",
+      "nav": 1852.18,
+      "benchmark": 2010.49
+     },
+     {
+      "date": "2018-08-29",
+      "nav": 1925.89,
+      "benchmark": 2017.13
+     },
+     {
+      "date": "2018-09-10",
+      "nav": 1888.52,
+      "benchmark": 1992.43
+     },
+     {
+      "date": "2018-09-20",
+      "nav": 1881.64,
+      "benchmark": 2015.19
+     },
+     {
+      "date": "2018-10-02",
+      "nav": 1970.93,
+      "benchmark": 2038.82
+     },
+     {
+      "date": "2018-10-15",
+      "nav": 1759.74,
+      "benchmark": 1922.51
+     },
+     {
+      "date": "2018-10-25",
+      "nav": 1697.33,
+      "benchmark": 1905.4
+     },
+     {
+      "date": "2018-11-06",
+      "nav": 1676.77,
+      "benchmark": 1935.74
+     },
+     {
+      "date": "2018-11-16",
+      "nav": 1575.09,
+      "benchmark": 1920.49
+     },
+     {
+      "date": "2018-11-28",
+      "nav": 1577.27,
+      "benchmark": 1920.9
+     },
+     {
+      "date": "2018-12-10",
+      "nav": 1530.55,
+      "benchmark": 1835.55
+     },
+     {
+      "date": "2018-12-20",
+      "nav": 1530.55,
+      "benchmark": 1771.15
+     },
+     {
+      "date": "2019-01-08",
+      "nav": 1530.55,
+      "benchmark": 1822.94
+     },
+     {
+      "date": "2019-01-18",
+      "nav": 1530.55,
+      "benchmark": 1909.31
+     },
+     {
+      "date": "2019-01-30",
+      "nav": 1530.55,
+      "benchmark": 1900.04
+     },
+     {
+      "date": "2019-02-11",
+      "nav": 1507.86,
+      "benchmark": 1943.78
+     },
+     {
+      "date": "2019-02-21",
+      "nav": 1541.35,
+      "benchmark": 1988.52
+     },
+     {
+      "date": "2019-03-05",
+      "nav": 1576.05,
+      "benchmark": 2009.38
+     },
+     {
+      "date": "2019-03-15",
+      "nav": 1615.98,
+      "benchmark": 2029.09
+     },
+     {
+      "date": "2019-03-27",
+      "nav": 1628.03,
+      "benchmark": 2021.01
+     },
+     {
+      "date": "2019-04-08",
+      "nav": 1668.65,
+      "benchmark": 2080.29
+     },
+     {
+      "date": "2019-04-18",
+      "nav": 1662.92,
+      "benchmark": 2094.15
+     },
+     {
+      "date": "2019-05-03",
+      "nav": 1725.84,
+      "benchmark": 2123.5
+     },
+     {
+      "date": "2019-05-15",
+      "nav": 1675.03,
+      "benchmark": 2057.66
+     },
+     {
+      "date": "2019-05-27",
+      "nav": 1674.9,
+      "benchmark": 2051.02
+     },
+     {
+      "date": "2019-06-06",
+      "nav": 1594.08,
+      "benchmark": 2037.66
+     },
+     {
+      "date": "2019-06-19",
+      "nav": 1697.47,
+      "benchmark": 2106.43
+     },
+     {
+      "date": "2019-07-01",
+      "nav": 1707.55,
+      "benchmark": 2124.57
+     },
+     {
+      "date": "2019-07-11",
+      "nav": 1735.39,
+      "benchmark": 2148.32
+     },
+     {
+      "date": "2019-07-23",
+      "nav": 1757.21,
+      "benchmark": 2166.71
+     },
+     {
+      "date": "2019-08-02",
+      "nav": 1679.16,
+      "benchmark": 2113.11
+     },
+     {
+      "date": "2019-08-14",
+      "nav": 1674.04,
+      "benchmark": 2061.99
+     },
+     {
+      "date": "2019-08-26",
+      "nav": 1702.58,
+      "benchmark": 2080.62
+     },
+     {
+      "date": "2019-09-05",
+      "nav": 1734.67,
+      "benchmark": 2168.03
+     },
+     {
+      "date": "2019-09-17",
+      "nav": 1693.08,
+      "benchmark": 2188.81
+     },
+     {
+      "date": "2019-09-27",
+      "nav": 1692.56,
+      "benchmark": 2199.7
+     },
+     {
+      "date": "2019-10-10",
+      "nav": 1707.7,
+      "benchmark": 2158.38
+     },
+     {
+      "date": "2019-10-22",
+      "nav": 1668.62,
+      "benchmark": 2189.31
+     },
+     {
+      "date": "2019-11-01",
+      "nav": 1724.85,
+      "benchmark": 2220.97
+     },
+     {
+      "date": "2019-11-13",
+      "nav": 1743.93,
+      "benchmark": 2272.51
+     },
+     {
+      "date": "2019-11-25",
+      "nav": 1755.09,
+      "benchmark": 2295.93
+     },
+     {
+      "date": "2019-12-05",
+      "nav": 1758.55,
+      "benchmark": 2262.12
+     },
+     {
+      "date": "2019-12-17",
+      "nav": 1812.89,
+      "benchmark": 2314.64
+     },
+     {
+      "date": "2020-01-03",
+      "nav": 1874.49,
+      "benchmark": 2336.91
+     },
+     {
+      "date": "2020-01-15",
+      "nav": 1931.83,
+      "benchmark": 2374.59
+     },
+     {
+      "date": "2020-01-27",
+      "nav": 1882.75,
+      "benchmark": 2363.38
+     },
+     {
+      "date": "2020-02-06",
+      "nav": 2030.4,
+      "benchmark": 2432.81
+     },
+     {
+      "date": "2020-02-18",
+      "nav": 2054.74,
+      "benchmark": 2472.88
+     },
+     {
+      "date": "2020-02-28",
+      "nav": 1758.69,
+      "benchmark": 2132.08
+     },
+     {
+      "date": "2020-03-11",
+      "nav": 1755.2,
+      "benchmark": 1949.1
+     },
+     {
+      "date": "2020-03-23",
+      "nav": 1755.2,
+      "benchmark": 1656.9
+     },
+     {
+      "date": "2020-04-02",
+      "nav": 1755.2,
+      "benchmark": 1837.16
+     },
+     {
+      "date": "2020-04-16",
+      "nav": 1755.2,
+      "benchmark": 2009.13
+     },
+     {
+      "date": "2020-04-28",
+      "nav": 1755.2,
+      "benchmark": 2086.64
+     },
+     {
+      "date": "2020-05-11",
+      "nav": 1755.2,
+      "benchmark": 2114.6
+     },
+     {
+      "date": "2020-05-21",
+      "nav": 1755.2,
+      "benchmark": 2105.94
+     },
+     {
+      "date": "2020-06-03",
+      "nav": 1751.12,
+      "benchmark": 2206.38
+     },
+     {
+      "date": "2020-06-15",
+      "nav": 1793.19,
+      "benchmark": 2125.81
+     },
+     {
+      "date": "2020-06-25",
+      "nav": 1875.25,
+      "benchmark": 2160.94
+     },
+     {
+      "date": "2020-07-07",
+      "nav": 2157.46,
+      "benchmark": 2232.18
+     },
+     {
+      "date": "2020-07-17",
+      "nav": 2188.55,
+      "benchmark": 2237.22
+     },
+     {
+      "date": "2020-07-29",
+      "nav": 2120.52,
+      "benchmark": 2196.31
+     },
+     {
+      "date": "2020-08-10",
+      "nav": 2188.76,
+      "benchmark": 2239.52
+     },
+     {
+      "date": "2020-08-20",
+      "nav": 2512.58,
+      "benchmark": 2251.48
+     },
+     {
+      "date": "2020-09-01",
+      "nav": 2858.2,
+      "benchmark": 2302.61
+     },
+     {
+      "date": "2020-09-11",
+      "nav": 2428.42,
+      "benchmark": 2241.92
+     },
+     {
+      "date": "2020-09-23",
+      "nav": 2503.66,
+      "benchmark": 2236.39
+     },
+     {
+      "date": "2020-10-05",
+      "nav": 2645.42,
+      "benchmark": 2277.54
+     },
+     {
+      "date": "2020-10-15",
+      "nav": 2768.56,
+      "benchmark": 2320.83
+     },
+     {
+      "date": "2020-10-27",
+      "nav": 2616.26,
+      "benchmark": 2257.34
+     },
+     {
+      "date": "2020-11-06",
+      "nav": 2716.43,
+      "benchmark": 2328.99
+     },
+     {
+      "date": "2020-11-18",
+      "nav": 2766.5,
+      "benchmark": 2424.81
+     },
+     {
+      "date": "2020-11-30",
+      "nav": 3018.54,
+      "benchmark": 2415.58
+     },
+     {
+      "date": "2020-12-10",
+      "nav": 3095.89,
+      "benchmark": 2438.09
+     },
+     {
+      "date": "2020-12-22",
+      "nav": 3209.01,
+      "benchmark": 2437.43
+     },
+     {
+      "date": "2021-01-07",
+      "nav": 3736.84,
+      "benchmark": 2505.54
+     },
+     {
+      "date": "2021-01-19",
+      "nav": 3765.58,
+      "benchmark": 2526.9
+     },
+     {
+      "date": "2021-01-29",
+      "nav": 3722.71,
+      "benchmark": 2472.39
+     },
+     {
+      "date": "2021-02-10",
+      "nav": 3823.41,
+      "benchmark": 2592.12
+     },
+     {
+      "date": "2021-02-22",
+      "nav": 3543.42,
+      "benchmark": 2588.49
+     },
+     {
+      "date": "2021-03-04",
+      "nav": 3143.66,
+      "benchmark": 2560.37
+     },
+     {
+      "date": "2021-03-16",
+      "nav": 3382.2,
+      "benchmark": 2677.55
+     },
+     {
+      "date": "2021-03-26",
+      "nav": 3127.4,
+      "benchmark": 2675.9
+     },
+     {
+      "date": "2021-04-09",
+      "nav": 3342.62,
+      "benchmark": 2752.51
+     },
+     {
+      "date": "2021-04-21",
+      "nav": 3427.63,
+      "benchmark": 2746.4
+     },
+     {
+      "date": "2021-05-03",
+      "nav": 3334.57,
+      "benchmark": 2767.93
+     },
+     {
+      "date": "2021-05-13",
+      "nav": 3030.8,
+      "benchmark": 2711.19
+     },
+     {
+      "date": "2021-05-26",
+      "nav": 3155.08,
+      "benchmark": 2752.34
+     },
+     {
+      "date": "2021-06-07",
+      "nav": 3089.15,
+      "benchmark": 2782.44
+     },
+     {
+      "date": "2021-06-17",
+      "nav": 3284.6,
+      "benchmark": 2849.56
+     },
+     {
+      "date": "2021-06-29",
+      "nav": 3441.42,
+      "benchmark": 2879.99
+     },
+     {
+      "date": "2021-07-09",
+      "nav": 3344.48,
+      "benchmark": 2918.09
+     },
+     {
+      "date": "2021-07-21",
+      "nav": 3361.65,
+      "benchmark": 2915.12
+     },
+     {
+      "date": "2021-08-02",
+      "nav": 3705.65,
+      "benchmark": 2947.36
+     },
+     {
+      "date": "2021-08-12",
+      "nav": 3837.49,
+      "benchmark": 3008.05
+     },
+     {
+      "date": "2021-08-24",
+      "nav": 3834.72,
+      "benchmark": 3016.46
+     },
+     {
+      "date": "2021-09-03",
+      "nav": 3952.39,
+      "benchmark": 3026.35
+     },
+     {
+      "date": "2021-09-15",
+      "nav": 3979.42,
+      "benchmark": 2993.95
+     },
+     {
+      "date": "2021-09-27",
+      "nav": 3991.05,
+      "benchmark": 3008.21
+     },
+     {
+      "date": "2021-10-07",
+      "nav": 4153.04,
+      "benchmark": 3010.69
+     },
+     {
+      "date": "2021-10-19",
+      "nav": 4512.71,
+      "benchmark": 3063.96
+     },
+     {
+      "date": "2021-10-29",
+      "nav": 5080.69,
+      "benchmark": 3121.43
+     },
+     {
+      "date": "2021-11-10",
+      "nav": 5171.06,
+      "benchmark": 3181.71
+     },
+     {
+      "date": "2021-11-22",
+      "nav": 5368.94,
+      "benchmark": 3262.02
+     },
+     {
+      "date": "2021-12-02",
+      "nav": 5012.11,
+      "benchmark": 3121.51
+     },
+     {
+      "date": "2021-12-14",
+      "nav": 4489.45,
+      "benchmark": 3161.34
+     },
+     {
+      "date": "2021-12-27",
+      "nav": 5002.1,
+      "benchmark": 3252.13
+     },
+     {
+      "date": "2022-01-07",
+      "nav": 4862.73,
+      "benchmark": 3196.06
+     },
+     {
+      "date": "2022-01-19",
+      "nav": 4759.72,
+      "benchmark": 3131.74
+     },
+     {
+      "date": "2022-01-31",
+      "nav": 4639.48,
+      "benchmark": 3089.52
+     },
+     {
+      "date": "2022-02-10",
+      "nav": 4745.19,
+      "benchmark": 3096.12
+     },
+     {
+      "date": "2022-02-22",
+      "nav": 4532.33,
+      "benchmark": 2979.19
+     },
+     {
+      "date": "2022-03-04",
+      "nav": 4584.26,
+      "benchmark": 3007.06
+     },
+     {
+      "date": "2022-03-16",
+      "nav": 4547.54,
+      "benchmark": 3042.19
+     },
+     {
+      "date": "2022-03-28",
+      "nav": 4965.15,
+      "benchmark": 3170.91
+     },
+     {
+      "date": "2022-04-07",
+      "nav": 4787.74,
+      "benchmark": 3147.57
+     },
+     {
+      "date": "2022-04-21",
+      "nav": 4783.77,
+      "benchmark": 3169.17
+     },
+     {
+      "date": "2022-05-03",
+      "nav": 4686.8,
+      "benchmark": 3069.89
+     },
+     {
+      "date": "2022-05-13",
+      "nav": 4481.59,
+      "benchmark": 2981.41
+     },
+     {
+      "date": "2022-05-25",
+      "nav": 4481.59,
+      "benchmark": 2894.5
+     },
+     {
+      "date": "2022-06-06",
+      "nav": 4481.59,
+      "benchmark": 3009.45
+     },
+     {
+      "date": "2022-06-16",
+      "nav": 4481.59,
+      "benchmark": 2729.0
+     },
+     {
+      "date": "2022-06-28",
+      "nav": 4481.59,
+      "benchmark": 2852.61
+     },
+     {
+      "date": "2022-07-08",
+      "nav": 4481.59,
+      "benchmark": 2953.3
+     },
+     {
+      "date": "2022-07-20",
+      "nav": 4481.59,
+      "benchmark": 2987.6
+     },
+     {
+      "date": "2022-08-01",
+      "nav": 4495.2,
+      "benchmark": 3091.58
+     },
+     {
+      "date": "2022-08-11",
+      "nav": 4398.41,
+      "benchmark": 3141.06
+     },
+     {
+      "date": "2022-08-23",
+      "nav": 4608.91,
+      "benchmark": 3156.56
+     },
+     {
+      "date": "2022-09-02",
+      "nav": 4443.22,
+      "benchmark": 3047.38
+     },
+     {
+      "date": "2022-09-14",
+      "nav": 4465.42,
+      "benchmark": 3022.89
+     },
+     {
+      "date": "2022-09-26",
+      "nav": 4293.12,
+      "benchmark": 2901.92
+     },
+     {
+      "date": "2022-10-06",
+      "nav": 4293.12,
+      "benchmark": 2930.78
+     },
+     {
+      "date": "2022-10-18",
+      "nav": 4293.12,
+      "benchmark": 2874.38
+     },
+     {
+      "date": "2022-10-28",
+      "nav": 4293.12,
+      "benchmark": 2959.81
+     },
+     {
+      "date": "2022-11-09",
+      "nav": 4293.12,
+      "benchmark": 2918.66
+     },
+     {
+      "date": "2022-11-21",
+      "nav": 4270.35,
+      "benchmark": 2982.73
+     },
+     {
+      "date": "2022-12-01",
+      "nav": 4291.23,
+      "benchmark": 3024.95
+     },
+     {
+      "date": "2022-12-13",
+      "nav": 4174.09,
+      "benchmark": 2978.2
+     },
+     {
+      "date": "2022-12-23",
+      "nav": 4097.96,
+      "benchmark": 2838.84
+     },
+     {
+      "date": "2023-01-05",
+      "nav": 4097.96,
+      "benchmark": 2861.44
+     },
+     {
+      "date": "2023-01-17",
+      "nav": 4097.96,
+      "benchmark": 2942.49
+     },
+     {
+      "date": "2023-01-27",
+      "nav": 4092.31,
+      "benchmark": 2977.21
+     },
+     {
+      "date": "2023-02-08",
+      "nav": 4027.78,
+      "benchmark": 3031.55
+     },
+     {
+      "date": "2023-02-20",
+      "nav": 4063.29,
+      "benchmark": 3019.76
+     },
+     {
+      "date": "2023-03-02",
+      "nav": 4079.66,
+      "benchmark": 2962.28
+     },
+     {
+      "date": "2023-03-14",
+      "nav": 4030.79,
+      "benchmark": 2909.34
+     },
+     {
+      "date": "2023-03-24",
+      "nav": 3998.57,
+      "benchmark": 2897.06
+     },
+     {
+      "date": "2023-04-05",
+      "nav": 4001.11,
+      "benchmark": 2968.22
+     },
+     {
+      "date": "2023-04-19",
+      "nav": 4112.13,
+      "benchmark": 3009.86
+     },
+     {
+      "date": "2023-05-02",
+      "nav": 4081.69,
+      "benchmark": 2963.69
+     },
+     {
+      "date": "2023-05-12",
+      "nav": 4144.48,
+      "benchmark": 3019.51
+     },
+     {
+      "date": "2023-05-24",
+      "nav": 4008.6,
+      "benchmark": 3030.15
+     },
+     {
+      "date": "2023-06-05",
+      "nav": 3973.63,
+      "benchmark": 3145.18
+     },
+     {
+      "date": "2023-06-15",
+      "nav": 4157.38,
+      "benchmark": 3170.41
+     },
+     {
+      "date": "2023-06-27",
+      "nav": 4037.05,
+      "benchmark": 3113.68
+     },
+     {
+      "date": "2023-07-07",
+      "nav": 3974.25,
+      "benchmark": 3139.32
+     },
+     {
+      "date": "2023-07-19",
+      "nav": 4132.76,
+      "benchmark": 3195.07
+     },
+     {
+      "date": "2023-07-31",
+      "nav": 4169.85,
+      "benchmark": 3257.65
+     },
+     {
+      "date": "2023-08-10",
+      "nav": 3968.86,
+      "benchmark": 3197.79
+     },
+     {
+      "date": "2023-08-22",
+      "nav": 3921.29,
+      "benchmark": 3154.74
+     },
+     {
+      "date": "2023-09-01",
+      "nav": 3975.67,
+      "benchmark": 3253.28
+     },
+     {
+      "date": "2023-09-13",
+      "nav": 3912.59,
+      "benchmark": 3242.73
+     },
+     {
+      "date": "2023-09-25",
+      "nav": 3818.57,
+      "benchmark": 3193.25
+     },
+     {
+      "date": "2023-10-05",
+      "nav": 3807.58,
+      "benchmark": 3134.29
+     },
+     {
+      "date": "2023-10-17",
+      "nav": 3947.97,
+      "benchmark": 3217.25
+     },
+     {
+      "date": "2023-10-27",
+      "nav": 3802.87,
+      "benchmark": 3047.79
+     },
+     {
+      "date": "2023-11-08",
+      "nav": 4045.07,
+      "benchmark": 3172.8
+     },
+     {
+      "date": "2023-11-20",
+      "nav": 4178.44,
+      "benchmark": 3228.71
+     },
+     {
+      "date": "2023-11-30",
+      "nav": 4066.6,
+      "benchmark": 3256.09
+     },
+     {
+      "date": "2023-12-12",
+      "nav": 4148.89,
+      "benchmark": 3345.14
+     },
+     {
+      "date": "2023-12-22",
+      "nav": 4205.83,
+      "benchmark": 3382.91
+     },
+     {
+      "date": "2024-01-08",
+      "nav": 4245.31,
+      "benchmark": 3372.11
+     },
+     {
+      "date": "2024-01-18",
+      "nav": 4344.92,
+      "benchmark": 3410.53
+     },
+     {
+      "date": "2024-01-30",
+      "nav": 4466.79,
+      "benchmark": 3526.64
+     },
+     {
+      "date": "2024-02-09",
+      "nav": 4681.06,
+      "benchmark": 3583.87
+     },
+     {
+      "date": "2024-02-21",
+      "nav": 4549.45,
+      "benchmark": 3569.02
+     },
+     {
+      "date": "2024-03-04",
+      "nav": 5073.27,
+      "benchmark": 3659.4
+     },
+     {
+      "date": "2024-03-14",
+      "nav": 5154.38,
+      "benchmark": 3676.63
+     },
+     {
+      "date": "2024-03-26",
+      "nav": 5334.41,
+      "benchmark": 3748.45
+     },
+     {
+      "date": "2024-04-09",
+      "nav": 5095.05,
+      "benchmark": 3705.41
+     },
+     {
+      "date": "2024-04-19",
+      "nav": 4966.95,
+      "benchmark": 3634.25
+     },
+     {
+      "date": "2024-05-02",
+      "nav": 5055.51,
+      "benchmark": 3664.92
+     },
+     {
+      "date": "2024-05-14",
+      "nav": 5243.5,
+      "benchmark": 3762.64
+     },
+     {
+      "date": "2024-05-24",
+      "nav": 5615.87,
+      "benchmark": 3794.63
+     },
+     {
+      "date": "2024-06-05",
+      "nav": 5976.34,
+      "benchmark": 3804.44
+     },
+     {
+      "date": "2024-06-17",
+      "nav": 6355.03,
+      "benchmark": 3878.74
+     },
+     {
+      "date": "2024-06-27",
+      "nav": 6204.25,
+      "benchmark": 3908.67
+     },
+     {
+      "date": "2024-07-09",
+      "nav": 6419.18,
+      "benchmark": 3943.47
+     },
+     {
+      "date": "2024-07-19",
+      "nav": 6030.7,
+      "benchmark": 3889.21
+     },
+     {
+      "date": "2024-07-31",
+      "nav": 5977.75,
+      "benchmark": 3932.26
+     },
+     {
+      "date": "2024-08-12",
+      "nav": 5746.3,
+      "benchmark": 3758.84
+     },
+     {
+      "date": "2024-08-22",
+      "nav": 6165.52,
+      "benchmark": 3889.96
+     },
+     {
+      "date": "2024-09-03",
+      "nav": 5733.3,
+      "benchmark": 3907.77
+     },
+     {
+      "date": "2024-09-13",
+      "nav": 5925.09,
+      "benchmark": 3916.26
+     },
+     {
+      "date": "2024-09-25",
+      "nav": 6011.38,
+      "benchmark": 3961.45
+     },
+     {
+      "date": "2024-10-07",
+      "nav": 6222.36,
+      "benchmark": 4023.71
+     },
+     {
+      "date": "2024-10-17",
+      "nav": 6504.48,
+      "benchmark": 4132.26
+     },
+     {
+      "date": "2024-10-29",
+      "nav": 6588.98,
+      "benchmark": 4113.09
+     },
+     {
+      "date": "2024-11-08",
+      "nav": 6855.86,
+      "benchmark": 4220.08
+     },
+     {
+      "date": "2024-11-20",
+      "nav": 6960.19,
+      "benchmark": 4220.29
+     },
+     {
+      "date": "2024-12-02",
+      "nav": 6945.48,
+      "benchmark": 4358.2
+     },
+     {
+      "date": "2024-12-12",
+      "nav": 6882.03,
+      "benchmark": 4374.7
+     },
+     {
+      "date": "2024-12-27",
+      "nav": 6901.47,
+      "benchmark": 4310.99
+     },
+     {
+      "date": "2025-01-10",
+      "nav": 6958.5,
+      "benchmark": 4293.88
+     },
+     {
+      "date": "2025-01-22",
+      "nav": 7428.0,
+      "benchmark": 4419.22
+     },
+     {
+      "date": "2025-02-03",
+      "nav": 6840.5,
+      "benchmark": 4420.05
+     },
+     {
+      "date": "2025-02-13",
+      "nav": 7391.23,
+      "benchmark": 4457.15
+     },
+     {
+      "date": "2025-02-25",
+      "nav": 7140.45,
+      "benchmark": 4330.58
+     },
+     {
+      "date": "2025-03-07",
+      "nav": 7079.85,
+      "benchmark": 4087.86
+     },
+     {
+      "date": "2025-03-19",
+      "nav": 7578.83,
+      "benchmark": 4076.31
+     },
+     {
+      "date": "2025-03-31",
+      "nav": 7329.42,
+      "benchmark": 4006.64
+     },
+     {
+      "date": "2025-04-10",
+      "nav": 7300.86,
+      "benchmark": 3653.96
+     },
+     {
+      "date": "2025-04-24",
+      "nav": 7300.86,
+      "benchmark": 3791.17
+     },
+     {
+      "date": "2025-05-07",
+      "nav": 7300.86,
+      "benchmark": 3909.66
+     },
+     {
+      "date": "2025-05-19",
+      "nav": 7600.89,
+      "benchmark": 4138.45
+     },
+     {
+      "date": "2025-05-29",
+      "nav": 7896.18,
+      "benchmark": 4094.21
+     },
+     {
+      "date": "2025-06-10",
+      "nav": 7624.49,
+      "benchmark": 4143.19
+     },
+     {
+      "date": "2025-06-20",
+      "nav": 7676.4,
+      "benchmark": 4075.49
+     },
+     {
+      "date": "2025-07-02",
+      "nav": 7776.06,
+      "benchmark": 4132.88
+     },
+     {
+      "date": "2025-07-14",
+      "nav": 7929.86,
+      "benchmark": 4183.8
+     },
+     {
+      "date": "2025-07-24",
+      "nav": 7966.45,
+      "benchmark": 4235.54
+     },
+     {
+      "date": "2025-08-05",
+      "nav": 7864.7,
+      "benchmark": 4235.96
+     },
+     {
+      "date": "2025-08-15",
+      "nav": 7707.98,
+      "benchmark": 4310.58
+     },
+     {
+      "date": "2025-08-27",
+      "nav": 7559.6,
+      "benchmark": 4356.97
+     },
+     {
+      "date": "2025-09-08",
+      "nav": 7630.83,
+      "benchmark": 4337.18
+     },
+     {
+      "date": "2025-09-18",
+      "nav": 8022.69,
+      "benchmark": 4405.82
+     },
+     {
+      "date": "2025-09-30",
+      "nav": 8234.89,
+      "benchmark": 4419.64
+     },
+     {
+      "date": "2025-10-10",
+      "nav": 8411.65,
+      "benchmark": 4449.53
+     },
+     {
+      "date": "2025-10-22",
+      "nav": 7851.99,
+      "benchmark": 4508.49
+     },
+     {
+      "date": "2025-11-03",
+      "nav": 8188.95,
+      "benchmark": 4616.51
+     },
+     {
+      "date": "2025-11-13",
+      "nav": 7890.37,
+      "benchmark": 4551.78
+     },
+     {
+      "date": "2025-11-25",
+      "nav": 7506.56,
+      "benchmark": 4526.83
+     },
+     {
+      "date": "2025-12-05",
+      "nav": 7774.32,
+      "benchmark": 4606.2
+     },
+     {
+      "date": "2025-12-17",
+      "nav": 7604.65,
+      "benchmark": 4504.98
+     },
+     {
+      "date": "2026-01-05",
+      "nav": 8257.66,
+      "benchmark": 4648.46
+     },
+     {
+      "date": "2026-01-15",
+      "nav": 8583.8,
+      "benchmark": 4739.37
+     },
+     {
+      "date": "2026-01-27",
+      "nav": 8820.62,
+      "benchmark": 4627.43
+     },
+     {
+      "date": "2026-02-06",
+      "nav": 8784.14,
+      "benchmark": 4645.58
+     },
+     {
+      "date": "2026-02-18",
+      "nav": 9336.84,
+      "benchmark": 4681.45
+     },
+     {
+      "date": "2026-03-02",
+      "nav": 9161.07,
+      "benchmark": 4698.35
+     },
+     {
+      "date": "2026-03-12",
+      "nav": 8854.11,
+      "benchmark": 4618.98
+     },
+     {
+      "date": "2026-03-24",
+      "nav": 8763.17,
+      "benchmark": 4499.0
+     },
+     {
+      "date": "2026-04-07",
+      "nav": 8587.53,
+      "benchmark": 4523.95
+     },
+     {
+      "date": "2026-04-17",
+      "nav": 9513.59,
+      "benchmark": 4811.53
+     },
+     {
+      "date": "2026-04-29",
+      "nav": 9519.49,
+      "benchmark": 4796.68
+     },
+     {
+      "date": "2026-05-12",
+      "nav": 9656.76,
+      "benchmark": 4912.74
+     },
+     {
+      "date": "2026-05-22",
+      "nav": 10026.52,
+      "benchmark": 5065.09
+     },
+     {
+      "date": "2026-06-03",
+      "nav": 9684.74,
+      "benchmark": 5107.97
+     },
+     {
+      "date": "2026-06-15",
+      "nav": 9895.48,
+      "benchmark": 5123.64
+     },
+     {
+      "date": "2026-06-25",
+      "nav": 9885.8,
+      "benchmark": 5116.42
+     },
+     {
+      "date": "2026-07-07",
+      "nav": 9657.23,
+      "benchmark": 5170.23
+     },
+     {
+      "date": "2026-07-17",
+      "nav": 9417.79,
+      "benchmark": 5148.79
+     },
+     {
+      "date": "2026-07-29",
+      "nav": 8803.83,
+      "benchmark": 5127.14
+     },
+     {
+      "date": "2026-08-10",
+      "nav": 9566.08,
+      "benchmark": 5308.55
+     },
+     {
+      "date": "2026-08-20",
+      "nav": 9362.7,
+      "benchmark": 5200.94
+     },
+     {
+      "date": "2026-09-01",
+      "nav": 8952.91,
+      "benchmark": 5219.29
+     },
+     {
+      "date": "2026-09-11",
+      "nav": 9203.78,
+      "benchmark": 5221.14
+     },
+     {
+      "date": "2026-09-23",
+      "nav": 9422.24,
+      "benchmark": 5323.19
+     },
+     {
+      "date": "2026-10-05",
+      "nav": 9761.68,
+      "benchmark": 5409.36
+     },
+     {
+      "date": "2026-10-15",
+      "nav": 9177.49,
+      "benchmark": 5392.25
+     }
+    ]
+   }
+  ]
+ },
+ "mistakes_html": "<p>Append-only. Every entry: what was wrong, what it cost, and what rule would have\nprevented it. Written by the agent when a past decision turns out to be wrong, and by\nthe owner when the agent missed one. Lines are never removed.</p>\n<p><em>No mistakes recorded yet. The first live run has not happened.</em></p>",
+ "glossary": {
+  "html": "<p>Plain-language definitions of the terms used on this site and in the journal. Each\nheading is a link target: <code>/finance/glossary/#nav</code>, <code>/finance/glossary/#drawdown</code>, and so on.</p>\n<h3 id=\"nav\">NAV</h3>\n<p>Net asset value: cash plus the market value of every position, in EUR. The single\nnumber that says how the account is doing. On this site it comes from the broker's\nown valuation at the time of the daily snapshot.</p>\n<h3 id=\"benchmark\">Benchmark</h3>\n<p>What the money would be worth if it had simply been put into one broad fund on the\nfirst live day and left alone. Here: EUR 1,000 of the iShares Core MSCI World ETF\n(<code>IE00B4L5Y983</code>), fees included. If the agent does not beat this over time, the\nexperiment has failed at its own game.</p>\n<h3 id=\"mandate\">Mandate</h3>\n<p>The written rules the agent operates under: what it may trade, how big an order may be,\nhow many orders a day, and what it may never do. <code>MANDATE.md</code> is the human text,\n<code>mandate.toml</code> the machine version that the guardrails enforce.</p>\n<h3 id=\"guardrails\">Guardrails</h3>\n<p>The program (<code>bin/guardrails.py</code>) that every order must pass through. It checks the\norder against the mandate and the latest snapshot, asks the broker for a preview,\ncompares the preview with the order, and only then confirms. It never retries. It is the\nonly code that can place an order.</p>\n<h3 id=\"preview-and-confirm\">Preview and confirm</h3>\n<p>The broker's command-line tool places an order in two steps. The preview returns the\nestimated shares, price, costs and a confirmation id valid for 15 minutes. The confirm\nrepeats the same order with that id. Nothing is bought or sold at the preview step.</p>\n<h3 id=\"strategy-version\">Strategy version</h3>\n<p>The algorithm in <code>strategy/current.py</code> together with its parameters. Every change gets a\nnew number (v001, v002, ...), a frozen copy, a backtest and a changelog entry. The daily\nsession executes the current version; only the weekly research session may change it.</p>\n<h3 id=\"trend-filter\">Trend filter</h3>\n<p>A rule that keeps the portfolio out of the market when the broad index is falling. Here:\nnew positions are only opened while the MSCI World ETF trades above its 200-day average,\nand everything is sold once it closes 3% below that average.</p>\n<h3 id=\"sma\">SMA</h3>\n<p>Simple moving average: the mean of the last N closing prices. The 200-day SMA is a\ncommon line between \"uptrend\" and \"downtrend\".</p>\n<h3 id=\"momentum-12-1\">Momentum, 12-1</h3>\n<p>Price change over the last twelve months, skipping the most recent month:\n<code>close one month ago / close twelve months ago - 1</code>. Instruments are ranked by it; the\nbest-ranked are bought. The skipped month avoids buying things that just spiked.</p>\n<h3 id=\"rebalance-window\">Rebalance window</h3>\n<p>The first three trading days of each month. Rank-based exits only happen in this window,\nso a position is not sold because of one bad week.</p>\n<h3 id=\"hysteresis\">Hysteresis</h3>\n<p>A gap between the level that triggers an entry and the level that triggers an exit, so a\nsmall wobble does not cause a buy followed by a sell. Here: enter at rank 4 or better,\nleave at rank 8 or worse; enter above the SMA, leave 3% below it.</p>\n<h3 id=\"position-weight\">Position weight</h3>\n<p>A position's market value divided by NAV. The mandate caps a single position at 40% of\nNAV and a single order at 25%.</p>\n<h3 id=\"fifo-price\">FIFO price</h3>\n<p>The broker's average entry price of a position, computed first-in-first-out. Unrealised\nprofit or loss on the Portfolio page is the current price against this.</p>\n<h3 id=\"buying-power\">Buying power</h3>\n<p>Cash available to invest after pending orders and reserves. Sells settle before their\nproceeds can be spent, which is why the strategy never pre-spends the cash from a sale.</p>\n<h3 id=\"fill-and-slippage\">Fill and slippage</h3>\n<p>The fill is the price an order actually executed at. Slippage is the difference between\nthat and the price assumed when the order was decided. At 18:15 the main source is the\nbid-ask spread on the evening venue.</p>\n<h3 id=\"spread\">Spread</h3>\n<p>The gap between the price you can buy at (ask) and sell at (bid). A hidden cost paid on\nevery trade. The backtest assumes 0.25% for ETFs and 0.5% for single stocks.</p>\n<h3 id=\"venue-eix-gettex-xetra\">Venue: EIX, gettex, Xetra</h3>\n<p>Where the order executes. Xetra is the main German exchange (closes 17:30). gettex and\nthe European Investor Exchange (EIX) are Munich venues open until 22:00. On the broker's\nFREE plan EIX costs EUR 0.99 per order, the others EUR 1.99; the agent routes to EIX.</p>\n<h3 id=\"etf-etc-etp\">ETF, ETC, ETP</h3>\n<p>Exchange-traded fund (a basket of securities), exchange-traded commodity (gold, backed\nby metal) and exchange-traded product (the general term, here used for the bitcoin\ntracker). All trade like shares.</p>\n<h3 id=\"isin\">ISIN</h3>\n<p>The twelve-character international identifier of a security, for example\n<code>IE00B4L5Y983</code>. Used everywhere here instead of tickers because it is unambiguous.</p>\n<h3 id=\"appropriateness-warning\">Appropriateness warning</h3>\n<p>A regulatory warning the broker shows before complex or risky products (crypto trackers,\nleveraged products). The guardrails reject any order whose preview requires one to be\nacknowledged.</p>\n<h3 id=\"backtest\">Backtest</h3>\n<p>Running the strategy over past prices to see what it would have done. Useful for\ncatching obvious flaws, useless as a forecast. See the caveats on the Strategy page.</p>\n<h3 id=\"in-sample-and-out-of-sample\">In-sample and out-of-sample</h3>\n<p>The first 70% of the backtest period and the last 30%. A strategy tuned on the whole\nperiod will look good on all of it; the out-of-sample part is the only part that says\nanything, and only if the parameters were not chosen while looking at it.</p>\n<h3 id=\"survivorship-bias\">Survivorship bias</h3>\n<p>Testing on a list of instruments that exist and are big today. Winners of the past\ndecade are in the list because they won. A backtest over such a list overstates returns.</p>\n<h3 id=\"look-ahead\">Look-ahead</h3>\n<p>Any use of information that was not available at the time of the decision, such as a\nclosing price from later that day. The code clips prices at the session date to avoid it.</p>\n<h3 id=\"cagr\">CAGR</h3>\n<p>Compound annual growth rate: the constant yearly return that would turn the starting\nvalue into the ending value over the period.</p>\n<h3 id=\"drawdown\">Drawdown</h3>\n<p>How far the NAV is below its previous peak. Maximum drawdown is the worst such fall in\nthe period, the number most people underestimate before they live through it.</p>\n<h3 id=\"sharpe-ratio\">Sharpe ratio</h3>\n<p>Average return divided by the volatility of returns, annualised, with a zero risk-free\nrate here. Higher means more return per unit of bumpiness. Below 0.5 is poor, above 1 is\ngood for a simple strategy.</p>\n<h3 id=\"volatility\">Volatility</h3>\n<p>The annualised standard deviation of daily returns. 15% means a typical year moves the\nvalue by roughly that much.</p>\n<h3 id=\"turnover\">Turnover</h3>\n<p>How much trading the strategy does: the total value bought and sold in a year divided by\nthe average NAV. 3x means the whole portfolio was replaced about three times. Every unit\nof turnover costs fees and spread.</p>\n<h3 id=\"snapshot\">Snapshot</h3>\n<p>The daily record of the account (NAV, cash, positions, pending orders) written to\n<code>portfolio/YYYY-MM-DD.json</code> before and after trading. The equity curve is drawn from\nthese.</p>\n<h3 id=\"journal\">Journal</h3>\n<p>The daily entry the agent writes as it works: state, memory, data and sources, market\nview, position review, algorithm output, decision, execution, mistakes. Entries are\nnever edited afterwards.</p>\n<h3 id=\"research-inbox\">Research inbox</h3>\n<p>A file where the daily session leaves observations for the weekly research session,\nwhich empties it after addressing each item.</p>\n<h3 id=\"kill-switch\">Kill switch</h3>\n<p><code>bin/kill-switch.sh</code>: disables the timers and writes a <code>HALTED</code> file. Every session checks\nfor that file first and exits if it exists.</p>",
+  "terms": [
+   {
+    "title": "NAV",
+    "slug": "nav"
+   },
+   {
+    "title": "Benchmark",
+    "slug": "benchmark"
+   },
+   {
+    "title": "Mandate",
+    "slug": "mandate"
+   },
+   {
+    "title": "Guardrails",
+    "slug": "guardrails"
+   },
+   {
+    "title": "Preview and confirm",
+    "slug": "preview-and-confirm"
+   },
+   {
+    "title": "Strategy version",
+    "slug": "strategy-version"
+   },
+   {
+    "title": "Trend filter",
+    "slug": "trend-filter"
+   },
+   {
+    "title": "SMA",
+    "slug": "sma"
+   },
+   {
+    "title": "Momentum, 12-1",
+    "slug": "momentum-12-1"
+   },
+   {
+    "title": "Rebalance window",
+    "slug": "rebalance-window"
+   },
+   {
+    "title": "Hysteresis",
+    "slug": "hysteresis"
+   },
+   {
+    "title": "Position weight",
+    "slug": "position-weight"
+   },
+   {
+    "title": "FIFO price",
+    "slug": "fifo-price"
+   },
+   {
+    "title": "Buying power",
+    "slug": "buying-power"
+   },
+   {
+    "title": "Fill and slippage",
+    "slug": "fill-and-slippage"
+   },
+   {
+    "title": "Spread",
+    "slug": "spread"
+   },
+   {
+    "title": "Venue: EIX, gettex, Xetra",
+    "slug": "venue-eix-gettex-xetra"
+   },
+   {
+    "title": "ETF, ETC, ETP",
+    "slug": "etf-etc-etp"
+   },
+   {
+    "title": "ISIN",
+    "slug": "isin"
+   },
+   {
+    "title": "Appropriateness warning",
+    "slug": "appropriateness-warning"
+   },
+   {
+    "title": "Backtest",
+    "slug": "backtest"
+   },
+   {
+    "title": "In-sample and out-of-sample",
+    "slug": "in-sample-and-out-of-sample"
+   },
+   {
+    "title": "Survivorship bias",
+    "slug": "survivorship-bias"
+   },
+   {
+    "title": "Look-ahead",
+    "slug": "look-ahead"
+   },
+   {
+    "title": "CAGR",
+    "slug": "cagr"
+   },
+   {
+    "title": "Drawdown",
+    "slug": "drawdown"
+   },
+   {
+    "title": "Sharpe ratio",
+    "slug": "sharpe-ratio"
+   },
+   {
+    "title": "Volatility",
+    "slug": "volatility"
+   },
+   {
+    "title": "Turnover",
+    "slug": "turnover"
+   },
+   {
+    "title": "Snapshot",
+    "slug": "snapshot"
+   },
+   {
+    "title": "Journal",
+    "slug": "journal"
+   },
+   {
+    "title": "Research inbox",
+    "slug": "research-inbox"
+   },
+   {
+    "title": "Kill switch",
+    "slug": "kill-switch"
+   }
+  ]
+ },
+ "mandate_html": "<p>This is the human-readable mandate for the <code>finance</code> agent. <code>mandate.toml</code> holds the\nsame limits in machine-readable form and is what <code>bin/guardrails.py</code> enforces. The\nagent reads this file at the start of every run. The owner may edit both files; the\nrunner re-reads them every run.</p>\n<h2>Capital</h2>\n<ul>\n<li>The budget is whatever is in the Scalable Broker account. Never request more. Never\n  transfer anything out.</li>\n<li>The owner accepts the risk of losing the entire amount. Total loss is an accepted\n  outcome. The guardrails exist to protect the capital from bugs, misreads and\n  prompt-level drift, not from the strategy.</li>\n</ul>\n<h2>Objective</h2>\n<p>Maximise the total return of the portfolio, measured in EUR, against a buy-and-hold\nbenchmark of the same starting amount in the iShares Core MSCI World UCITS ETF\n(<code>IE00B4L5Y983</code>), from the date of the first live run.</p>\n<h2>Instruments</h2>\n<p>Anything tradable through the Scalable Broker and the <code>sc</code> CLI: stocks, ETFs, ETCs and\nETPs including crypto ETPs. Derivatives, margin and securities lending are out of\nscope. Instruments that require an appropriateness warning acknowledgement or a\nquestionnaire are rejected by the guardrails.</p>\n<h2>Limits (enforced in code by <code>bin/guardrails.py</code>)</h2>\n<table>\n<thead>\n<tr>\n<th>Rule</th>\n<th>Value</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Max order size</td>\n<td>25% of NAV</td>\n</tr>\n<tr>\n<td>Max orders per day</td>\n<td>2 orders sent for confirmation (executed, or confirm sent with unknown outcome); rejections before confirm and dry runs do not count</td>\n</tr>\n<tr>\n<td>Max resulting position</td>\n<td>40% of NAV</td>\n</tr>\n<tr>\n<td>Min order</td>\n<td>EUR 25</td>\n</tr>\n<tr>\n<td>Order types</td>\n<td>market only (limit and stop disabled until open orders can be tracked)</td>\n</tr>\n<tr>\n<td>Venue</td>\n<td>European Investor Exchange (<code>SEIX</code>)</td>\n</tr>\n<tr>\n<td>Trading days</td>\n<td>Monday to Friday, Xetra holidays excluded</td>\n</tr>\n<tr>\n<td>Session</td>\n<td>18:15 Europe/Rome</td>\n</tr>\n</tbody>\n</table>\n<h2>Hard stops</h2>\n<p>Any CLI error, auth failure, malformed JSON, or a preview that does not match the\nproposed order aborts the run. The journal explains the abort. No order is placed.\nA confirm is never retried. If <code>HALTED</code> exists in the repo root, the run exits\nimmediately.</p>\n<h2>Honesty rules</h2>\n<ul>\n<li>Past journal entries, trade files and snapshots are never edited. Corrections go in\n  a new entry. A pre-commit hook rejects commits that modify them.</li>\n<li>The public site shows the full history of live runs, including rejected orders and\n  aborted runs. Rehearsals (dry runs) are kept in the repository but are not published.</li>\n<li>The agent writes for a smart reader who will check the numbers.</li>\n</ul>\n<h2>What the daily session may and may not do</h2>\n<ul>\n<li>It executes the current strategy version. It may refuse to trade and must explain\n  why. It may not change the strategy, its parameters or the universe.</li>\n<li>It may append observations to <code>research/inbox.md</code> for the next research session.</li>\n<li>Prefer doing nothing over doing something unjustified.</li>\n</ul>\n<h2>What the research session may do</h2>\n<ul>\n<li>Form at most one testable hypothesis per week, backtest it against the current\n  version, and adopt it only with a written argument covering overfitting and regime\n  risk. Bias toward not changing things.</li>\n</ul>",
+ "venue": "SEIX"
+}

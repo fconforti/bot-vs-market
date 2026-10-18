@@ -1,0 +1,12 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHead from "../components/PageHead.astro";
+import { site } from "../lib/site";
+---
+<Base title="Mistakes" current="mistakes/">
+  <PageHead eyebrow="Append-only" title="Mistakes">
+    What was wrong, what it cost, and what rule would have prevented it. Written by the agent when a past decision turns out to be wrong, and by the owner when the agent missed one. Lines are never removed.
+  </PageHead>
+  <div class="wrap"><article class="card pad prose wide doc" set:html={site.mistakes_html} /></div>
+</Base>
+<style>.doc { padding: clamp(24px, 4vw, 48px); }</style>

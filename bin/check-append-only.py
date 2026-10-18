@@ -6,7 +6,7 @@ directories listed in mandate.toml [honesty].append_only_dirs (journal/, trades/
 portfolio/, research/), except the listed exceptions (research/inbox.md). New files
 are fine. Corrections go in a new entry.
 
-Also rejects removing lines from site/mistakes.md (append-only file).
+Also rejects removing lines from MISTAKES.md (append-only file).
 """
 from __future__ import annotations
 
@@ -40,7 +40,7 @@ def main() -> int:
             continue   # dry-run journals/snapshots are rehearsals and may be re-run
         if path.startswith(dirs) and status in ("M", "D", "R", "T"):
             problems.append(f"{status} {path}")
-        if path == "site/mistakes.md" and status in ("M", "D"):
+        if path == "MISTAKES.md" and status in ("M", "D"):
             diff = subprocess.run(["git", "diff", "--cached", "--", path], capture_output=True, text=True, cwd=ROOT).stdout
             removed = [l for l in diff.splitlines() if l.startswith("-") and not l.startswith("---")]
             if removed:

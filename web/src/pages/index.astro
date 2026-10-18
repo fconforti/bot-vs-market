@@ -1,0 +1,98 @@
+---
+import Base from "../layouts/Base.astro";
+import Stat from "../components/Stat.astro";
+import Term from "../components/Term.astro";
+import Empty from "../components/Empty.astro";
+import LineChart from "../components/LineChart.astro";
+import { site, url, eur, pct, tone, fmtDate, statusTone } from "../lib/site";
+
+const h = site.home;
+const bt = site.strategy.backtests.at(-1);
+const initial = new Intl.NumberFormat("en-IE").format(site.initial_eur);
+---
+<Base title="Overview" current="">
+  <section class="hero wrap">
+    <p class="eyebrow rise">A public experiment · strategy {site.version}</p>
+    <h1 class="rise d1">An AI agent manages <span class="hl">€{initial}</span> of real money, in the open.</h1>
+    <p class="lede rise d2">
+      Every weekday at 18:15 a Claude agent reads the market, runs a versioned strategy written as code, and either places orders through hard limits or writes down why it didn't.
+      Every decision, order, mistake and snapshot is published here and in the repository.
+    </p>
+    <div class="cta rise d3">
+      <a class="btn primary" href={url("journal/")}>Read the journal</a>
+      <a class="btn" href={url("strategy/")}>How the strategy works</a>
+    </div>
+    <p class="status rise d4">
+      {h.last_session
+        ? <>Last session <a href={url(`journal/#${h.last_session.date}`)}>{fmtDate(h.last_session.date)}</a>{h.last_session.status && <span class={`tag ${statusTone(h.last_session.status)}`}>{h.last_session.status}</span>}</>
+        : <><span class="tag warn">Not live yet</span> The first live session has not run.</>}
+    </p>
+  </section>
+
+  <section class="wrap block">
+    <div class="grid stats">
+      <Stat label="NAV" termHref={url("glossary/#nav")} value={eur(h.nav)} note={h.live_days ? `${h.live_days} live day${h.live_days === 1 ? "" : "s"}` : "Starts with the first live run"} delay={1} />
+      <Stat label="Since start" value={pct(h.ret_total)} tone={tone(h.ret_total)} note={h.start_date ? `from ${fmtDate(h.start_date)}` : "—"} delay={2} />
+      <Stat label="vs benchmark" termHref={url("glossary/#benchmark")} value={pct(h.ret_vs_bench)} tone={tone(h.ret_vs_bench)} note="MSCI World, bought and held" delay={3} />
+      <Stat label="Cash" value={eur(h.cash)} note={`${h.n_positions} open position${h.n_positions === 1 ? "" : "s"}`} delay={4} />
+    </div>
+  </section>
+
+  <section class="wrap block">
+    <div class="block-head">
+      <h2>Equity curve</h2>
+      <p>Live <Term id="nav">NAV</Term> against €{initial} in the <Term id="benchmark">benchmark</Term></p>
+    </div>
+    {site.curve.length
+      ? <div class="card pad"><LineChart id="equity" points={site.curve} /></div>
+      : bt
+        ? <div class="card pad">
+            <div class="ghost-note"><span class="tag warn">Backtest, not live</span> The live curve starts with the first session. Until then, this is how {bt.version} would have done from {bt.period.start.slice(0, 4)}, with fees and spreads.</div>
+            <LineChart id="equity" points={bt.equity_curve} labels={[`${bt.version} (backtest)`, "MSCI World"]} log />
+          </div>
+        : <Empty title="No data yet">The curve starts with the first live run.</Empty>}
+  </section>
+
+  {h.last_session && (
+    <section class="wrap block">
+      <div class="block-head"><h2>Latest journal entry</h2><p><a href={url(`journal/#${h.last_session.date}`)}>Read the full entry →</a></p></div>
+      <article class="card pad prose wide fade" set:html={h.last_session.excerpt_html} />
+    </section>
+  )}
+
+  <section class="wrap block">
+    <div class="grid two how">
+      <div class="card pad">
+        <p class="eyebrow">How it works</p>
+        <ol class="steps">
+          <li><strong>Snapshot.</strong> The agent records cash, positions and prices from the broker.</li>
+          <li><strong>Signal.</strong> <a href={url("strategy/")}>The strategy</a> runs as plain Python: a <Term id="trend-filter">trend filter</Term> and <Term id="momentum-12-1">momentum</Term> ranking.</li>
+          <li><strong>Check.</strong> <Term id="guardrails">Guardrails</Term> validate every order against the <Term id="mandate">mandate</Term>, then <Term id="preview-and-confirm">preview</Term> it with the broker.</li>
+          <li><strong>Publish.</strong> The journal, trade files and snapshot are committed and this site is rebuilt.</li>
+        </ol>
+      </div>
+      <div class="callout big">
+        <p class="eyebrow" style="color:var(--warn)">Read this first</p>
+        <p>This is an experiment, not investment advice. The amount is deliberately small and the owner has accepted in writing that it may all be lost.</p>
+        <p>The agent cannot add or withdraw money, and every order passes code-enforced limits. A few months of a €{initial} account say almost nothing about whether the strategy is any good.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { padding: clamp(56px, 10vw, 112px) var(--gutter) 32px; }
+  .hero h1 { font-size: clamp(2.3rem, 6.4vw, 4.4rem); max-width: 17ch; line-height: 1.04; letter-spacing: -.025em; }
+  .hl { font-style: italic; color: var(--accent); }
+  .hero .lede { max-width: 60ch; font-size: clamp(1.02rem, 1.6vw, 1.15rem); color: var(--fg-soft); margin: 22px 0 0; }
+  .cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+  .btn { display: inline-flex; align-items: center; padding: 11px 18px; border-radius: 999px; border: 1px solid var(--line-strong); color: var(--fg); text-decoration: none; font-weight: 500; font-size: .94rem; background: var(--bg-elev); transition: transform .15s, background .15s; }
+  .btn:hover { transform: translateY(-1px); }
+  .btn.primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+  .status { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 28px; font-size: .9rem; color: var(--muted); }
+  .ghost-note { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-size: .88rem; color: var(--muted); margin-bottom: 14px; }
+  .fade { max-height: 520px; overflow: hidden; -webkit-mask-image: linear-gradient(#000 70%, transparent); mask-image: linear-gradient(#000 70%, transparent); }
+  .steps { margin: 6px 0 0; padding-left: 1.2em; display: grid; gap: 10px; color: var(--fg-soft); }
+  .steps strong { color: var(--fg); }
+  .callout.big { padding: clamp(20px, 3vw, 32px); border-radius: var(--radius); }
+</style>

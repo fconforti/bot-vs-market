@@ -22,8 +22,9 @@ Written by the build session on 2026-10-18. Read this before the first live run.
   hook is inert outside agent sessions (`FINANCE_AGENT=1`).
 - **History**: `journal/`, `trades/`, `portfolio/`, `research/` are append-only; the
   pre-commit hook `bin/check-append-only.py` rejects edits, `gitleaks` scans secrets.
-- **Site**: `bin/build-site.py` + `templates/` → `site/` (8 pages, dark-mode aware,
-  Chart.js equity curve). `.github/workflows/pages.yml` deploys `site/` on push.
+- **Site**: Astro project in `web/` (9 pages, light and dark themes, Chart.js charts).
+  `bin/build-site.py` exports `web/src/data/site.json` (live data only); the Pages
+  workflow builds `web/` with Node and deploys `web/dist` on every push touching `web/`.
 - **Automation**: `systemd/finance.{service,timer}` and `finance-research.*`. Not
   installed, not enabled. `bin/kill-switch.sh` disables them and writes `HALTED`.
 - **Docs**: `docs/cli-notes.md` (what `sc` really does, from its source), `docs/sc-capabilities.json`.
@@ -126,7 +127,7 @@ this machine's Claude Code login. Logs: `~/.local/state/finance/session-YYYY-MM-
 Stop everything: `./bin/kill-switch.sh`.
 
 GitHub Pages: in the repo settings, set Pages source to "GitHub Actions" once; the
-workflow deploys `site/` on every push to `main` that touches it.
+workflow builds and deploys `web/` on every push to `main` that touches it.
 
 ## Design decisions you made or should know about
 

@@ -1,0 +1,7 @@
+---
+// Inline link to a glossary entry: <Term id="drawdown">max drawdown</Term>
+import { url } from "../lib/site";
+interface Props { id: string }
+const { id } = Astro.props;
+---
+<a class="term" href={url(`glossary/#${id}`)}><slot /></a>

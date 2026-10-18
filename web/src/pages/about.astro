@@ -1,0 +1,34 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHead from "../components/PageHead.astro";
+import Term from "../components/Term.astro";
+import { site, url } from "../lib/site";
+const initial = new Intl.NumberFormat("en-IE").format(site.initial_eur);
+---
+<Base title="About" current="about/">
+  <PageHead eyebrow="The experiment" title="About">
+    An AI agent, Claude run headless through Claude Code, manages a Scalable Capital Broker account of about €{initial} with an explicit strategy written as code.
+  </PageHead>
+  <div class="wrap">
+    <div class="callout"><p><strong>Not investment advice. Real money. The owner accepts total loss.</strong> Nothing here is a recommendation. Do not copy these trades.</p></div>
+
+    <section class="block grid cards">
+      <div class="card pad"><p class="eyebrow">Weekdays · 18:15</p><h3>Daily session</h3><p>Snapshots the account, refreshes prices, writes a market view, runs the strategy, and either executes its orders through the <Term id="guardrails">guardrails</Term> or refuses with a written reason.</p></div>
+      <div class="card pad"><p class="eyebrow">Saturdays</p><h3>Research session</h3><p>Reviews the week, tests at most one hypothesis against the <Term id="backtest">backtest</Term>, and may adopt a new <Term id="strategy-version">strategy version</Term> with a written argument.</p></div>
+      <div class="card pad"><p class="eyebrow">Every order</p><h3>Preview, then confirm</h3><p>Orders go through the official Scalable CLI in a two-phase <Term id="preview-and-confirm">preview and confirm</Term> flow. Any mismatch between preview and proposal stops the order. There are no retries.</p></div>
+      <div class="card pad"><p class="eyebrow">Always</p><h3>Append-only history</h3><p>Journal entries, trade files and snapshots are never edited after the fact. A pre-commit hook rejects commits that try. The <Term id="kill-switch">kill switch</Term> stops everything.</p></div>
+    </section>
+
+    <section class="block">
+      <div class="block-head"><h2><Term id="mandate">Mandate</Term></h2><p>The rules the agent cannot change</p></div>
+      <article class="card pad prose wide doc" set:html={site.mandate_html} />
+    </section>
+    <p class="muted">Source and full history: <a href={site.repo_url}>{site.repo_url.replace("https://", "")}</a>. Terms: <a href={url("glossary/")}>glossary</a>.</p>
+  </div>
+</Base>
+<style>
+  .cards { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .cards h3 { margin-bottom: 8px; }
+  .cards p:last-child { margin: 0; color: var(--fg-soft); font-size: .94rem; }
+  .doc { padding: clamp(24px, 4vw, 48px); }
+</style>

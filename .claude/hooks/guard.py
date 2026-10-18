@@ -68,7 +68,7 @@ def main() -> None:
             deny(f"writes outside the repo are forbidden: {raw}")
         rel_s = rel.as_posix()
         today = os.environ.get("FINANCE_TODAY") or date.today().isoformat()
-        append_only_ok = {"research/inbox.md", "site/mistakes.md"}
+        append_only_ok = {"research/inbox.md", "MISTAKES.md"}
         if rel_s in append_only_ok or "-dryrun" in p.name:
             return
         for d in ("journal/", "trades/", "portfolio/"):
@@ -78,7 +78,7 @@ def main() -> None:
             deny(f"{rel_s} is history; never edit past research entries")
         if rel_s.startswith("trades/") and p.exists():
             deny(f"{rel_s} already exists; trade files are only rewritten by bin/guardrails.py")
-        if rel_s in ("mandate.toml", "MANDATE.md") or rel_s.startswith(("bin/", "finance/", ".claude/", "systemd/", "tests/", ".github/")):
+        if rel_s in ("mandate.toml", "MANDATE.md") or rel_s.startswith(("bin/", "finance/", ".claude/", "systemd/", "tests/", ".github/", "web/")):
             deny(f"{rel_s} is infrastructure; the owner edits it, not the agent")
         if os.environ.get("FINANCE_SESSION") != "research" and (rel_s.startswith("strategy/") or rel_s == "STRATEGY.md"):
             deny("the daily session may not change the strategy; put ideas in research/inbox.md")

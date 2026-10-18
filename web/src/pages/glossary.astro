@@ -1,0 +1,51 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHead from "../components/PageHead.astro";
+import { site } from "../lib/site";
+const terms = [...site.glossary.terms].sort((a: any, b: any) => a.title.localeCompare(b.title));
+---
+<Base title="Glossary" current="glossary/">
+  <PageHead eyebrow="Reference" title="Glossary">
+    Plain-language definitions of the terms used on this site and in the journal. Dotted underlines elsewhere on the site link here.
+  </PageHead>
+  <div class="wrap layout">
+    <aside class="index">
+      <label class="sr-only" for="q">Filter terms</label>
+      <input id="q" type="search" placeholder="Filter terms…" autocomplete="off" />
+      <ul>{terms.map((t: any) => <li><a href={`#${t.slug}`}>{t.title}</a></li>)}</ul>
+    </aside>
+    <article class="card pad prose wide gloss" set:html={site.glossary.html} />
+  </div>
+</Base>
+<style>
+  .layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 32px; align-items: start; }
+  .index { position: sticky; top: 88px; }
+  .index input { width: 100%; padding: 10px 14px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--bg-elev); color: var(--fg); font: inherit; font-size: .9rem; margin-bottom: 12px; }
+  .index input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .index ul { list-style: none; margin: 0; padding: 0; max-height: 68vh; overflow: auto; display: grid; gap: 1px; }
+  .index a { display: block; padding: 5px 10px; border-radius: 8px; font-size: .86rem; color: var(--fg-soft); text-decoration: none; }
+  .index a:hover { background: var(--bg-sunk); color: var(--fg); }
+  .gloss { padding: clamp(24px, 4vw, 48px); }
+  .gloss :global(h3) { scroll-margin-top: 88px; font-size: 1.3rem; padding-top: 1.1em; margin-top: 1.1em; border-top: 1px solid var(--line); }
+  .gloss :global(h3:target) { color: var(--accent); }
+  .gloss :global(h3:target + p) { background: var(--accent-soft); box-shadow: 0 0 0 8px var(--accent-soft); border-radius: 4px; }
+  .gloss :global(.hidden) { display: none; }
+  @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } .index { position: static; } .index ul { display: flex; flex-wrap: wrap; gap: 6px; max-height: none; } .index a { border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; } }
+</style>
+<script>
+  const q = document.getElementById("q") as HTMLInputElement | null;
+  const art = document.querySelector(".gloss");
+  q?.addEventListener("input", () => {
+    const needle = q.value.trim().toLowerCase();
+    document.querySelectorAll<HTMLAnchorElement>(".index a").forEach((a) => {
+      a.parentElement!.hidden = !!needle && !a.textContent!.toLowerCase().includes(needle);
+    });
+    art?.querySelectorAll("h3").forEach((h) => {
+      const block: Element[] = [h];
+      let n = h.nextElementSibling;
+      while (n && n.tagName !== "H3") { block.push(n); n = n.nextElementSibling; }
+      const hit = !needle || block.some((el) => el.textContent!.toLowerCase().includes(needle));
+      block.forEach((el) => el.classList.toggle("hidden", !hit));
+    });
+  });
+</script>

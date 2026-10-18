@@ -22,7 +22,7 @@ TODAY = "2026-10-20"   # a Tuesday, not a holiday
 def repo(tmp_path, monkeypatch):
     """Isolated repo layout under tmp_path with the real mandate and holidays."""
     root = tmp_path / "repo"
-    for d in ("journal", "trades", "portfolio", "research", "site", "data", "data/prices", "docs"):
+    for d in ("journal", "trades", "portfolio", "research", "data", "data/prices", "docs"):
         (root / d).mkdir(parents=True)
     shutil.copy(REPO / "mandate.toml", root / "mandate.toml")
     shutil.copy(REPO / "data" / "holidays.toml", root / "data" / "holidays.toml")
@@ -31,13 +31,13 @@ def repo(tmp_path, monkeypatch):
     monkeypatch.setattr(paths, "TRADES", root / "trades")
     monkeypatch.setattr(paths, "PORTFOLIO", root / "portfolio")
     monkeypatch.setattr(paths, "RESEARCH", root / "research")
-    monkeypatch.setattr(paths, "SITE", root / "site")
+    monkeypatch.setattr(paths, "SITE_DATA", root / "web" / "src" / "data" / "site.json")
     monkeypatch.setattr(paths, "DATA", root / "data")
     monkeypatch.setattr(paths, "PRICE_CACHE", root / "data" / "prices")
     monkeypatch.setattr(paths, "MANDATE_TOML", root / "mandate.toml")
     monkeypatch.setattr(paths, "HALTED", root / "HALTED")
     monkeypatch.setattr(paths, "INBOX", root / "research" / "inbox.md")
-    monkeypatch.setattr(paths, "MISTAKES", root / "site" / "mistakes.md")
+    monkeypatch.setattr(paths, "MISTAKES", root / "MISTAKES.md")
     monkeypatch.setattr(paths, "BENCHMARK", root / "portfolio" / "benchmark.json")
     monkeypatch.setenv("FINANCE_TODAY", TODAY)
     monkeypatch.delenv("FINANCE_DRY_RUN", raising=False)

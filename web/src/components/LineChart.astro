@@ -1,0 +1,60 @@
+---
+// Two-series line chart (portfolio vs benchmark) drawn client-side with Chart.js.
+interface Point { date: string; nav: number | null; benchmark: number | null }
+interface Props { points: Point[]; id: string; height?: number; labels?: [string, string]; log?: boolean }
+const { points, id, height = 340, labels = ["Portfolio", "Benchmark (MSCI World)"], log = false } = Astro.props;
+const payload = JSON.stringify({ points, labels, log });
+---
+<div class="chart-box" style={`height:${height}px`}>
+  <canvas id={id} data-chart={payload} aria-label={`${labels[0]} versus ${labels[1]}`} role="img"></canvas>
+</div>
+<style>
+  .chart-box { position: relative; width: 100%; }
+  @media (max-width: 600px) { .chart-box { height: 260px !important; } }
+</style>
+<script>
+  import { Chart, LineController, LineElement, PointElement, LinearScale, LogarithmicScale, CategoryScale, Filler, Tooltip, Legend } from "chart.js";
+  Chart.register(LineController, LineElement, PointElement, LinearScale, LogarithmicScale, CategoryScale, Filler, Tooltip, Legend);
+
+  const css = (n: string) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const eur = new Intl.NumberFormat("en-IE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
+  const charts: Chart[] = [];
+
+  function draw() {
+    charts.splice(0).forEach((c) => c.destroy());
+    document.querySelectorAll<HTMLCanvasElement>("canvas[data-chart]").forEach((cv) => {
+      const { points, labels, log } = JSON.parse(cv.dataset.chart || "{}");
+      const ctx = cv.getContext("2d")!;
+      const accent = css("--accent"), bench = css("--bench"), muted = css("--muted"), line = css("--line");
+      const grad = ctx.createLinearGradient(0, 0, 0, cv.parentElement!.clientHeight);
+      grad.addColorStop(0, accent + "38");
+      grad.addColorStop(1, accent + "00");
+      charts.push(new Chart(cv, {
+        type: "line",
+        data: {
+          labels: points.map((p: any) => p.date),
+          datasets: [
+            { label: labels[0], data: points.map((p: any) => p.nav), borderColor: accent, backgroundColor: grad, fill: true, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, tension: .25 },
+            { label: labels[1], data: points.map((p: any) => p.benchmark), borderColor: bench, borderWidth: 1.6, borderDash: [5, 4], pointRadius: 0, pointHoverRadius: 3, tension: .25, fill: false },
+          ],
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, animation: { duration: 700 },
+          interaction: { mode: "index", intersect: false },
+          plugins: {
+            legend: { position: "top", align: "end", labels: { color: muted, boxWidth: 14, boxHeight: 2, font: { family: "Inter Variable", size: 12 } } },
+            tooltip: { backgroundColor: css("--fg"), titleColor: css("--bg"), bodyColor: css("--bg"), padding: 10, cornerRadius: 8, titleFont: { family: "JetBrains Mono Variable" }, bodyFont: { family: "JetBrains Mono Variable" },
+              callbacks: { label: (c: any) => ` ${c.dataset.label}: ${c.parsed.y == null ? "—" : eur.format(c.parsed.y)}` } },
+          },
+          scales: {
+            x: { grid: { display: false }, border: { color: line }, ticks: { color: muted, maxTicksLimit: 7, maxRotation: 0, font: { family: "JetBrains Mono Variable", size: 11 }, callback(v: any) { const l = this.getLabelForValue(v) as string; return l.slice(0, 7); } } },
+            y: { type: log ? "logarithmic" : "linear", grid: { color: line }, border: { display: false }, ticks: { color: muted, maxTicksLimit: 6, font: { family: "JetBrains Mono Variable", size: 11 }, callback: (v: any) => eur.format(v) } },
+          },
+        },
+      }));
+    });
+  }
+  draw();
+  window.addEventListener("themechange", draw);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", draw);
+</script>
