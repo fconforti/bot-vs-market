@@ -2,10 +2,10 @@
 {% block content %}
 <h1>Portfolio</h1>
 {% if state %}
-<p class="muted">Snapshot {{ state.as_of }}{% if state.dry_run %} <span class="tag warn">dry run / fixture data</span>{% endif %}. NAV {{ state.nav|eur }}, cash {{ state.cash|eur }}.</p>
+<p class="muted"><a href="glossary.html#snapshot">Snapshot</a> {{ state.as_of }}. <a href="glossary.html#nav">NAV</a> {{ state.nav|eur }}, cash {{ state.cash|eur }}.</p>
 <div class="tablewrap">
 <table>
-<thead><tr><th>Instrument</th><th class="num">Qty</th><th class="num">Price</th><th class="num">Value</th><th class="num">Weight</th><th class="num">Entry (FIFO)</th><th class="num">Unrealised</th><th>Entry thesis</th></tr></thead>
+<thead><tr><th>Instrument</th><th class="num">Qty</th><th class="num">Price</th><th class="num">Value</th><th class="num"><a href="glossary.html#position-weight">Weight</a></th><th class="num"><a href="glossary.html#fifo-price">Entry (FIFO)</a></th><th class="num">Unrealised</th><th>Entry thesis</th></tr></thead>
 <tbody>
 {% for p in positions %}
 <tr>
@@ -24,8 +24,8 @@
 </tbody></table>
 </div>
 {% else %}
-<p class="muted">No snapshot yet.</p>
+<p class="muted">No live snapshot yet.</p>
 {% endif %}
-<h2>Benchmark</h2>
+<h2><a href="glossary.html#benchmark">Benchmark</a></h2>
 <p>{{ benchmark.name }} (<code>{{ benchmark.isin }}</code>), EUR {{ initial|int }} buy-and-hold from {{ benchmark.start_date or 'the first live run' }}.{% if benchmark.last %} Last value {{ benchmark.last.value|eur }} on {{ benchmark.last.date }}.{% endif %}</p>
 {% endblock %}

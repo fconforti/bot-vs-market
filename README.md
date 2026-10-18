@@ -7,7 +7,7 @@
 > the entire amount. Nothing here is investment advice or a recommendation to anyone.
 > Do not copy these trades.
 
-Site: <https://fconforti.github.io/finance/> · Strategy: [`STRATEGY.md`](STRATEGY.md) ·
+Site: <https://fconforti.github.io/finance/> · Glossary: [`docs/glossary.md`](docs/glossary.md) · Strategy: [`STRATEGY.md`](STRATEGY.md) ·
 Rules: [`MANDATE.md`](MANDATE.md) · First-run checklist: [`docs/handover.md`](docs/handover.md)
 
 ## Status
@@ -93,11 +93,11 @@ strategy/                   current.py, params.toml, universe.csv, data.py, back
 bin/                        run-session.sh, run-research.sh, guardrails.py, snapshot.py,
                             session-info.py, build-site.py, check-append-only.py, kill-switch.sh
 prompts/                    daily.md, research.md
-journal/ trades/ portfolio/ research/    append-only history (dry runs are suffixed -dryrun)
+journal/ trades/ portfolio/ research/    append-only history (dry runs suffixed -dryrun, not published)
 site/                       generated static site (committed, deployed by GitHub Pages)
 systemd/                    user units (not enabled)
 tests/                      pytest, with a fake `sc` that serves fixtures
-docs/                       cli-notes.md (what the Scalable CLI really does), handover.md
+docs/                       cli-notes.md (what the Scalable CLI really does), handover.md, glossary.md
 finance/                    shared library: sc wrapper, mandate, models, trade files, snapshots
 ```
 
@@ -134,8 +134,9 @@ uv run python bin/build-site.py && python -m http.server -d site 8000
 ```
 
 `--dry-run` uses the real account when `sc` is logged in and falls back to a fake `sc`
-with fixture data (clearly labelled in the journal) when it is not. Dry-run journals
-and snapshots carry a `-dryrun` suffix and never feed the equity curve.
+with fixture data (clearly labelled in the journal) when it is not. Dry-run journals,
+snapshots and trade files stay in the repo for the record but are not published on the
+site and never feed the equity curve.
 `FINANCE_TODAY=YYYY-MM-DD` replays a date for a rehearsal on a weekend; never set it live.
 
 ## Automation (not enabled)

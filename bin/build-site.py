@@ -25,13 +25,17 @@ from finance import mandate as mandate_mod, paths, portfolio, trades  # noqa: E4
 
 REPO_URL = "https://github.com/fconforti/finance"
 MENU = [("index.html", "Home"), ("journal.html", "Journal"), ("trades.html", "Trades"), ("portfolio.html", "Portfolio"),
-        ("strategy.html", "Strategy"), ("research.html", "Research"), ("mistakes.html", "Mistakes"), ("about.html", "About")]
+        ("strategy.html", "Strategy"), ("research.html", "Research"), ("mistakes.html", "Mistakes"),
+        ("glossary.html", "Glossary"), ("about.html", "About")]
 MD = markdown.Markdown(extensions=["tables", "fenced_code", "sane_lists"])
+MD_ANCHORS = markdown.Markdown(extensions=["tables", "fenced_code", "sane_lists", "toc"],
+                               extension_configs={"toc": {"anchorlink": True}})
 
 
-def md(text: str) -> str:
-    MD.reset()
-    return MD.convert(text)
+def md(text: str, anchors: bool = False) -> str:
+    conv = MD_ANCHORS if anchors else MD
+    conv.reset()
+    return conv.convert(text)
 
 
 def eur(v) -> str:
@@ -59,14 +63,30 @@ def fmt(v, key: str) -> str:
 
 
 def read_entries(directory: Path) -> list[dict]:
+    """Live entries only. Dry-run rehearsals (*-dryrun*.md) stay in the repo but are
+    not published."""
     out = []
     for p in sorted(directory.glob("????-??-??*.md"), reverse=True):
+        if "dryrun" in p.stem:
+            continue
         text = p.read_text(encoding="utf-8")
         m = re.search(r"\*\*Status:\*\*\s*([^\n(]+)", text)
         status = m.group(1).strip() if m else None
         out.append({"date": p.stem, "anchor": p.stem, "dry_run": "dryrun" in p.stem,
                     "status": status, "html": md(text), "text": text})
     return out
+
+
+def drop_rehearsal_sections(text: str) -> str:
+    """Remove '## ...' sections whose heading mentions a dry run. The file itself is
+    append-only and keeps them; the site does not publish rehearsals."""
+    out, skipping = [], False
+    for line in text.splitlines():
+        if line.startswith("## "):
+            skipping = "dry run" in line.lower() or "dry-run" in line.lower() or "rehearsal" in line.lower()
+        if not skipping:
+            out.append(line)
+    return "\n".join(out) + "\n"
 
 
 def excerpt(text: str, max_lines: int = 30) -> str:
@@ -98,11 +118,10 @@ def build() -> Path:
 
     journal = read_entries(paths.JOURNAL)
     research = read_entries(paths.RESEARCH)
-    all_trades = trades.load_all()
+    all_trades = [t for t in trades.load_all() if not t.get("dry_run")]   # rehearsals are not published
     live_snaps = portfolio.list_snapshots()
     state = portfolio.load_snapshot(live_snaps[-1]) if live_snaps else None
-    any_snaps = portfolio.list_snapshots(include_dry_run=True)
-    display_state = state or (portfolio.load_snapshot(any_snaps[-1]) if any_snaps else None)
+    display_state = state
     bench = portfolio.load_benchmark()
     bench_by_date = {r["date"]: r["value"] for r in bench.get("series", [])}
     curve = [{"date": r["date"], "nav": r["nav"], "benchmark": bench_by_date.get(r["date"])} for r in portfolio.equity_curve()]
@@ -124,8 +143,7 @@ def build() -> Path:
     ret_total = (nav_now / start_nav - 1) if start_nav else 0.0
     bench_now = curve[-1]["benchmark"] if curve and curve[-1]["benchmark"] else None
     ret_bench = (bench_now / man.benchmark_initial_eur - 1) if bench_now else 0.0
-    live_journal = [e for e in journal if not e["dry_run"]]
-    last_session = (live_journal or journal or [None])[0]
+    last_session = journal[0] if journal else None
     try:
         with (paths.STRATEGY / "params.toml").open("rb") as fh:
             version = tomllib.load(fh).get("version", "?")
@@ -198,7 +216,11 @@ def build() -> Path:
     pages["strategy.html"] = env.get_template("strategy.html").render(title="Strategy", current="strategy.html",
                                                                        strategy_html=md(strategy_md), backtests=backtests, **common)
     mistakes_md = paths.MISTAKES.read_text(encoding="utf-8") if paths.MISTAKES.exists() else "# Mistakes\n\nNone recorded yet."
+    mistakes_md = drop_rehearsal_sections(mistakes_md)
     pages["mistakes.html"] = env.get_template("mistakes.html").render(title="Mistakes", current="mistakes.html", html=md(mistakes_md), **common)
+    glossary_path = paths.DOCS / "glossary.md"
+    glossary_md = glossary_path.read_text(encoding="utf-8") if glossary_path.exists() else "# Glossary\n\n(not written yet)"
+    pages["glossary.html"] = env.get_template("glossary.html").render(title="Glossary", current="glossary.html", html=md(glossary_md, anchors=True), **common)
     mandate_md = (paths.ROOT / "MANDATE.md").read_text(encoding="utf-8")
     pages["about.html"] = env.get_template("about.html").render(title="About", current="about.html", mandate_html=md(mandate_md), **common)
 

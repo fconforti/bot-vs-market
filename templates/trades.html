@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>Trades</h1>
-<p class="muted">Every order ever proposed, including rejected ones, aborted runs and dry runs. Status comes from <code>bin/guardrails.py</code>, the only code path that can confirm an order.</p>
+<p class="muted">Every order ever proposed, including rejected ones and aborted runs. Status comes from the <a href="glossary.html#guardrails">guardrails</a>, the only code path that can <a href="glossary.html#preview-and-confirm">confirm</a> an order.</p>
 <div class="tablewrap">
 <table>
-<thead><tr><th>Date</th><th>Id</th><th>Side</th><th>Instrument</th><th class="num">Size</th><th>Status</th><th class="num">Est. price</th><th class="num">P&amp;L since</th><th>Reason / thesis</th></tr></thead>
+<thead><tr><th>Date</th><th>Id</th><th>Side</th><th>Instrument</th><th class="num">Size</th><th>Status</th><th class="num"><a href="glossary.html#preview-and-confirm">Est. price</a></th><th class="num">P&amp;L since</th><th>Reason / thesis</th></tr></thead>
 <tbody>
 {% for t in trades %}
 <tr class="status-{{ t.status }}">
@@ -13,7 +13,7 @@
   <td>{{ t.side }}</td>
   <td>{{ t.name or t.isin }}<br><small class="muted">{{ t.isin }}</small></td>
   <td class="num">{{ t.size }}</td>
-  <td><span class="tag {{ t.status }}">{{ t.status }}</span>{% if t.dry_run %} <span class="tag warn">dry</span>{% endif %}</td>
+  <td><span class="tag {{ t.status }}">{{ t.status }}</span></td>
   <td class="num">{{ t.est_price or '—' }}</td>
   <td class="num {{ 'pos' if (t.pnl_pct or 0) >= 0 else 'neg' }}">{% if t.pnl_pct is not none %}{{ t.pnl_pct|pct }}{% else %}—{% endif %}</td>
   <td class="small">{{ t.reason or t.thesis }}</td>

@@ -35,6 +35,8 @@ the broker data is live or FIXTURE (`sc_mode`). In a dry run:
 - `guardrails.py execute` must be called with `--dry-run` (it previews and stops);
 - if `sc_mode` is `fixture`, say in the first paragraph of the journal that the
   portfolio numbers are FIXTURE DATA from `tests/fixtures/sc`, not the real account;
+- rehearsals are not published on the site. If you append to `site/mistakes.md` during a
+  dry run, the entry's `##` heading must contain "(dry run)" so the site builder skips it;
 - do not push. The runner commits.
 
 ## Pipeline

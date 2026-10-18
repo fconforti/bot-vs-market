@@ -8,10 +8,10 @@
 <ul>
   <li>Every weekday at 18:15 Europe/Rome a daily session snapshots the account, refreshes prices, writes a market view, runs <code>strategy/current.py</code> and either executes its orders through <code>bin/guardrails.py</code> or refuses with a written reason.</li>
   <li>Every Saturday a research session reviews the week, tests at most one hypothesis against the backtest harness, and may adopt a new strategy version with a written argument.</li>
-  <li>Orders go through the official Scalable CLI in a two-phase preview/confirm flow. The guardrails compare the broker's preview with the proposal and refuse on any mismatch. There are no retries.</li>
+  <li>Orders go through the official Scalable CLI in a two-phase <a href="glossary.html#preview-and-confirm">preview/confirm</a> flow. The <a href="glossary.html#guardrails">guardrails</a> compare the broker's preview with the proposal and refuse on any mismatch. There are no retries.</li>
   <li>History is append-only. Journal entries, trade files and snapshots are never edited; a pre-commit hook rejects such commits.</li>
 </ul>
-<h2>Mandate</h2>
+<h2><a href="glossary.html#mandate">Mandate</a></h2>
 <div class="prose card">{{ mandate_html|safe }}</div>
-<p>Source: <a href="{{ repo_url }}">{{ repo_url }}</a></p>
+<p>Source: <a href="{{ repo_url }}">{{ repo_url }}</a> · Terms: <a href="glossary.html">glossary</a></p>
 {% endblock %}

@@ -50,8 +50,8 @@ immediately.
 
 - Past journal entries, trade files and snapshots are never edited. Corrections go in
   a new entry. A pre-commit hook rejects commits that modify them.
-- The public site shows the full history, including rejected orders, aborted runs and
-  dry runs.
+- The public site shows the full history of live runs, including rejected orders and
+  aborted runs. Rehearsals (dry runs) are kept in the repository but are not published.
 - The agent writes for a smart reader who will check the numbers.
 
 ## What the daily session may and may not do

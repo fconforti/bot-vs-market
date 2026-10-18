@@ -142,8 +142,8 @@ workflow deploys `site/` on every push to `main` that touches it.
 - **v001 deliberately simple**, with the churn-reducing fixes documented in `STRATEGY.md`.
   Expect live performance far below the backtest (survivorship bias in the universe).
 - **Dry runs** write `journal/YYYY-MM-DD-dryrun.md` and `portfolio/YYYY-MM-DD-dryrun.json`
-  so they never collide with live files; the site labels them and excludes them from
-  the equity curve. `FINANCE_TODAY=YYYY-MM-DD` replays a date (used for the build's
+  so they never collide with live files; the site does not publish them (journal, trades,
+  snapshots, and mistakes entries headed "(dry run)"). `FINANCE_TODAY=YYYY-MM-DD` replays a date (used for the build's
   dry run, which ran on a Saturday); never set it for live runs.
 - **CLAUDE_BRIEF.md is not committed** (it had owner-only permissions). Add it if you
   want the spec in the public repo.
