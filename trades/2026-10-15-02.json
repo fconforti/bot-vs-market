@@ -1,0 +1,385 @@
+{
+  "id": "2026-10-15-02",
+  "date": "2026-10-15",
+  "created_at": "2026-10-18T08:04:00Z",
+  "isin": "NL0010273215",
+  "name": "ASML Holding NV",
+  "side": "buy",
+  "order_type": "market",
+  "eur_amount": 240.0,
+  "quantity": null,
+  "limit_price": null,
+  "rationale": "Enter: rank 2 of 42 by 12-1 momentum (+63.1%); trend ON (IE00B4L5Y983 130.54 > SMA200 120.5762); target weight 25% of NAV 1000.00 EUR.",
+  "thesis": "v001 momentum entry: ASML has the second-strongest 12-1 month momentum in the universe (+63%) while the MSCI World trend filter is on; the strategy expects the relative strength to persist. Sized to a 25% target weight, which at a EUR 1,475 share price means a fractional order of about 0.16 shares, so the order also tests whether the broker accepts fractional one-off market orders in stocks. It would be proven wrong, and sold by the algorithm, if in the first three trading days of a month its 12-1 momentum turns negative or its rank falls to 8 or worse, or at any time if MSCI World closes more than 3% below its 200-day average. Overlap with the semiconductor ETF proposed the same day is noted for the research inbox. Dry run on fixture data: no real position results from this file.",
+  "strategy_version": "v001",
+  "status": "dry_run",
+  "dry_run": true,
+  "checks": [
+    {
+      "name": "halted",
+      "ok": true,
+      "detail": "no HALTED file"
+    },
+    {
+      "name": "side",
+      "ok": true,
+      "detail": "side='buy'"
+    },
+    {
+      "name": "isin_format",
+      "ok": true,
+      "detail": "isin='NL0010273215'"
+    },
+    {
+      "name": "order_type_allowed",
+      "ok": true,
+      "detail": "order_type='market', allowed=['market']"
+    },
+    {
+      "name": "venue_configured",
+      "ok": true,
+      "detail": "venue='SEIX'"
+    },
+    {
+      "name": "trading_day",
+      "ok": true,
+      "detail": "2026-10-15 is a trading day"
+    },
+    {
+      "name": "orders_per_day",
+      "ok": true,
+      "detail": "0 attempted today, limit 2"
+    },
+    {
+      "name": "snapshot_today",
+      "ok": true,
+      "detail": "snapshot 2026-10-15 nav=1000.00 cash=775.32 DRY-RUN FIXTURE"
+    },
+    {
+      "name": "nav_positive",
+      "ok": true,
+      "detail": "nav=1000.0"
+    },
+    {
+      "name": "instrument_resolves",
+      "ok": true,
+      "detail": "quote isin=NL0010273215 mid=100.0 name=Fixture security"
+    },
+    {
+      "name": "quote_currency_eur",
+      "ok": true,
+      "detail": "currency=EUR"
+    },
+    {
+      "name": "buy_amount_or_quantity",
+      "ok": true,
+      "detail": "buy needs exactly one of eur_amount, quantity"
+    },
+    {
+      "name": "min_order",
+      "ok": true,
+      "detail": "240.00 >= min 25.00"
+    },
+    {
+      "name": "max_order_pct_of_nav",
+      "ok": true,
+      "detail": "240.00 <= 25% of NAV 1000.00 = 250.00"
+    },
+    {
+      "name": "max_position_pct_of_nav",
+      "ok": true,
+      "detail": "held 0.00 + order 240.00 <= 40% of NAV = 400.00"
+    },
+    {
+      "name": "cash_available",
+      "ok": true,
+      "detail": "240.00 <= buying power 775.32 - reserve 2.00"
+    },
+    {
+      "name": "preview_shape",
+      "ok": true,
+      "detail": "preview has result and confirmation.id"
+    },
+    {
+      "name": "preview_isin",
+      "ok": true,
+      "detail": "preview isin=NL0010273215 proposal=NL0010273215"
+    },
+    {
+      "name": "preview_side",
+      "ok": true,
+      "detail": "preview side=buy proposal=buy"
+    },
+    {
+      "name": "preview_order_type",
+      "ok": true,
+      "detail": "preview order_type=market proposal=market"
+    },
+    {
+      "name": "preview_currency",
+      "ok": true,
+      "detail": "currency=EUR"
+    },
+    {
+      "name": "preview_tradable",
+      "ok": true,
+      "detail": "tradable=True status=TRADABLE_WITHOUT_APPROPRIATENESS venue_status=TRADABLE_WITHOUT_APPROPRIATENESS reason=None"
+    },
+    {
+      "name": "preview_venue",
+      "ok": true,
+      "detail": "selected_venue=SEIX mandate=SEIX"
+    },
+    {
+      "name": "preview_no_appropriateness",
+      "ok": true,
+      "detail": "requires_appropriateness=False questionnaire=False ack=False warning=none"
+    },
+    {
+      "name": "preview_no_price_warning",
+      "ok": true,
+      "detail": "0 price warning(s)"
+    },
+    {
+      "name": "preview_volume_present",
+      "ok": true,
+      "detail": "estimated_order_volume=240.0000"
+    },
+    {
+      "name": "preview_amount_match",
+      "ok": true,
+      "detail": "preview volume 240.00 vs proposal 240.00 (tolerance 1.0%)"
+    },
+    {
+      "name": "preview_max_order_pct",
+      "ok": true,
+      "detail": "preview volume 240.00 <= 25% of NAV 1000.00"
+    },
+    {
+      "name": "preview_not_expired",
+      "ok": true,
+      "detail": "confirmation expires at epoch 1792311518.0, now 1792310618"
+    }
+  ],
+  "attempt": {
+    "preview_args": [
+      "broker",
+      "trade",
+      "buy",
+      "--isin",
+      "NL0010273215",
+      "--amount",
+      "240.00",
+      "--order-type",
+      "market",
+      "--venue",
+      "SEIX"
+    ],
+    "previewed_at": "2026-10-18T08:03:38+00:00",
+    "confirmation_id": "fake-confirmation-id",
+    "expires_at_epoch": 1792311518
+  },
+  "preview": {
+    "_fixture": "FIXTURE DATA",
+    "account_id": "fixture-account",
+    "portfolio_id": "fixture-portfolio",
+    "resolution": {
+      "account": "fixture",
+      "portfolio": "fixture"
+    },
+    "result": {
+      "intent": {
+        "side": "buy",
+        "isin": "NL0010273215",
+        "amount": "240.00",
+        "shares": null,
+        "order_type": "market",
+        "limit_price": null,
+        "stop_price": null,
+        "venue_override": "SEIX",
+        "locale": "en_DE"
+      },
+      "market_quote": {
+        "mid_price": "100.0000",
+        "ask_price": "100.1000",
+        "bid_price": "99.9000",
+        "currency": "EUR",
+        "is_outdated": false,
+        "timestamp_utc": "2026-10-16T15:30:00.000Z"
+      },
+      "calculation": {
+        "sizing_price_basis": "ask_price",
+        "sizing_price": "100.1000",
+        "estimate_price_basis": "ask_price",
+        "estimate_price": "0",
+        "shares": "2.397602",
+        "estimated_order_volume_raw": "240.0000",
+        "estimated_order_volume": "240.0000",
+        "is_whole_position_sold": false
+      },
+      "tradability": {
+        "status": "TRADABLE_WITHOUT_APPROPRIATENESS",
+        "selected_venue": "SEIX",
+        "selected_venue_label": "European Investor Exchange (EIX)",
+        "selected_venue_status": "TRADABLE_WITHOUT_APPROPRIATENESS",
+        "selected_venue_unavailability_reason": null,
+        "requires_appropriateness": false,
+        "tradable": true,
+        "selected_venue_sellable": null
+      },
+      "warning": null,
+      "price_warnings": {
+        "items": []
+      },
+      "ex_ante_costs": {
+        "id": "fixture-cost-id",
+        "entryCosts": {
+          "serviceCosts": {
+            "amount": 0.99,
+            "percentage": 0.004
+          },
+          "productCosts": {
+            "amount": 0.0,
+            "percentage": 0.0
+          },
+          "total": {
+            "amount": 0.99,
+            "percentage": 0.004
+          }
+        },
+        "ongoingCosts": {
+          "serviceCosts": {
+            "amount": 0,
+            "percentage": 0
+          },
+          "productCosts": {
+            "amount": 0.5,
+            "percentage": 0.002
+          },
+          "total": {
+            "amount": 0.5,
+            "percentage": 0.002
+          }
+        },
+        "exitCosts": {
+          "serviceCosts": {
+            "amount": 0.99,
+            "percentage": 0.004
+          },
+          "productCosts": {
+            "amount": 0,
+            "percentage": 0
+          },
+          "total": {
+            "amount": 0.99,
+            "percentage": 0.004
+          }
+        },
+        "effectOnReturn": {
+          "initialYearCosts": {
+            "amount": 1.49,
+            "percentage": 0.006
+          },
+          "followingYearsCosts": {
+            "amount": 0.5,
+            "percentage": 0.002
+          },
+          "finalYearCosts": {
+            "amount": 1.49,
+            "percentage": 0.006
+          }
+        },
+        "incidentalCosts": {
+          "amount": 0,
+          "percentage": 0
+        },
+        "fiveYearsCosts": {
+          "amount": 4.47,
+          "percentage": 0.018
+        }
+      },
+      "suitability": {
+        "source": "not_required",
+        "type": null,
+        "status": "NOT_REQUIRED",
+        "action_when_unsuitable": null,
+        "questionnaire_required": false,
+        "questionnaire_reason": null,
+        "requires_appropriateness_warning_acknowledgement": false,
+        "acknowledgement_flag": null
+      },
+      "order_submission": {
+        "submitted": false,
+        "reason": "phase_1_preview_only"
+      },
+      "pre_trade_checks_passed": true,
+      "regulatory_disclosures": {
+        "market_data_notice": null,
+        "execution_instruction": "FIXTURE: I instruct Scalable Capital to place this order for execution on European Investor Exchange (EIX) valid for up to 360 days.",
+        "ex_ante_costs_notice": "FIXTURE"
+      },
+      "document_links": {
+        "client_documents": {
+          "label": "Client documents",
+          "url": "https://example.invalid/docs"
+        },
+        "primary_kid": {
+          "label": "KID",
+          "url": "https://example.invalid/kid.pdf"
+        },
+        "secondary_kid": null
+      }
+    },
+    "confirmation": {
+      "id": "fake-confirmation-id",
+      "intent_checksum": "fixture-checksum",
+      "expires_at_epoch": 1792311518,
+      "required_fields": {},
+      "warning_version": null,
+      "requires_appropriateness_warning_acknowledgement": false,
+      "appropriateness_warning_acknowledgement_flag": null,
+      "command_template": "sc broker trade buy ... --confirm fake-confirmation-id --json"
+    },
+    "compliance": {
+      "rule_id": "pre_trade_full_disclosure_v1"
+    },
+    "next_step": "confirm"
+  },
+  "confirm": null,
+  "order_id": null,
+  "reason": "dry run: preview matched, confirm deliberately skipped",
+  "fill": null,
+  "mandate_snapshot": {
+    "limits": {
+      "max_order_pct_of_nav": 0.25,
+      "max_orders_per_day": 2,
+      "max_position_pct_of_nav": 0.4,
+      "min_order_eur": 25,
+      "cash_reserve_eur": 2.0,
+      "allow_market_orders": true,
+      "allow_limit_orders": false,
+      "allow_stop_orders": false,
+      "reject_on_price_warning": true,
+      "reject_on_appropriateness": true,
+      "preview_amount_tolerance": 0.01,
+      "preview_confirm_max_age_seconds": 600
+    },
+    "venue": {
+      "code": "SEIX",
+      "require_selected_venue_match": true
+    }
+  },
+  "quote": {
+    "isin": "NL0010273215",
+    "name": "Fixture security",
+    "security_type": "ETF",
+    "quote_mid_price": "100.0000",
+    "quote_bid_price": "99.9000",
+    "quote_ask_price": "100.1000",
+    "quote_currency": "EUR",
+    "quote_timestamp_utc": "2026-10-16T15:30:00.000Z",
+    "quote_is_outdated": false
+  },
+  "estimated_eur": 240.0,
+  "finished_at": "2026-10-18T08:03:38+00:00"
+}
