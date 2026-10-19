@@ -26,7 +26,8 @@ STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/finance"
 mkdir -p "$STATE_DIR"
 # FINANCE_TODAY=YYYY-MM-DD replays a past date (dry runs on weekends). Never set it for live runs.
 TODAY="${FINANCE_TODAY:-$(TZ=Europe/Rome date +%F)}"
-LOG="$STATE_DIR/session-$TODAY$( [[ $DRY_RUN == 1 ]] && echo -dryrun ).log"
+SUFFIX_LOG=""; if [[ $DRY_RUN == 1 ]]; then SUFFIX_LOG="-dryrun"; fi
+LOG="$STATE_DIR/session-$TODAY$SUFFIX_LOG.log"
 exec > >(tee -a "$LOG") 2>&1
 echo "=== finance session $TODAY dry_run=$DRY_RUN start $(date -Is)"
 
@@ -107,7 +108,7 @@ echo "=== agent exited with $AGENT_RC at $(date -Is)"
 
 # --- publish (deterministic, even if the agent stopped early) --------------
 uv run python bin/build-site.py || echo "build-site failed"
-SUFFIX=""; [[ $DRY_RUN == 1 ]] && SUFFIX=" (dry run)"
+SUFFIX=""; if [[ $DRY_RUN == 1 ]]; then SUFFIX=" (dry run)"; fi
 PUSH_RC=0
 if [[ -n "$(git status --porcelain)" ]]; then
   git add -A
