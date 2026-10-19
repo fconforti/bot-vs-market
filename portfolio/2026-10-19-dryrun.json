@@ -6,7 +6,7 @@
   "positions": [],
   "pending_buy_orders_eur": 0.0,
   "dry_run": true,
-  "taken_at": "2026-10-19T14:02:57+00:00",
+  "taken_at": "2026-10-19T14:38:52+00:00",
   "post_trade": false,
   "raw": {
     "whoami": {
@@ -31,7 +31,7 @@
         },
         {
           "simpleAbsoluteReturn": 0,
-          "timeframe": "ONE_YEAR"
+          "timeframe": "SIX_MONTHS"
         },
         {
           "simpleAbsoluteReturn": 0,
@@ -39,11 +39,7 @@
         },
         {
           "simpleAbsoluteReturn": 0,
-          "timeframe": "TWO_DAYS"
-        },
-        {
-          "simpleAbsoluteReturn": 0,
-          "timeframe": "INTRADAY"
+          "timeframe": "ONE_YEAR"
         },
         {
           "simpleAbsoluteReturn": 0,
@@ -51,17 +47,21 @@
         },
         {
           "simpleAbsoluteReturn": 0,
-          "timeframe": "SIX_MONTHS"
+          "timeframe": "INTRADAY"
         },
         {
           "simpleAbsoluteReturn": 0,
           "timeframe": "ONE_WEEK"
+        },
+        {
+          "simpleAbsoluteReturn": 0,
+          "timeframe": "TWO_DAYS"
         }
       ],
       "portfolio_id": "uNVGhixHaw2nhApzFvKpJQ",
       "timestamps": {
-        "inventory_timestamp_utc": "2026-10-19T13:45:26.309Z",
-        "valuation_timestamp_utc": "2026-10-19T14:02:56.143Z"
+        "inventory_timestamp_utc": "2026-10-19T14:31:02.939Z",
+        "valuation_timestamp_utc": "2026-10-19T14:38:51.859Z"
       },
       "valuation": {
         "crypto": 0,

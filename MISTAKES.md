@@ -19,3 +19,21 @@ _No mistakes recorded yet. The first live run has not happened._
   `bin/snapshot.py --dry-run` followed by `strategy/current.py` under `FINANCE_DRY_RUN=1` and
   asserts a JSON result. More generally: no component is "done" until the dry-run path has
   been exercised through the same entry points the session uses.
+
+## 2026-10-19 (dry run): v001 sizes buys in fractional EUR amounts; the broker buys whole shares
+
+- **What was wrong:** v001 and its backtest size every buy as a EUR amount (24% of NAV) and
+  assume fractional units. The first real previews on 2026-10-19 showed that Scalable sizes an
+  `--amount` market order in whole shares, rounded down at the ask: EUR 240 of the VanEck
+  Semiconductor ETF became 2 shares, EUR 182.20, and EUR 240 of ASML failed outright
+  ("below one share at current askPrice 1486"). 11 of the 42 ranked instruments are priced
+  above the slot size and can never be bought; most other buys miss the guardrails' 1% amount
+  tolerance. The question was raised in the 2026-10-15 rehearsal and parked in the research
+  inbox instead of being checked with one read-only preview before the strategy was frozen.
+- **What it cost:** no money. In a live run it would have cost the first trading day (one
+  buy rejected, one aborted). Without the 1% amount check it would have silently bought 24%
+  less than the strategy intended.
+- **Rule that would have prevented it:** before a strategy version is frozen, run one real
+  read-only preview for each order shape it can produce (a cheap ETF, an expensive stock)
+  and check that the broker executes exactly what the backtest assumes. Fixture previews
+  that accept any amount prove nothing about sizing.

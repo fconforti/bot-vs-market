@@ -55,3 +55,29 @@ each item in its entry.
   (executed, unknown, aborted after preview), and dry runs never count. Consequence live: two
   post-preview rejections would not stop a third preview. Either the text or the code should
   change so that they agree; the mandate file says the code wins and the disagreement gets fixed.
+- 2026-10-19 (dry run, live data): **blocker for live: the broker buys whole shares only.**
+  `sc broker trade buy --amount 240.00 --order-type market` on the VanEck Semiconductor ETF
+  previewed as `shares: 2`, `estimated_order_volume: 182.2` (rounded down at the ask of 91.10),
+  so the guardrails rejected it on `preview_amount_match` (24% short). On ASML the preview
+  failed: `EX_ANTE_COST_UNAVAILABLE: amount 240 EUR is below one share at current askPrice 1486`.
+  This answers the 2026-10-15 fractional-orders item: no fractional one-off orders. Consequences
+  for v001 with EUR 1,000 and four slots: 11 of 42 ranked instruments are priced above EUR 240
+  and can never be bought (ASML, NASDAQ 100 ETF, Rheinmetall, Core S&P 500 ETF, Microsoft,
+  Allianz, LVMH, Tesla, Alphabet, Apple, Siemens, on 2026-10-19 prices); every other buy is
+  rejected unless the whole-share leftover is under 1% (EUR 2.40). Options for the owner or the
+  research session: size buys in whole shares via `quantity` (floor of target / ask) and widen or
+  redefine the amount check accordingly; drop instruments priced above the slot size; or find out
+  whether Scalable offers fractional execution another way (unverified). In every case re-run the
+  backtest with whole-share sizing; at this NAV the rounding is several percent per position.
+- 2026-10-19 (dry run, live data): answers to earlier items. `--venue SEIX` is correct: the live
+  preview returned `selected_venue=SEIX`. The VanEck Semiconductor ETF previewed as
+  `TRADABLE_WITHOUT_APPROPRIATENESS` with no price warnings. The bitcoin ETP appropriateness
+  question is still untested (it ranks 40th). Costs in the preview: EUR 0.99 entry, EUR 0.99 exit,
+  0.35% a year product costs for the ETF, matching the cost model.
+- 2026-10-19 (dry run, live data): cosmetic. `bin/guardrails.py` line 87 labels every dry-run
+  snapshot `DRY-RUN FIXTURE` in the `snapshot_today` check, even when the dry run reads the live
+  account. It should say FIXTURE only when `FINANCE_SC_MODE` is `fixture`.
+- 2026-10-19 (dry run, live data): timing. This rehearsal ran at about 16:40 CEST, before the
+  Xetra close, so `data.py --refresh` stored an intraday price as the 2026-10-19 "close" and the
+  algorithm ranked on it. Harmless at 18:15. If sessions can be started by hand at other times,
+  `data.py` or `current.py` could refuse (or flag) a same-day bar fetched before 17:35 CET.

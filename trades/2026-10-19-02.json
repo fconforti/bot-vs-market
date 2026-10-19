@@ -1,0 +1,172 @@
+{
+  "id": "2026-10-19-02",
+  "date": "2026-10-19",
+  "created_at": "2026-10-19T14:40:05Z",
+  "isin": "NL0010273215",
+  "name": "ASML Holding NV",
+  "side": "buy",
+  "order_type": "market",
+  "eur_amount": 240.0,
+  "quantity": null,
+  "limit_price": null,
+  "rationale": "Enter: rank 2 of 42 by 12-1 momentum (+61.4%); trend ON (IE00B4L5Y983 130.52 > SMA200 120.6632); target weight 25% of NAV 1000.00 EUR.",
+  "thesis": "v001 buys the second-strongest 12-1 momentum instrument while the MSCI World is in an uptrend. ASML is up 61% over the twelve months to a month ago; on 14 October it reported Q3 revenue of about EUR 11.7bn and raised 2026 guidance to EUR 44-45bn, and management expects capacity bottlenecks in 2027-2028. Caveat: it overlaps heavily with order 2026-10-19-01 (ASML is a top holding of the semiconductor ETF), so together the two are close to one 48% bet on semiconductors. What proves it wrong under the rules: momentum turning negative or rank worse than 7 at a monthly exit window, or the MSCI World closing more than 3% below its 200-day average. Outside the rules: order cancellations or a guidance cut, or the valuation concern (Jefferies Hold, target EUR 1,650, about 11% above the last price) winning out over earnings growth. At EUR 240 and a price near EUR 1,489 this is a fractional order of about 0.16 shares; if the broker refuses fractional one-off stock orders, the preview will say so.",
+  "strategy_version": "v001",
+  "status": "aborted",
+  "dry_run": true,
+  "checks": [
+    {
+      "name": "halted",
+      "ok": true,
+      "detail": "no HALTED file"
+    },
+    {
+      "name": "side",
+      "ok": true,
+      "detail": "side='buy'"
+    },
+    {
+      "name": "isin_format",
+      "ok": true,
+      "detail": "isin='NL0010273215'"
+    },
+    {
+      "name": "order_type_allowed",
+      "ok": true,
+      "detail": "order_type='market', allowed=['market']"
+    },
+    {
+      "name": "venue_configured",
+      "ok": true,
+      "detail": "venue='SEIX'"
+    },
+    {
+      "name": "trading_day",
+      "ok": true,
+      "detail": "2026-10-19 is a trading day"
+    },
+    {
+      "name": "orders_per_day",
+      "ok": true,
+      "detail": "0 attempted today, limit 2"
+    },
+    {
+      "name": "snapshot_today",
+      "ok": true,
+      "detail": "snapshot 2026-10-19 nav=1000.00 cash=1000.00 DRY-RUN FIXTURE"
+    },
+    {
+      "name": "nav_positive",
+      "ok": true,
+      "detail": "nav=1000.0"
+    },
+    {
+      "name": "instrument_resolves",
+      "ok": true,
+      "detail": "quote isin=NL0010273215 mid=1485.9 name=ASML Holding"
+    },
+    {
+      "name": "quote_currency_eur",
+      "ok": true,
+      "detail": "currency=EUR"
+    },
+    {
+      "name": "buy_amount_or_quantity",
+      "ok": true,
+      "detail": "buy needs exactly one of eur_amount, quantity"
+    },
+    {
+      "name": "min_order",
+      "ok": true,
+      "detail": "240.00 >= min 25.00"
+    },
+    {
+      "name": "max_order_pct_of_nav",
+      "ok": true,
+      "detail": "240.00 <= 25% of NAV 1000.00 = 250.00"
+    },
+    {
+      "name": "max_position_pct_of_nav",
+      "ok": true,
+      "detail": "held 0.00 + order 240.00 <= 40% of NAV = 400.00"
+    },
+    {
+      "name": "cash_available",
+      "ok": true,
+      "detail": "240.00 <= buying power 1000.00 - reserve 2.00"
+    }
+  ],
+  "attempt": {
+    "preview_args": [
+      "broker",
+      "trade",
+      "buy",
+      "--isin",
+      "NL0010273215",
+      "--amount",
+      "240.00",
+      "--order-type",
+      "market",
+      "--venue",
+      "SEIX"
+    ],
+    "previewed_at": "2026-10-19T14:41:32+00:00"
+  },
+  "preview": null,
+  "confirm": null,
+  "order_id": null,
+  "reason": "preview failed: sc broker trade buy failed: ex_ante_cost_unavailable: EX_ANTE_COST_UNAVAILABLE: amount 240 EUR is below one share at current askPrice 1486",
+  "fill": null,
+  "mandate_snapshot": {
+    "limits": {
+      "max_order_pct_of_nav": 0.25,
+      "max_orders_per_day": 2,
+      "max_position_pct_of_nav": 0.4,
+      "min_order_eur": 25,
+      "cash_reserve_eur": 2.0,
+      "allow_market_orders": true,
+      "allow_limit_orders": false,
+      "allow_stop_orders": false,
+      "reject_on_price_warning": true,
+      "reject_on_appropriateness": true,
+      "preview_amount_tolerance": 0.01,
+      "preview_confirm_max_age_seconds": 600
+    },
+    "venue": {
+      "code": "SEIX",
+      "require_selected_venue_match": true
+    }
+  },
+  "quote": {
+    "isin": "NL0010273215",
+    "name": "ASML Holding",
+    "security_type": "STOCK",
+    "quote_mid_price": 1485.9,
+    "quote_bid_price": 1485.8,
+    "quote_ask_price": 1486,
+    "quote_currency": "EUR",
+    "quote_timestamp_utc": "2026-10-19T14:41:26.937Z",
+    "quote_is_outdated": false
+  },
+  "estimated_eur": 240.0,
+  "preview_error": {
+    "message": "sc broker trade buy failed: ex_ante_cost_unavailable: EX_ANTE_COST_UNAVAILABLE: amount 240 EUR is below one share at current askPrice 1486",
+    "exit_code": 10,
+    "error_code": "ex_ante_cost_unavailable",
+    "args": [
+      "broker",
+      "trade",
+      "buy",
+      "--isin",
+      "NL0010273215",
+      "--amount",
+      "240.00",
+      "--order-type",
+      "market",
+      "--venue",
+      "SEIX"
+    ],
+    "raw": "{\"ok\":false,\"command\":\"broker.trade.buy\",\"error\":{\"code\":\"ex_ante_cost_unavailable\",\"message\":\"EX_ANTE_COST_UNAVAILABLE: amount 240 EUR is below one share at current askPrice 1486\"},\"hints\":[\"Quote or ex-ante costs are unavailable for this trade attempt.\"]}"
+  },
+  "finished_at": "2026-10-19T14:41:32+00:00"
+}
