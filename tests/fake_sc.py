@@ -65,10 +65,11 @@ def main(argv):
 
     data = env.get("data")
     if isinstance(data, dict) and key.startswith("broker.quote") and isin:
-        data["isin"] = isin
-        data["quote_mid_price"] = f"{mid:.4f}"
-        data["quote_bid_price"] = f"{mid * 0.999:.4f}"
-        data["quote_ask_price"] = f"{mid * 1.001:.4f}"
+        q = data["result"]
+        q["isin"] = isin
+        q["quote_mid_price"] = f"{mid:.4f}"
+        q["quote_bid_price"] = f"{mid * 0.999:.4f}"
+        q["quote_ask_price"] = f"{mid * 1.001:.4f}"
     if isinstance(data, dict) and key.startswith("broker.trade.") and isin and "result" in data:
         res = data["result"]
         intent = res.setdefault("intent", {})

@@ -129,28 +129,37 @@ def num(value: Any, default: float | None = None) -> float | None:
 
 # --- read-only helpers -------------------------------------------------------
 
+def _payload(data: Any) -> dict:
+    """Account-scoped commands (overview, holdings, cash-breakdown, quote,
+    transactions) wrap their payload: {account_id, portfolio_id, resolution,
+    result: {...}}. chart, security-news and whoami do not. Return the payload."""
+    if isinstance(data, dict) and isinstance(data.get("result"), dict) and "resolution" in data:
+        return data["result"]
+    return data or {}
+
+
 def whoami() -> dict:
-    return run(["whoami"]).data or {}
+    return _payload(run(["whoami"]).data)
 
 
 def overview() -> dict:
-    return run(["broker", "overview"]).data or {}
+    return _payload(run(["broker", "overview"]).data)
 
 
 def holdings() -> dict:
-    return run(["broker", "holdings"]).data or {}
+    return _payload(run(["broker", "holdings"]).data)
 
 
 def cash_breakdown() -> dict:
-    return run(["broker", "cash-breakdown"]).data or {}
+    return _payload(run(["broker", "cash-breakdown"]).data)
 
 
 def quote(isin: str) -> dict:
-    return run(["broker", "quote", "--isin", isin]).data or {}
+    return _payload(run(["broker", "quote", "--isin", isin]).data)
 
 
 def chart(isin: str, timeframe: str = "1y") -> dict:
-    return run(["broker", "chart", "--isin", isin, "--timeframe", timeframe]).data or {}
+    return _payload(run(["broker", "chart", "--isin", isin, "--timeframe", timeframe]).data)
 
 
 def transactions(*, statuses: list[str] | None = None, page_size: int = 50, isin: str | None = None) -> dict:
@@ -159,7 +168,7 @@ def transactions(*, statuses: list[str] | None = None, page_size: int = 50, isin
         args += ["--status", s]
     if isin:
         args += ["--isin", isin]
-    return run(args).data or {}
+    return _payload(run(args).data)
 
 
 def open_orders() -> list[dict]:
@@ -170,7 +179,7 @@ def open_orders() -> list[dict]:
 
 
 def security_news(isin: str, locale: str = "en_DE") -> dict:
-    return run(["broker", "security-news", "--isin", isin, "--locale", locale]).data or {}
+    return _payload(run(["broker", "security-news", "--isin", isin, "--locale", locale]).data)
 
 
 # --- order flow (only bin/guardrails.py may call these) ----------------------

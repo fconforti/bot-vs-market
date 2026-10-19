@@ -150,3 +150,16 @@ def test_current_main_finds_dry_run_snapshot(repo, fake_sc, monkeypatch, capsys)
     assert out["state"]["dry_run"] is True and out["state"]["as_of"] == "2026-10-20"
     assert out["signals"]["trend_on"] is True
     assert len(out["proposed_orders"]) == PARAMS["sizing"]["max_orders_per_day"]
+
+
+def test_daily_check_set_rotates_over_the_universe():
+    from datetime import date, timedelta
+    from strategy.data import DAILY_SLICE, daily_check_set
+    isins = [f"X{i:02d}" for i in range(44)]
+    seen = set()
+    for d in range(6):
+        day = date(2026, 10, 19) + timedelta(days=d)
+        s = daily_check_set(isins, day, held=["X05"], benchmark="X00")
+        assert s[:2] == ["X00", "X05"] and len(s) == 2 + DAILY_SLICE and len(set(s)) == len(s)
+        seen |= set(s)
+    assert seen == set(isins)

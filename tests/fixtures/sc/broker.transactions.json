@@ -1,1 +1,21 @@
-{"ok":true,"command":"broker.transactions","data":{"_fixture":"FIXTURE DATA","account_id":"fixture-account","portfolio_id":"fixture-portfolio","cursor":null,"total":0,"count":0,"items":[]}}
+{
+  "ok": true,
+  "command": "broker.transactions",
+  "data": {
+    "_fixture": "FIXTURE DATA",
+    "account_id": "fixture-account",
+    "portfolio_id": "fixture-portfolio",
+    "resolution": {
+      "account": "selected_context",
+      "portfolio": "selected_context"
+    },
+    "result": {
+      "account_id": "fixture-account",
+      "portfolio_id": "fixture-portfolio",
+      "cursor": null,
+      "total": 0,
+      "count": 0,
+      "items": []
+    }
+  }
+}

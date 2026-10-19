@@ -10,7 +10,8 @@
 Usage:
     uv run python strategy/data.py --refresh            # daily
     uv run python strategy/data.py --full               # rebuild the whole cache
-    uv run python strategy/data.py --check-live         # compare last close vs sc quote
+    uv run python strategy/data.py --check-live         # holdings, benchmark, rotating slice
+    uv run python strategy/data.py --check-live --all   # every instrument (one-off, slow)
 """
 from __future__ import annotations
 
@@ -125,18 +126,48 @@ def market_data(as_of: date | None = None) -> MarketData:
     return MarketData(closes=closes, as_of=as_of, universe=load_universe())
 
 
-def check_live(isins: list[str] | None = None) -> list[dict]:
+# The broker rate-limits quotes: about 45 in a burst exhausted it for several minutes
+# (2026-10-19), and the guardrails need quotes and previews afterwards. So the daily
+# check covers holdings, the benchmark and a slice of the rest that rotates by day.
+DAILY_SLICE = 8
+QUOTE_PAUSE_S = 1.0
+
+
+def daily_check_set(all_isins: list[str], day: date, held: list[str], benchmark: str | None) -> list[str]:
+    first = [i for i in [benchmark, *held] if i and i in all_isins]
+    rest = [i for i in all_isins if i not in first]
+    if not rest:
+        return first
+    start = (day.toordinal() * DAILY_SLICE) % len(rest)
+    rotated = rest[start:] + rest[:start]
+    return list(dict.fromkeys(first + rotated[:DAILY_SLICE]))
+
+
+def _default_check_set(closes: pd.DataFrame) -> list[str]:
+    from finance import clock, mandate, portfolio
+    day = clock.today()
+    state = portfolio.latest_state(day, dry_run=os.environ.get("FINANCE_DRY_RUN") == "1")
+    held = [p.isin for p in state.positions] if state else []
+    return daily_check_set(list(closes.columns), day, held, mandate.load().benchmark_isin)
+
+
+def check_live(isins: list[str] | None = None, *, all_instruments: bool = False, pause_s: float = QUOTE_PAUSE_S) -> list[dict]:
     """Compare the last cached close with the broker's live mid quote. A gap above 3%
     usually means a bad ticker mapping or a stale cache, and the journal must say so."""
+    import time
     closes = closes_by_isin()
     u = load_universe().set_index("isin")
+    if not isins:
+        isins = list(closes.columns) if all_instruments else _default_check_set(closes)
     out = []
-    for isin in (isins or list(closes.columns)):
+    for n, isin in enumerate(isins):
+        if n and pause_s:
+            time.sleep(pause_s)
         try:
             q = sc.quote(isin)
         except sc.ScError as exc:
             out.append({"isin": isin, "error": exc.to_dict()["message"]})
-            if exc.is_auth:
+            if exc.is_auth or exc.error_code == "rate_limited":
                 break
             continue
         mid = sc.num(q.get("quote_mid_price"))
@@ -155,6 +186,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--full", action="store_true", help="rebuild the cache from scratch")
     ap.add_argument("--check-live", action="store_true", help="compare cached closes with sc quotes")
     ap.add_argument("--isin", action="append", help="limit --check-live to these ISINs")
+    ap.add_argument("--all", action="store_true", help="--check-live every instrument, not the daily set")
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args(argv)
     result: dict = {}
@@ -168,7 +200,7 @@ def main(argv: list[str] | None = None) -> int:
             for s in report["stale"]:
                 print(f"STALE: {s['ticker']} last close {s['last']}")
     if args.check_live:
-        rows = check_live(args.isin)
+        rows = check_live(args.isin, all_instruments=args.all)
         result["check_live"] = rows
         if not args.json:
             for r in rows:

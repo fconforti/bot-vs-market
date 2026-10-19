@@ -3,7 +3,7 @@
 What the tool actually exposes, learned from `sc capabilities --json` (saved as
 `docs/sc-capabilities.json`), `sc <cmd> --help`, the README and the public Rust source
 of `ScalableCapital/scalable-cli` (v1.1.0). Everything in this repo is built against
-this, not against assumptions. Items marked **VERIFY** need a logged-in account.
+this, not against assumptions. Items marked **VERIFY** need a logged-in account; the read-only ones were verified on 2026-10-19.
 
 ## Envelope and exit codes
 
@@ -30,7 +30,8 @@ Exit codes: `0` ok, `1` generic error, `10` validation error, `20` auth/config e
   session_backend = "file"
   ```
 
-  This is required for headless systemd runs too. **VERIFY** after the owner sets it.
+  This is required for headless systemd runs too. Verified 2026-10-19: with it set,
+  `sc login` and every read command work.
 - Access tokens refresh automatically using a refresh token. Session lifetime is not
   documented. Expect to re-run `sc login` occasionally; the daily run detects exit
   code 20 and aborts with a "needs re-login" journal entry.
@@ -52,6 +53,18 @@ Enforced by the CLI on phase 1 and phase 2 of buy/sell. Independent of our
 owner to add them.
 
 ## Read-only commands and their JSON shapes (`data`)
+
+Verified against the real account on 2026-10-19. Account-scoped commands (`overview`,
+`holdings`, `cash-breakdown`, `quote`, `transactions`) wrap their payload:
+`data = {account_id, portfolio_id, resolution: {...}, result: {...}}`, and the fields
+below live in `data.result`. `chart` and `security-news` are not wrapped, and `whoami`
+returns `data.result.personOverview`. `finance/sc.py` unwraps this in one place
+(`_payload`). Decimals arrive as JSON numbers, not strings (`sc.num` accepts both).
+
+**Rate limit.** About 45 quotes in a quick burst returned `rate_limited` on every
+call for several minutes afterwards. The daily `--check-live` therefore quotes only
+holdings, the benchmark and a rotating slice of 8 instruments, one per second, and
+stops at the first `rate_limited`.
 
 - `whoami` → `{person_id, env, ...}`; only `ok` is relied on.
 - `broker overview` → `{account_id, portfolio_id, valuation: {total, securities, crypto}, timestamps: {...}, performance: [{timeframe, simpleAbsoluteReturn}]}`.

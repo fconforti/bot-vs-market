@@ -86,6 +86,14 @@ Chart: `research/backtests/v001.png`.
 
 ## Changelog
 
+### v001 universe fix (2026-10-19, before the first live order)
+
+`strategy/universe.csv` paired the Xtrackers MSCI World Financials prices (`XDWF.DE`)
+with the ISIN of the Consumer Staples ETF (`IE00BM67HN09`). Found by the first
+`data.py --check-live` against the real account (23% close-vs-quote gap). The ISIN is
+now `IE00BM67HL84`, which Scalable quotes at the `XDWF.DE` price. The backtest already
+used the Financials prices, so its numbers do not change and this is not a new version.
+
 ### v001 (2026-10-18) initial version
 
 Written by the build session. Design history, in order, all on the same data and
