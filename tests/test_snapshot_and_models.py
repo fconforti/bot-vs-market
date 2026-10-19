@@ -54,3 +54,12 @@ def test_trade_numbering_and_attempt_count(repo):
     t["status"] = "executed"
     trades.write(p1, t)
     assert trades.attempted_today(d) == 1
+
+
+def test_dry_run_attempts_do_not_count_against_live_limit(repo):
+    d = date(2026, 10, 20)
+    p = trades.new_proposal(day=d, isin="IE00B5BMR087", side="buy", quantity=2, dry_run=True)
+    t = trades.load(p)
+    t["status"] = "aborted"
+    trades.write(p, t)
+    assert trades.attempted_today(d) == 0

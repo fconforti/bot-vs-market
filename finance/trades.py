@@ -149,6 +149,8 @@ def attempted_today(day: date) -> int:
         except (OSError, ValueError, json.JSONDecodeError):
             n += 1   # unreadable file: count it, be conservative
             continue
+        if d.get("dry_run") is True:
+            continue
         if d.get("status") in ATTEMPTED_STATUSES or (d.get("attempt") or {}).get("confirm_sent_at"):
             n += 1
     return n
