@@ -142,7 +142,23 @@ def simulate(strategy, params: dict, closes: pd.DataFrame, universe: pd.DataFram
                 rejected.append({"date": str(t.date()), "isin": o.isin, "reason": "no close"})
                 continue
             itype = types.get(o.isin, "stock")
-            if o.side == "buy":
+            if o.side == "buy" and o.quantity is not None:
+                # Whole-share buy (v002+): the order value is shares x price, the fee is on top.
+                q = float(o.quantity)
+                px = fr.exec_price(float(px_close), "buy", itype)
+                fee = fr.fee()
+                cost = q * px
+                held_val = qty.get(o.isin, 0.0) * px_close
+                if (q < 1 or not q.is_integer() or cost < lim.min_order_eur or cost > lim.max_order_pct_of_nav * nav + 1e-6
+                        or cost + fee > cash - lim.cash_reserve_eur or held_val + cost > lim.max_position_pct_of_nav * nav + 1e-6):
+                    rejected.append({"date": str(t.date()), "isin": o.isin, "reason": "mandate limit", "amount": cost})
+                    continue
+                qty[o.isin] = qty.get(o.isin, 0.0) + q
+                cash -= cost + fee
+                fees_paid += fee
+                turnover += cost
+                trade_log.append({"date": str(t.date()), "side": "buy", "isin": o.isin, "eur": round(cost, 2), "shares": q, "price": round(px, 4), "fee": fee})
+            elif o.side == "buy":
                 amount = float(o.eur_amount or 0.0)
                 if amount < lim.min_order_eur or amount > lim.max_order_pct_of_nav * nav + 1e-6 or amount > cash - lim.cash_reserve_eur:
                     rejected.append({"date": str(t.date()), "isin": o.isin, "reason": "mandate limit", "amount": amount})

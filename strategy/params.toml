@@ -1,6 +1,6 @@
 # Parameters for strategy/current.py. Changing anything here is a strategy change:
 # it needs a new frozen version, a STRATEGY.md changelog entry and a backtest.
-version = "v001"
+version = "v002"
 
 [trend]
 isin = "IE00B4L5Y983"        # MSCI World ETF used as the broad-market trend filter
@@ -24,5 +24,6 @@ sleeve_types = ["etf", "stock", "etc", "crypto"]
 target_weight = 0.25         # 1 / top_n
 order_cap_pct_of_nav = 0.24  # below the mandate's 0.25 so quote drift cannot trip it
 min_order_eur = 100          # the mandate allows 25; the algorithm's own floor is higher (fees)
+price_buffer = 0.01          # shares = floor(budget / (close * 1.01)): room for the ask and the move to 18:15
 cash_reserve_eur = 5
 max_orders_per_day = 2       # mirrors the mandate; sells go first

@@ -46,18 +46,32 @@ def test_generate_is_pure_and_deterministic():
     assert a == b
 
 
-def test_trend_on_buys_top_ranked_within_daily_limit_and_caps():
+def test_trend_on_buys_top_affordable_in_whole_shares_within_caps():
     md = synthetic_market(date(2026, 10, 20))
     orders = current.generate(state(), md, PARAMS)
     assert len(orders) == PARAMS["sizing"]["max_orders_per_day"]
-    assert all(o.side == "buy" for o in orders)
+    assert all(o.side == "buy" and o.eur_amount is None for o in orders)
     sig = current.signals(md, PARAMS)
-    top = [r["isin"] for r in sig["ranking"][:2]]
-    assert [o.isin for o in orders] == top
     cap = 1000.0 * PARAMS["sizing"]["order_cap_pct_of_nav"]
-    assert all(o.eur_amount <= cap for o in orders)
-    assert all(o.eur_amount >= PARAMS["sizing"]["min_order_eur"] for o in orders)
+    buffer = 1 + PARAMS["sizing"]["price_buffer"]
+    affordable = [r["isin"] for r in sig["ranking"] if r["last_close"] * buffer <= cap]
+    assert [o.isin for o in orders] == affordable[:2]
+    close = {r["isin"]: r["last_close"] for r in sig["ranking"]}
+    for o in orders:
+        assert o.quantity >= 1 and float(o.quantity).is_integer()
+        assert PARAMS["sizing"]["min_order_eur"] <= o.quantity * close[o.isin] * buffer <= cap
+        assert (o.quantity + 1) * close[o.isin] * buffer > cap      # as many shares as fit
     assert all("rank" in o.rationale for o in orders)
+
+
+def test_unaffordable_leaders_are_skipped_not_left_as_empty_slots():
+    md = synthetic_market(date(2026, 10, 20))
+    sig = current.signals(md, PARAMS)
+    cap = 1000.0 * PARAMS["sizing"]["order_cap_pct_of_nav"]
+    assert sig["ranking"][0]["last_close"] > cap      # the synthetic leader costs more than a slot
+    orders = current.generate(state(), md, PARAMS)
+    assert sig["ranking"][0]["isin"] not in {o.isin for o in orders}
+    assert len(orders) == PARAMS["sizing"]["max_orders_per_day"]
 
 
 def test_trend_off_sells_everything_and_buys_nothing():

@@ -1,4 +1,4 @@
-"""Strategy v001: trend-filtered 12-1 momentum rotation with hysteresis.
+"""Strategy v002: trend-filtered 12-1 momentum rotation with hysteresis.
 
     generate(state, market, params) -> list[ProposedOrder]
 
@@ -17,10 +17,11 @@ Rules (all parameters in strategy/params.toml):
    momentum below zero (absolute momentum) or rank worse than `hold_rank`.
    Outside the window a position is only sold by the trend filter.
 4. Entries: whenever fewer than `top_n` sleeve positions are held, buy the best-ranked
-   instruments not held, one slot each, in rank order.
-5. Sizing: target 1/top_n of NAV per position; an order never exceeds
-   `order_cap_pct_of_nav` of NAV or the spendable cash; top-ups below `min_order_eur`
-   are skipped. Sells are whole positions.
+   instruments not held, one slot each, in rank order, skipping any whose single
+   share costs more than the slot.
+5. Sizing (v002): whole shares, floor(budget / (close * (1 + price_buffer))), where
+   budget = min(target 1/top_n of NAV, `order_cap_pct_of_nav` of NAV, spendable cash).
+   Buys worth less than `min_order_eur` are skipped. Sells are whole positions.
 6. At most `max_orders_per_day` orders, sells first. The rest wait for tomorrow.
 """
 from __future__ import annotations
@@ -35,7 +36,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from finance.models import MarketData, PortfolioState, ProposedOrder  # noqa: E402
 
-VERSION = "v001"
+VERSION = "v002"
 PARAMS_PATH = Path(__file__).resolve().parent / "params.toml"
 
 
@@ -149,24 +150,33 @@ def generate(state: PortfolioState, market: MarketData, params: dict) -> list[Pr
     order_cap = nav * float(p_sz["order_cap_pct_of_nav"])
     min_order = float(p_sz["min_order_eur"])
 
+    # Whole shares only: Scalable fills one-off orders in whole shares (verified
+    # 2026-10-19), so each buy is a share count sized at the last close plus a buffer
+    # for the ask and the move to 18:15. Candidates whose single share does not fit
+    # the slot are passed over for the next affordable one.
+    buffer = 1.0 + float(p_sz["price_buffer"])
     candidates = [] if not sig["trend_on"] else \
-        [r for r in sig["ranking"] if r["isin"] not in keep_isins and r["momentum"] > 0][:max(slots, 0)]
+        [r for r in sig["ranking"] if r["isin"] not in keep_isins and r["momentum"] > 0]
     for r in candidates:
+        if len(buys) >= slots:
+            break
         current = state.weight(r["isin"]) * nav
-        amount = min(target_value - current, order_cap, spendable)
-        amount = math.floor(amount * 100) / 100
-        if amount < min_order:
+        budget = min(target_value - current, order_cap, spendable)
+        price = float(r["last_close"])
+        shares = math.floor(budget / (price * buffer)) if price > 0 else 0
+        est = shares * price
+        if shares < 1 or est < min_order:
             continue
         buys.append(ProposedOrder(
-            isin=r["isin"], side="buy", eur_amount=amount, name=names.get(r["isin"], r["name"]),
+            isin=r["isin"], side="buy", quantity=float(shares), name=names.get(r["isin"], r["name"]),
             rationale=(f"Enter: rank {r['rank']} of {len(sig['ranking'])} by 12-1 momentum ({r['momentum']:+.1%}); "
                        f"trend ON ({params['trend']['isin']} {sig['trend_close']} > SMA{params['trend']['sma_days']} {sig['trend_sma']}); "
-                       f"target weight {p_sz['target_weight']:.0%} of NAV {nav:.2f} EUR."),
+                       f"{shares} shares at about {price:.2f} EUR = {est:.2f} EUR, target weight {p_sz['target_weight']:.0%} of NAV {nav:.2f} EUR."),
         ))
-        spendable -= amount
+        spendable -= est * buffer
 
     # Top-ups for kept positions that drifted well below target are deliberately not
-    # done in v001: they add fees without changing the signal.
+    # done: they add fees without changing the signal.
     sells.sort(key=lambda o: rank.get(o.isin, {}).get("rank", 10_000), reverse=True)
     orders = sells + buys
     return orders[: int(p_sz["max_orders_per_day"])]

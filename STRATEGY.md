@@ -1,10 +1,10 @@
 # Strategy
 
-Current version: **v001** (2026-10-18). Live algorithm: `strategy/current.py`, parameters:
+Current version: **v002** (2026-10-19). Live algorithm: `strategy/current.py`, parameters:
 `strategy/params.toml`, universe: `strategy/universe.csv`. Frozen copy:
-`strategy/versions/v001_2026-10-18.py` / `.toml`. Backtest: `research/backtests/v001.json`.
+`strategy/versions/v002_2026-10-19.py` / `.toml`. Backtest: `research/backtests/v002.json`.
 
-## v001 in plain language
+## v002 in plain language
 
 A slow, trend-filtered momentum rotation over a fixed list of 44 liquid instruments
 (24 ETFs, 2 gold ETCs, 1 bitcoin ETP, 15 large-cap stocks, 2 cash-like ETFs that are
@@ -25,8 +25,12 @@ never bought). Everything is priced in EUR on Xetra/gettex listings.
    if its momentum is negative or its rank is worse than 7. Outside that window, only
    the trend filter can sell. This hysteresis (enter at rank 4 or better, leave at rank
    8 or worse) is what keeps turnover down.
-5. **Sizing.** Each buy is `min(target - current, 24% of NAV, spendable cash)`, rounded
-   down to cents; buys under EUR 100 are skipped (the mandate allows EUR 25, but at
+5. **Sizing, in whole shares.** The broker fills one-off orders in whole shares only.
+   Each buy gets a budget of `min(target - current, 24% of NAV, spendable cash)` and
+   buys as many whole shares as fit at the last close plus 1%. An instrument whose
+   single share costs more than the budget is passed over for the next one in the
+   ranking (at EUR 1,000 that rules out about a quarter of the list, from ASML to the
+   S&P 500 ETF). Buys under EUR 100 are skipped (the mandate allows EUR 25, but at
    EUR 0.99 per order that is a 4% fee). Sells are whole positions. There are no top-ups.
 6. **Two orders a day**, sells first. A full rotation takes a few days by design.
 
@@ -44,26 +48,27 @@ close plus half the spread, which is closer to an 18:15 fill on EIX than the usu
 
 ## Backtest, 2013-01-18 to 2026-10-16 (EUR 1,000 start)
 
-| | v001 | MSCI World buy-and-hold |
-|---|---|---|
-| CAGR | 17.5% | 13.1% |
-| Max drawdown | -30.1% | -33.6% |
-| Sharpe (daily, rf 0) | 0.82 | 0.87 |
-| Volatility | 21% | 15% |
-| Trades | 262 | 1 |
-| Fees paid | EUR 259 | EUR 1 |
-| Turnover per year | 3.7x NAV | 0 |
-| In-sample CAGR (first 70%) | 16.9% | 12.2% |
-| Out-of-sample CAGR (last 30%) | 19.5% | 15.2% |
+| | v002 | v001 (fractional) | MSCI World buy-and-hold |
+|---|---|---|---|
+| CAGR | 17.0% | 17.5% | 13.0% |
+| Max drawdown | -25.1% | -30.1% | -33.6% |
+| Sharpe (daily, rf 0) | 0.84 | 0.82 | 0.87 |
+| Volatility | 21% | 21% | 15% |
+| Trades | 262 | 262 | 1 |
+| Fees paid | EUR 259 | EUR 259 | EUR 1 |
+| Turnover per year | 3.4x NAV | 3.7x NAV | 0 |
+| In-sample CAGR (first 70%) | 15.9% | 16.9% | 12.2% |
+| Out-of-sample CAGR (last 30%) | 20.0% | 19.5% | 15.1% |
 
-Chart: `research/backtests/v001.png`.
+Chart: `research/backtests/v002.png`. The period ends 2026-10-19 for v002 and
+2026-10-16 for v001.
 
 ### Why these numbers should not be trusted much
 
 - **Survivorship bias, the big one.** The universe is a list written in October 2026.
   It contains NVIDIA, Tesla, Rheinmetall, ASML and a semiconductor ETF because they
   are large *today*. A momentum rule run over the last decade on that list will
-  "discover" them. The honest expectation for live performance is far below 17.5%.
+  "discover" them. The honest expectation for live performance is far below 17%.
   The ETF-only part of the universe is less affected; a research session should
   measure the strategy on ETFs only.
 - **One regime.** 2013 to 2026 was mostly a long equity bull market with two sharp
@@ -85,6 +90,23 @@ Chart: `research/backtests/v001.png`.
   algorithm and the account disagree about something.
 
 ## Changelog
+
+### v002 (2026-10-19) whole-share sizing
+
+Not a research result: a correction found before the first live order. The first
+previews against the real account showed that Scalable fills one-off orders in whole
+shares, rounded down at the ask. v001's EUR-amount buys came back 24% short (2 shares
+of the semiconductor ETF, EUR 182 instead of 240, rejected by the guardrails'
+1% amount check) or not at all (ASML: "below one share at current askPrice 1486").
+
+v002 changes only the sizing: buys are share counts, `floor(budget / (close * 1.01))`,
+and a candidate whose one share does not fit the budget is passed over for the next
+in the ranking instead of leaving the slot empty. The guardrails already handled
+share-count buys (preview shares must match exactly, value within 2% of quantity x
+quote). Signals, ranking, exits and every other parameter are unchanged. Same data,
+same frictions: CAGR 17.0% vs 17.5%, max drawdown -25% vs -30%, 262 trades in both.
+The lower drawdown is a side effect of skipping the most expensive names, not a
+reason for the change.
 
 ### v001 universe fix (2026-10-19, before the first live order)
 

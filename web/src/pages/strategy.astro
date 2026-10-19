@@ -24,7 +24,7 @@ const decisions = [
   { title: "When it sells", fact: "Once a month", term: "rebalance-window",
     text: `In the first ${se.rebalance_window_days} trading days of each month, a holding is sold if it drops out of the top ${se.hold_rank} or its momentum turns negative.` },
   { title: "How much in each", fact: `${pc(si.target_weight)} per position`, term: "position-weight",
-    text: `Equal weights. One order is at most ${pc(si.order_cap_pct_of_nav)} of the portfolio and at least €${si.min_order_eur}, so fees stay small.` },
+    text: `Equal weights, bought in whole shares: the broker does not sell fractions. One order is at most ${pc(si.order_cap_pct_of_nav)} of the portfolio and at least €${si.min_order_eur}, so fees stay small; anything whose single share costs more is skipped.` },
   { title: "How fast it trades", fact: `${si.max_orders_per_day} orders a day`, term: "guardrails",
     text: "Sells go first. A full rotation takes a few days, on purpose: slow and cheap beats fast and noisy." },
 ];

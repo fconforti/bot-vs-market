@@ -1,0 +1,29 @@
+# Parameters for strategy/current.py. Changing anything here is a strategy change:
+# it needs a new frozen version, a STRATEGY.md changelog entry and a backtest.
+version = "v002"
+
+[trend]
+isin = "IE00B4L5Y983"        # MSCI World ETF used as the broad-market trend filter
+sma_days = 200
+exit_band = 0.03             # sell everything only when the index is 3% below the SMA (no whipsaw)
+
+[momentum]
+lookback_days = 252          # 12 months
+skip_days = 21               # skip the most recent month (12-1 momentum)
+min_history_days = 260       # instruments with less history are not ranked
+
+[selection]
+top_n = 4                    # positions held when the trend is on
+hold_rank = 7                # a held instrument is kept while its rank is <= hold_rank
+rebalance_window_days = 3    # rank-based exits only in the first N trading days of a month
+exit_on_negative_momentum = true   # absolute-momentum exit, checked in the rebalance window
+exits_only_in_rebalance_window = true
+sleeve_types = ["etf", "stock", "etc", "crypto"]
+
+[sizing]
+target_weight = 0.25         # 1 / top_n
+order_cap_pct_of_nav = 0.24  # below the mandate's 0.25 so quote drift cannot trip it
+min_order_eur = 100          # the mandate allows 25; the algorithm's own floor is higher (fees)
+price_buffer = 0.01          # shares = floor(budget / (close * 1.01)): room for the ask and the move to 18:15
+cash_reserve_eur = 5
+max_orders_per_day = 2       # mirrors the mandate; sells go first
