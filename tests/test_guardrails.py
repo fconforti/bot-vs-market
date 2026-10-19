@@ -242,6 +242,8 @@ def test_trade_file_outside_trades_dir_refused(gr, repo, fake_sc, snapshot, tmp_
 def test_redaction_of_secret_like_keys():
     out = trades.redact({"access_token": "abc", "nested": {"Authorization": "x", "fine": 1}, "list": [{"api_key": "k"}]})
     assert out == {"access_token": "[redacted]", "nested": {"Authorization": "[redacted]", "fine": 1}, "list": [{"api_key": "[redacted]"}]}
+    url = "https://api.fundinfo.com/document/x/KID.pdf?apiKey=abc123&lang=it"
+    assert trades.redact({"url": url}) == {"url": "https://api.fundinfo.com/document/x/KID.pdf?apiKey=[redacted]&lang=it"}
 
 
 def test_bug_in_checks_never_confirms(gr, repo, fake_sc, snapshot, monkeypatch):

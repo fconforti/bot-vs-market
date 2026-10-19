@@ -2,6 +2,7 @@
 Description=finance: weekly strategy research session (claude -p)
 After=network-online.target
 Wants=network-online.target
+OnFailure=finance-alert@%n.service
 
 [Service]
 Type=oneshot

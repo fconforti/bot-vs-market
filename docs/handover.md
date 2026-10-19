@@ -104,6 +104,21 @@ even a live session can only preview.
 Optional but recommended: add `allowed_isins = [...]` with the universe ISINs under
 `[trade_controls]` so the CLI refuses anything outside the universe.
 
+## Failure alerts (email, private)
+
+Every non-zero exit of `finance.service` or `finance-research.service` (agent error,
+expired broker login, refused commit, failed push, crash or timeout) starts
+`finance-alert@.service`, which runs `bin/notify.py` and emails the owner with the log
+tail. Alerts never go through GitHub, because the repo is public. Setup, once:
+
+```sh
+# Google account > Security > 2-Step Verification > App passwords: create one for "Bot vs Market"
+addsecret finance ALERT_EMAIL      # the Gmail address; alerts are sent from and to it
+addsecret finance SMTP_PASSWORD    # the 16-character app password
+direnv reload && uv run python bin/notify.py --test
+cp systemd/finance-alert@.service ~/.config/systemd/user/
+```
+
 ## First live run
 
 ```sh

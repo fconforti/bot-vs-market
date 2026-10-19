@@ -5,7 +5,10 @@
 #   bin/run-session.sh --dry-run   preview only, never confirms, never pushes
 #
 # Exit 0 on a completed session (including a deliberate "no trade" or an abort that
-# was journaled), 3 when the session could not even start.
+# was journaled), 3 when the session could not even start (e.g. sc not logged in),
+# the agent's exit code when it failed, 4 when the push failed, 5 when the commit
+# was refused (a pre-commit hook: secret scan or append-only). Any non-zero exit
+# makes systemd run finance-alert@.service, which emails the owner.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -105,14 +108,17 @@ echo "=== agent exited with $AGENT_RC at $(date -Is)"
 # --- publish (deterministic, even if the agent stopped early) --------------
 uv run python bin/build-site.py || echo "build-site failed"
 SUFFIX=""; [[ $DRY_RUN == 1 ]] && SUFFIX=" (dry run)"
+PUSH_RC=0
 if [[ -n "$(git status --porcelain)" ]]; then
   git add -A
-  git commit -q -m "session: $TODAY$SUFFIX" || echo "commit failed (pre-commit hook?)"
+  git commit -q -m "session: $TODAY$SUFFIX" || { PUSH_RC=5; echo "commit failed (pre-commit hook?)"; }
 fi
-if [[ $DRY_RUN == 0 ]]; then
-  git push -q || echo "push failed (GH_TOKEN missing or network)"
+if [[ $DRY_RUN == 0 && $PUSH_RC == 0 ]]; then
+  git push -q || { PUSH_RC=4; echo "push failed (GH_TOKEN missing or network)"; }
 else
-  echo "dry run: not pushing"
+  echo "not pushing (dry run or commit failed)"
 fi
 echo "=== done $(date -Is)"
-exit 0
+# Whatever the agent wrote is still committed above; a failed agent or push fails the unit.
+if [[ $AGENT_RC != 0 ]]; then exit "$AGENT_RC"; fi
+exit "$PUSH_RC"

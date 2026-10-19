@@ -1,0 +1,10 @@
+[Unit]
+Description=finance: email the owner that %i failed
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/personal/bot-vs-market
+EnvironmentFile=%h/.secrets/finance.env
+Environment=XDG_STATE_HOME=%h/.local/state
+# System Python, standard library only: alerts must work even if the venv is broken.
+ExecStart=/usr/bin/python3 -I %h/personal/bot-vs-market/bin/notify.py --failed-unit %i

@@ -84,7 +84,7 @@ def _validate(trade: dict, man: mandate_mod.Mandate, today: date, *, dry_run: bo
     state = portfolio.latest_state(today, dry_run=dry_run)
     _check(trade, "snapshot_today", state is not None and state.as_of == today,
            "no portfolio snapshot for today; run bin/snapshot.py first" if state is None or state.as_of != today
-           else f"snapshot {state.as_of.isoformat()} nav={state.nav:.2f} cash={state.cash:.2f}{' DRY-RUN FIXTURE' if state.dry_run else ''}")
+           else f"snapshot {state.as_of.isoformat()} nav={state.nav:.2f} cash={state.cash:.2f}{(' DRY-RUN FIXTURE' if os.environ.get('FINANCE_SC_MODE') == 'fixture' else ' DRY-RUN') if state.dry_run else ''}")
     assert state is not None
     _check(trade, "nav_positive", state.nav > 0, f"nav={state.nav}")
 

@@ -89,13 +89,20 @@ def write(path: Path, data: dict[str, Any]) -> None:
 _SECRET_KEY_RE = re.compile(r"(token|secret|password|cookie|authorization|api[_-]?key)", re.I)
 
 
+# Query parameters in URLs, e.g. the fund-document links in a preview carry
+# `?apiKey=...` (the broker's key for its document provider, 2026-10-19).
+_SECRET_PARAM_RE = re.compile(r"([?&][^=&#]*(?:token|secret|password|signature|sig|api[_-]?key)[^=&#]*=)[^&#]*", re.I)
+
+
 def redact(obj: Any) -> Any:
-    """Defensive: the CLI output should never contain secrets, but we store it raw,
-    so scrub any key that looks like one."""
+    """Defensive: we store CLI output raw and publish it, so scrub any key that looks
+    like a secret and any secret-looking query parameter inside a URL."""
     if isinstance(obj, dict):
         return {k: ("[redacted]" if _SECRET_KEY_RE.search(str(k)) else redact(v)) for k, v in obj.items()}
     if isinstance(obj, list):
         return [redact(v) for v in obj]
+    if isinstance(obj, str) and "://" in obj:
+        return _SECRET_PARAM_RE.sub(r"\1[redacted]", obj)
     return obj
 
 

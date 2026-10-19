@@ -61,12 +61,17 @@ AGENT_RC=$?
 set -e
 echo "=== agent exited with $AGENT_RC at $(date -Is)"
 
-uv run pytest -q || echo "TESTS FAILED after research session; review before the next daily run"
+TEST_RC=0
+uv run pytest -q || { TEST_RC=6; echo "TESTS FAILED after research session; review before the next daily run"; }
 uv run python bin/build-site.py || echo "build-site failed"
+PUSH_RC=0
 if [[ -n "$(git status --porcelain)" ]]; then
   git add -A
-  git commit -q -m "research: $TODAY" || echo "commit failed (pre-commit hook?)"
+  git commit -q -m "research: $TODAY" || { PUSH_RC=5; echo "commit failed (pre-commit hook?)"; }
 fi
-if [[ $DRY_RUN == 0 ]]; then git push -q || echo "push failed"; else echo "dry run: not pushing"; fi
+if [[ $DRY_RUN == 0 && $PUSH_RC == 0 ]]; then git push -q || { PUSH_RC=4; echo "push failed"; }; else echo "not pushing (dry run or commit failed)"; fi
 echo "=== done $(date -Is)"
-exit 0
+# Whatever the agent wrote is still committed above; a failed agent or push fails the unit.
+if [[ $AGENT_RC != 0 ]]; then exit "$AGENT_RC"; fi
+if [[ ${TEST_RC:-0} != 0 ]]; then exit "$TEST_RC"; fi
+exit "$PUSH_RC"
