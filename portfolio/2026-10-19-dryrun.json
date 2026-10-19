@@ -1,0 +1,93 @@
+{
+  "as_of": "2026-10-19",
+  "nav": 1000.0,
+  "cash": 1000.0,
+  "buying_power": 1000.0,
+  "positions": [],
+  "pending_buy_orders_eur": 0.0,
+  "dry_run": true,
+  "taken_at": "2026-10-19T14:02:57+00:00",
+  "post_trade": false,
+  "raw": {
+    "whoami": {
+      "result": {
+        "personOverview": {
+          "externalId": null,
+          "id": "idRotUo7VqVp5PUjn8tnfW",
+          "locale": "it_IT",
+          "personalDetails": {
+            "firstName": "Filippo",
+            "lastName": "Conforti"
+          }
+        }
+      }
+    },
+    "overview": {
+      "account_id": "idRotUo7VqVp5PUjn8tnfW",
+      "performance": [
+        {
+          "simpleAbsoluteReturn": 0,
+          "timeframe": "MAX"
+        },
+        {
+          "simpleAbsoluteReturn": 0,
+          "timeframe": "ONE_YEAR"
+        },
+        {
+          "simpleAbsoluteReturn": 0,
+          "timeframe": "THREE_MONTHS"
+        },
+        {
+          "simpleAbsoluteReturn": 0,
+          "timeframe": "TWO_DAYS"
+        },
+        {
+          "simpleAbsoluteReturn": 0,
+          "timeframe": "INTRADAY"
+        },
+        {
+          "simpleAbsoluteReturn": 0,
+          "timeframe": "ONE_MONTH"
+        },
+        {
+          "simpleAbsoluteReturn": 0,
+          "timeframe": "SIX_MONTHS"
+        },
+        {
+          "simpleAbsoluteReturn": 0,
+          "timeframe": "ONE_WEEK"
+        }
+      ],
+      "portfolio_id": "uNVGhixHaw2nhApzFvKpJQ",
+      "timestamps": {
+        "inventory_timestamp_utc": "2026-10-19T13:45:26.309Z",
+        "valuation_timestamp_utc": "2026-10-19T14:02:56.143Z"
+      },
+      "valuation": {
+        "crypto": 0,
+        "securities": 0,
+        "total": 1000
+      }
+    },
+    "holdings": {
+      "account_id": "idRotUo7VqVp5PUjn8tnfW",
+      "count": 0,
+      "items": [],
+      "portfolio_id": "uNVGhixHaw2nhApzFvKpJQ"
+    },
+    "cash_breakdown": {
+      "account_id": "idRotUo7VqVp5PUjn8tnfW",
+      "available_credit_line": 0,
+      "available_for_derivatives": 1000,
+      "buying_power": 1000,
+      "buying_power_without_credit": 1000,
+      "cash_balance": 1000,
+      "derivatives_buying_power": 1000,
+      "loaned": 0,
+      "pending_buy_orders_amount": 0,
+      "portfolio_id": "uNVGhixHaw2nhApzFvKpJQ",
+      "possible_taxes": 0
+    },
+    "reconciliation_gap_eur": 0.0
+  }
+}
