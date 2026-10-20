@@ -1,0 +1,143 @@
+{
+  "as_of": "2026-10-20",
+  "nav": 997.15,
+  "cash": 598.46,
+  "buying_power": 598.46,
+  "positions": [
+    {
+      "isin": "IE00BL25JM42",
+      "name": "Xtrackers MSCI World Value (Acc)",
+      "quantity": 3.0,
+      "price": 72.765,
+      "value_eur": 218.3,
+      "fifo_price": 72.88,
+      "security_type": "ETF"
+    },
+    {
+      "isin": "IE00BMC38736",
+      "name": "VanEck Semiconductor (Acc)",
+      "quantity": 2.0,
+      "price": 90.195,
+      "value_eur": 180.39,
+      "fifo_price": 90.46,
+      "security_type": "ETF"
+    }
+  ],
+  "pending_buy_orders_eur": 0.0,
+  "dry_run": false,
+  "taken_at": "2026-10-20T16:19:47+00:00",
+  "post_trade": true,
+  "raw": {
+    "whoami": {
+      "result": {
+        "personOverview": {
+          "externalId": null,
+          "id": "idRotUo7VqVp5PUjn8tnfW",
+          "locale": "it_IT",
+          "personalDetails": {
+            "firstName": "Filippo",
+            "lastName": "Conforti"
+          }
+        }
+      }
+    },
+    "overview": {
+      "account_id": "idRotUo7VqVp5PUjn8tnfW",
+      "performance": [
+        {
+          "simpleAbsoluteReturn": -2.85,
+          "timeframe": "MAX"
+        },
+        {
+          "simpleAbsoluteReturn": -2.85,
+          "timeframe": "ONE_YEAR"
+        },
+        {
+          "simpleAbsoluteReturn": -2.85,
+          "timeframe": "ONE_MONTH"
+        },
+        {
+          "simpleAbsoluteReturn": -2.85,
+          "timeframe": "ONE_WEEK"
+        },
+        {
+          "simpleAbsoluteReturn": -2.85,
+          "timeframe": "THREE_MONTHS"
+        },
+        {
+          "simpleAbsoluteReturn": -2.85,
+          "timeframe": "INTRADAY"
+        },
+        {
+          "simpleAbsoluteReturn": -2.85,
+          "timeframe": "TWO_DAYS"
+        },
+        {
+          "simpleAbsoluteReturn": -2.85,
+          "timeframe": "SIX_MONTHS"
+        }
+      ],
+      "portfolio_id": "uNVGhixHaw2nhApzFvKpJQ",
+      "timestamps": {
+        "inventory_timestamp_utc": "2026-10-20T16:19:42.916Z",
+        "valuation_timestamp_utc": "2026-10-20T16:19:46.420Z"
+      },
+      "valuation": {
+        "crypto": 0,
+        "securities": 398.69,
+        "total": 997.15
+      }
+    },
+    "holdings": {
+      "account_id": "idRotUo7VqVp5PUjn8tnfW",
+      "count": 2,
+      "items": [
+        {
+          "blocked_quantity": 0,
+          "fifo_price": 72.88,
+          "isin": "IE00BL25JM42",
+          "name": "Xtrackers MSCI World Value (Acc)",
+          "pending_quantity": 0,
+          "quantity": 3,
+          "quote_currency": "EUR",
+          "quote_is_outdated": false,
+          "quote_mid_price": 72.765,
+          "quote_timestamp_utc": "2026-10-20T16:19:42.995Z",
+          "security_type": "ETF",
+          "valuation": 218.3,
+          "valuation_currency": "EUR"
+        },
+        {
+          "blocked_quantity": 0,
+          "fifo_price": 90.46,
+          "isin": "IE00BMC38736",
+          "name": "VanEck Semiconductor (Acc)",
+          "pending_quantity": 0,
+          "quantity": 2,
+          "quote_currency": "EUR",
+          "quote_is_outdated": false,
+          "quote_mid_price": 90.195,
+          "quote_timestamp_utc": "2026-10-20T16:19:35.877Z",
+          "security_type": "ETF",
+          "valuation": 180.39,
+          "valuation_currency": "EUR"
+        }
+      ],
+      "portfolio_id": "uNVGhixHaw2nhApzFvKpJQ"
+    },
+    "cash_breakdown": {
+      "account_id": "idRotUo7VqVp5PUjn8tnfW",
+      "available_credit_line": 0,
+      "available_for_derivatives": 598.46,
+      "buying_power": 598.46,
+      "buying_power_without_credit": 598.46,
+      "cash_balance": 598.46,
+      "derivatives_buying_power": 598.46,
+      "loaned": 0,
+      "pending_buy_orders_amount": 0,
+      "portfolio_id": "uNVGhixHaw2nhApzFvKpJQ",
+      "possible_taxes": 0
+    },
+    "reconciliation_gap_eur": 0.0
+  }
+}

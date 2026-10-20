@@ -112,3 +112,18 @@ each item in its entry.
   Also check `equity_curve()` dates and the benchmark series. Then add a test that builds the
   site with one live snapshot present. Until it is fixed the public site does not show any
   live session. Plumbing for the owner, not a strategy change.
+- 2026-10-20 (live, 18:16): **first live fills.** VanEck Semiconductor ETF: 2 shares at 90.46,
+  the ask; Xetra close 89.92, mid at preview 90.195, spread 0.59%. Slippage vs close +0.60%
+  (above the 0.5% watch threshold), vs mid +0.29%. Xtrackers MSCI World Value: 3 shares at
+  72.88, the ask; close 72.77, mid 72.77, spread 0.30%; slippage vs close +0.15%. Two data
+  points are not a sample, but the cost model's "close plus half the spread, 0.25% spread" was
+  roughly right for the Value ETF and about twice too optimistic for the semiconductor ETF at
+  18:19. Keep collecting before changing anything.
+- 2026-10-20 (live): rank 3 vs rank 4 was decided by 0.0023 of momentum (Value ETF 0.5200 vs
+  S&P 500 Energy ETF 0.5177), and the morning run, on a stale bar, had them the other way round.
+  Not a flaw, just a reminder that adjacent ranks are near-ties and the daily entry order is
+  partly noise. No action proposed.
+- 2026-10-20 (live): doc/code mismatch. `STRATEGY.md` (v002 changelog) says share-count buys
+  must have a preview value "within 2% of quantity x quote"; `bin/guardrails.py` uses
+  `SELL_VOLUME_TOLERANCE = 0.03` for that check (lines 183/190, reported as "tolerance 3%"
+  in today's trade files). One of the two should change so they agree.

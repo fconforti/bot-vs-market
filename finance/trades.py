@@ -86,7 +86,7 @@ def write(path: Path, data: dict[str, Any]) -> None:
             os.unlink(tmp)
 
 
-_SECRET_KEY_RE = re.compile(r"(token|secret|password|cookie|authorization|api[_-]?key)", re.I)
+_SECRET_KEY_RE = re.compile(r"(token|secret|password|cookie|authorization|api[_-]?key|idempotency)", re.I)
 
 
 # Query parameters in URLs, e.g. the fund-document links in a preview carry

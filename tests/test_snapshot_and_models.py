@@ -74,3 +74,22 @@ def test_snapshot_raw_payloads_are_redacted(repo):
     text = portfolio.write_snapshot(state, raw).read_text()
     assert "SECRET1" not in text and "SECRET2" not in text
     assert json.loads(text)["raw"]["holdings"]["items"][0]["doc"].endswith("apiKey=[redacted]&lang=it")
+
+
+def test_benchmark_series_may_only_grow():
+    import importlib.util
+    from finance import paths
+    spec = importlib.util.spec_from_file_location("check_append_only", paths.ROOT / "bin" / "check-append-only.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    empty = {"isin": "X", "initial_eur": 1000.0, "start_date": None, "units": None, "series": []}
+    day1 = {"isin": "X", "initial_eur": 1000.0, "start_date": "2026-10-20", "units": 7.6, "start_close": 130.4,
+            "series": [{"date": "2026-10-20", "close": 130.4, "value": 1000.0}]}
+    day2 = {**day1, "series": day1["series"] + [{"date": "2026-10-21", "close": 131.0, "value": 1004.6}]}
+    assert mod.series_grows(None, day1) is None          # new file
+    assert mod.series_grows(empty, day1) is None         # first live run fixes the units
+    assert mod.series_grows(day1, day2) is None          # a day appended
+    assert mod.series_grows(day1, {**day1, "units": 8.0})
+    assert mod.series_grows(day2, day1)                  # a point dropped
+    changed = {**day2, "series": [{**day2["series"][0], "close": 1.0}, day2["series"][1]]}
+    assert mod.series_grows(day2, changed)               # a point rewritten

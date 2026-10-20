@@ -244,6 +244,10 @@ def test_redaction_of_secret_like_keys():
     assert out == {"access_token": "[redacted]", "nested": {"Authorization": "[redacted]", "fine": 1}, "list": [{"api_key": "[redacted]"}]}
     url = "https://api.fundinfo.com/document/x/KID.pdf?apiKey=abc123&lang=it"
     assert trades.redact({"url": url}) == {"url": "https://api.fundinfo.com/document/x/KID.pdf?apiKey=[redacted]&lang=it"}
+    # The confirm response carries the order's idempotency key: not a credential, but it
+    # looks like one to secret scanners and has no use once the order is placed.
+    assert trades.redact({"order_submission": {"idempotency_key": "uuid", "order_id": "o1"}}) == \
+        {"order_submission": {"idempotency_key": "[redacted]", "order_id": "o1"}}
 
 
 def test_bug_in_checks_never_confirms(gr, repo, fake_sc, snapshot, monkeypatch):

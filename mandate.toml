@@ -49,3 +49,4 @@ crypto_etp_spread_surcharge = 0.0099
 [honesty]
 append_only_dirs = ["journal", "trades", "portfolio", "research"]
 append_only_exceptions = ["research/inbox.md"]
+grow_only_series = ["portfolio/benchmark.json"]   # rewritten daily, earlier points must survive

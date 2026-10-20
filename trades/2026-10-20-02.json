@@ -1,0 +1,1254 @@
+{
+  "id": "2026-10-20-02",
+  "date": "2026-10-20",
+  "created_at": "2026-10-20T16:19:19Z",
+  "isin": "IE00BL25JM42",
+  "name": "Xtrackers MSCI World Value UCITS ETF",
+  "side": "buy",
+  "order_type": "market",
+  "eur_amount": null,
+  "quantity": 3.0,
+  "limit_price": null,
+  "rationale": "Enter: rank 3 of 42 by 12-1 momentum (+52.0%); trend ON (IE00B4L5Y983 130.435 > SMA200 120.749); 3 shares at about 72.77 EUR = 218.31 EUR, target weight 25% of NAV 1000.00 EUR.",
+  "thesis": "Developed-market value stocks (about 400 holdings, heavy in financials and energy) have the third-strongest 12-1 month momentum (+52%), and the best one whose share fits the slot after ASML is skipped; it also diversifies a book whose first position is a concentrated semiconductor fund. Proven wrong if the rotation into value reverses: rank worse than 7 or negative momentum at a monthly check, or the MSCI World ETF closing more than 3% below its 200-day average. Its lead over the S&P 500 Energy ETF (rank 4) is tiny (0.520 vs 0.518), so the choice between the two is close to arbitrary.",
+  "strategy_version": "v002",
+  "status": "executed",
+  "dry_run": false,
+  "checks": [
+    {
+      "name": "halted",
+      "ok": true,
+      "detail": "no HALTED file"
+    },
+    {
+      "name": "side",
+      "ok": true,
+      "detail": "side='buy'"
+    },
+    {
+      "name": "isin_format",
+      "ok": true,
+      "detail": "isin='IE00BL25JM42'"
+    },
+    {
+      "name": "order_type_allowed",
+      "ok": true,
+      "detail": "order_type='market', allowed=['market']"
+    },
+    {
+      "name": "venue_configured",
+      "ok": true,
+      "detail": "venue='SEIX'"
+    },
+    {
+      "name": "trading_day",
+      "ok": true,
+      "detail": "2026-10-20 is a trading day"
+    },
+    {
+      "name": "orders_per_day",
+      "ok": true,
+      "detail": "1 attempted today, limit 2"
+    },
+    {
+      "name": "snapshot_today",
+      "ok": true,
+      "detail": "snapshot 2026-10-20 nav=1000.00 cash=1000.00"
+    },
+    {
+      "name": "nav_positive",
+      "ok": true,
+      "detail": "nav=1000.0"
+    },
+    {
+      "name": "instrument_resolves",
+      "ok": true,
+      "detail": "quote isin=IE00BL25JM42 mid=72.77 name=Xtrackers MSCI World Value (Acc)"
+    },
+    {
+      "name": "quote_currency_eur",
+      "ok": true,
+      "detail": "currency=EUR"
+    },
+    {
+      "name": "buy_amount_or_quantity",
+      "ok": true,
+      "detail": "buy needs exactly one of eur_amount, quantity"
+    },
+    {
+      "name": "buy_quantity_whole",
+      "ok": true,
+      "detail": "quantity=3.0 (buys by shares must be whole numbers)"
+    },
+    {
+      "name": "min_order",
+      "ok": true,
+      "detail": "218.31 >= min 25.00"
+    },
+    {
+      "name": "max_order_pct_of_nav",
+      "ok": true,
+      "detail": "218.31 <= 25% of NAV 1000.00 = 250.00"
+    },
+    {
+      "name": "max_position_pct_of_nav",
+      "ok": true,
+      "detail": "held 0.00 + order 218.31 <= 40% of NAV = 400.00"
+    },
+    {
+      "name": "cash_available",
+      "ok": true,
+      "detail": "218.31 <= buying power 1000.00 - reserve 2.00"
+    },
+    {
+      "name": "preview_shape",
+      "ok": true,
+      "detail": "preview has result and confirmation.id"
+    },
+    {
+      "name": "preview_isin",
+      "ok": true,
+      "detail": "preview isin=IE00BL25JM42 proposal=IE00BL25JM42"
+    },
+    {
+      "name": "preview_side",
+      "ok": true,
+      "detail": "preview side=buy proposal=buy"
+    },
+    {
+      "name": "preview_order_type",
+      "ok": true,
+      "detail": "preview order_type=market proposal=market"
+    },
+    {
+      "name": "preview_currency",
+      "ok": true,
+      "detail": "currency=EUR"
+    },
+    {
+      "name": "preview_tradable",
+      "ok": true,
+      "detail": "tradable=True status=TRADABLE_WITHOUT_APPROPRIATENESS venue_status=TRADABLE_WITHOUT_APPROPRIATENESS reason=None"
+    },
+    {
+      "name": "preview_venue",
+      "ok": true,
+      "detail": "selected_venue=SEIX mandate=SEIX"
+    },
+    {
+      "name": "preview_no_appropriateness",
+      "ok": true,
+      "detail": "requires_appropriateness=False questionnaire=False ack=False warning=none"
+    },
+    {
+      "name": "preview_no_price_warning",
+      "ok": true,
+      "detail": "0 price warning(s)"
+    },
+    {
+      "name": "preview_volume_present",
+      "ok": true,
+      "detail": "estimated_order_volume=218.64"
+    },
+    {
+      "name": "preview_shares_match",
+      "ok": true,
+      "detail": "preview shares 3.0 vs proposal 3.0"
+    },
+    {
+      "name": "preview_amount_match",
+      "ok": true,
+      "detail": "preview volume 218.64 vs quantity x quote 218.31 (tolerance 3%)"
+    },
+    {
+      "name": "preview_max_order_pct",
+      "ok": true,
+      "detail": "preview volume 218.64 <= 25% of NAV 1000.00"
+    },
+    {
+      "name": "preview_not_expired",
+      "ok": true,
+      "detail": "confirmation expires at epoch 1792514080.0, now 1792513180"
+    }
+  ],
+  "attempt": {
+    "preview_args": [
+      "broker",
+      "trade",
+      "buy",
+      "--isin",
+      "IE00BL25JM42",
+      "--shares",
+      "3",
+      "--order-type",
+      "market",
+      "--venue",
+      "SEIX"
+    ],
+    "previewed_at": "2026-10-20T16:19:39+00:00",
+    "confirmation_id": "scb1_3a1dcd5e37be9ca8968f5def3a",
+    "expires_at_epoch": 1792514080,
+    "confirm_args": [
+      "broker",
+      "trade",
+      "buy",
+      "--isin",
+      "IE00BL25JM42",
+      "--shares",
+      "3",
+      "--order-type",
+      "market",
+      "--venue",
+      "SEIX",
+      "--confirm",
+      "scb1_3a1dcd5e37be9ca8968f5def3a"
+    ],
+    "confirm_sent_at": "2026-10-20T16:19:40+00:00"
+  },
+  "preview": {
+    "account_id": "idRotUo7VqVp5PUjn8tnfW",
+    "compliance": {
+      "confirmation_must_be_separate_step": true,
+      "forbid_automatic_phase_2_execution": true,
+      "instruction": "Before running phase 2, you MUST present all pre-trade information from phase 1 in a human-readable summary (not raw JSON), without omitting or changing any values. After presenting it, you MUST explicitly ask the user whether to proceed and receive an explicit affirmative confirmation from the user in a separate interaction step. You MUST NOT execute phase 2 automatically, implicitly, or in the same step as phase 1 output.",
+      "must_present_all_information": true,
+      "phase_2_requirement": "Repeat the phase 1 command with --confirm <id> only after explicit affirmative user confirmation in a separate interaction step.",
+      "presentation": {
+        "display_null_as_literal": true,
+        "format": "markdown_sections",
+        "preserve_exact_values": true,
+        "raw_json_only_on_user_request": true,
+        "required_leaf_paths": [
+          "/result/intent/isin",
+          "/result/intent/shares",
+          "/result/intent/order_type",
+          "/result/intent/venue_override",
+          "/result/intent/locale",
+          "/result/market_quote/mid_price",
+          "/result/market_quote/ask_price",
+          "/result/market_quote/bid_price",
+          "/result/market_quote/currency",
+          "/result/market_quote/is_outdated",
+          "/result/market_quote/timestamp_utc",
+          "/result/calculation/shares",
+          "/result/calculation/estimated_order_volume_raw",
+          "/result/calculation/estimated_order_volume",
+          "/result/tradability/status",
+          "/result/tradability/selected_venue",
+          "/result/tradability/selected_venue_label",
+          "/result/tradability/selected_venue_status",
+          "/result/tradability/selected_venue_unavailability_reason",
+          "/result/tradability/requires_appropriateness",
+          "/result/tradability/tradable",
+          "/result/warning/kind",
+          "/result/warning/title",
+          "/result/warning/version",
+          "/result/warning/locale",
+          "/result/warning/body",
+          "/result/warning/acknowledgement_text",
+          "/result/price_warnings/items",
+          "/result/ex_ante_costs/id",
+          "/result/ex_ante_costs/entryCosts/serviceCosts/amount",
+          "/result/ex_ante_costs/entryCosts/serviceCosts/percentage",
+          "/result/ex_ante_costs/entryCosts/productCosts/amount",
+          "/result/ex_ante_costs/entryCosts/productCosts/percentage",
+          "/result/ex_ante_costs/entryCosts/total/amount",
+          "/result/ex_ante_costs/entryCosts/total/percentage",
+          "/result/ex_ante_costs/ongoingCosts/serviceCosts/amount",
+          "/result/ex_ante_costs/ongoingCosts/serviceCosts/percentage",
+          "/result/ex_ante_costs/ongoingCosts/productCosts/amount",
+          "/result/ex_ante_costs/ongoingCosts/productCosts/percentage",
+          "/result/ex_ante_costs/ongoingCosts/total/amount",
+          "/result/ex_ante_costs/ongoingCosts/total/percentage",
+          "/result/ex_ante_costs/exitCosts/serviceCosts/amount",
+          "/result/ex_ante_costs/exitCosts/serviceCosts/percentage",
+          "/result/ex_ante_costs/exitCosts/productCosts/amount",
+          "/result/ex_ante_costs/exitCosts/productCosts/percentage",
+          "/result/ex_ante_costs/exitCosts/total/amount",
+          "/result/ex_ante_costs/exitCosts/total/percentage",
+          "/result/ex_ante_costs/effectOnReturn/initialYearCosts/amount",
+          "/result/ex_ante_costs/effectOnReturn/initialYearCosts/percentage",
+          "/result/ex_ante_costs/effectOnReturn/followingYearsCosts/amount",
+          "/result/ex_ante_costs/effectOnReturn/followingYearsCosts/percentage",
+          "/result/ex_ante_costs/effectOnReturn/finalYearCosts/amount",
+          "/result/ex_ante_costs/effectOnReturn/finalYearCosts/percentage",
+          "/result/ex_ante_costs/incidentalCosts/amount",
+          "/result/ex_ante_costs/incidentalCosts/percentage",
+          "/result/ex_ante_costs/fiveYearsCosts/amount",
+          "/result/ex_ante_costs/fiveYearsCosts/percentage",
+          "/result/suitability/source",
+          "/result/suitability/type",
+          "/result/suitability/status",
+          "/result/suitability/action_when_unsuitable",
+          "/result/suitability/questionnaire_required",
+          "/result/suitability/questionnaire_reason",
+          "/result/suitability/requires_appropriateness_warning_acknowledgement",
+          "/result/regulatory_disclosures/market_data_notice",
+          "/result/regulatory_disclosures/execution_instruction",
+          "/result/regulatory_disclosures/ex_ante_costs_notice",
+          "/result/document_links/client_documents",
+          "/result/document_links/primary_kid",
+          "/result/document_links/secondary_kid",
+          "/confirmation/id",
+          "/confirmation/expires_at_epoch"
+        ],
+        "section_order": [
+          "trade_intent",
+          "market_quote",
+          "calculation",
+          "tradability",
+          "warning",
+          "price_warnings",
+          "ex_ante_costs",
+          "suitability",
+          "regulatory_disclosures",
+          "document_links",
+          "confirmation"
+        ]
+      },
+      "required_json_paths": [
+        "/result/intent",
+        "/result/market_quote",
+        "/result/calculation",
+        "/result/tradability",
+        "/result/warning",
+        "/result/price_warnings",
+        "/result/ex_ante_costs",
+        "/result/suitability",
+        "/result/document_links",
+        "/confirmation/id",
+        "/confirmation/expires_at_epoch",
+        "/result/regulatory_disclosures"
+      ],
+      "requires_explicit_user_confirmation_between_phases": true,
+      "rule_id": "pre_trade_full_disclosure_v1"
+    },
+    "confirmation": {
+      "appropriateness_warning_acknowledgement_flag": null,
+      "command_template": "sc broker trade buy --isin IE00BL25JM42 --order-type market --shares 3 --venue SEIX --confirm scb1_3a1dcd5e37be9ca8968f5def3a --json",
+      "expires_at_epoch": 1792514080,
+      "id": "scb1_3a1dcd5e37be9ca8968f5def3a",
+      "intent_checksum": "a230ea58bd9c383b7baa0f100b5324baa6379eaa58fd94ca015f03dd639ce5c2",
+      "phase_1_command_template_json": "sc broker trade buy --isin IE00BL25JM42 --order-type market --shares 3 --venue SEIX --json",
+      "phase_2_command_template_json": "sc broker trade buy --isin IE00BL25JM42 --order-type market --shares 3 --venue SEIX --confirm scb1_3a1dcd5e37be9ca8968f5def3a --json",
+      "required_fields": {
+        "amount": null,
+        "currency": "EUR",
+        "entry_total": "0.99",
+        "exit_total": "0.99",
+        "five_years_total": "n/a",
+        "isin": "IE00BL25JM42",
+        "ongoing_total": "0.54",
+        "shares": "3",
+        "venue": "SEIX"
+      },
+      "requires_appropriateness_warning_acknowledgement": false,
+      "warning_version": null
+    },
+    "next_step": "confirm_with_id",
+    "portfolio_id": "uNVGhixHaw2nhApzFvKpJQ",
+    "presentation": {
+      "format": "markdown_sections",
+      "required_leaf_paths": [
+        "/result/intent/isin",
+        "/result/intent/shares",
+        "/result/intent/order_type",
+        "/result/intent/venue_override",
+        "/result/intent/locale",
+        "/result/market_quote/mid_price",
+        "/result/market_quote/ask_price",
+        "/result/market_quote/bid_price",
+        "/result/market_quote/currency",
+        "/result/market_quote/is_outdated",
+        "/result/market_quote/timestamp_utc",
+        "/result/calculation/shares",
+        "/result/calculation/estimated_order_volume_raw",
+        "/result/calculation/estimated_order_volume",
+        "/result/tradability/status",
+        "/result/tradability/selected_venue",
+        "/result/tradability/selected_venue_label",
+        "/result/tradability/selected_venue_status",
+        "/result/tradability/selected_venue_unavailability_reason",
+        "/result/tradability/requires_appropriateness",
+        "/result/tradability/tradable",
+        "/result/warning/kind",
+        "/result/warning/title",
+        "/result/warning/version",
+        "/result/warning/locale",
+        "/result/warning/body",
+        "/result/warning/acknowledgement_text",
+        "/result/price_warnings/items",
+        "/result/ex_ante_costs/id",
+        "/result/ex_ante_costs/entryCosts/serviceCosts/amount",
+        "/result/ex_ante_costs/entryCosts/serviceCosts/percentage",
+        "/result/ex_ante_costs/entryCosts/productCosts/amount",
+        "/result/ex_ante_costs/entryCosts/productCosts/percentage",
+        "/result/ex_ante_costs/entryCosts/total/amount",
+        "/result/ex_ante_costs/entryCosts/total/percentage",
+        "/result/ex_ante_costs/ongoingCosts/serviceCosts/amount",
+        "/result/ex_ante_costs/ongoingCosts/serviceCosts/percentage",
+        "/result/ex_ante_costs/ongoingCosts/productCosts/amount",
+        "/result/ex_ante_costs/ongoingCosts/productCosts/percentage",
+        "/result/ex_ante_costs/ongoingCosts/total/amount",
+        "/result/ex_ante_costs/ongoingCosts/total/percentage",
+        "/result/ex_ante_costs/exitCosts/serviceCosts/amount",
+        "/result/ex_ante_costs/exitCosts/serviceCosts/percentage",
+        "/result/ex_ante_costs/exitCosts/productCosts/amount",
+        "/result/ex_ante_costs/exitCosts/productCosts/percentage",
+        "/result/ex_ante_costs/exitCosts/total/amount",
+        "/result/ex_ante_costs/exitCosts/total/percentage",
+        "/result/ex_ante_costs/effectOnReturn/initialYearCosts/amount",
+        "/result/ex_ante_costs/effectOnReturn/initialYearCosts/percentage",
+        "/result/ex_ante_costs/effectOnReturn/followingYearsCosts/amount",
+        "/result/ex_ante_costs/effectOnReturn/followingYearsCosts/percentage",
+        "/result/ex_ante_costs/effectOnReturn/finalYearCosts/amount",
+        "/result/ex_ante_costs/effectOnReturn/finalYearCosts/percentage",
+        "/result/ex_ante_costs/incidentalCosts/amount",
+        "/result/ex_ante_costs/incidentalCosts/percentage",
+        "/result/ex_ante_costs/fiveYearsCosts/amount",
+        "/result/ex_ante_costs/fiveYearsCosts/percentage",
+        "/result/suitability/source",
+        "/result/suitability/type",
+        "/result/suitability/status",
+        "/result/suitability/action_when_unsuitable",
+        "/result/suitability/questionnaire_required",
+        "/result/suitability/questionnaire_reason",
+        "/result/suitability/requires_appropriateness_warning_acknowledgement",
+        "/result/regulatory_disclosures/market_data_notice",
+        "/result/regulatory_disclosures/execution_instruction",
+        "/result/regulatory_disclosures/ex_ante_costs_notice",
+        "/result/document_links/client_documents",
+        "/result/document_links/primary_kid",
+        "/result/document_links/secondary_kid",
+        "/confirmation/id",
+        "/confirmation/expires_at_epoch"
+      ],
+      "section_order": [
+        "trade_intent",
+        "market_quote",
+        "calculation",
+        "tradability",
+        "warning",
+        "price_warnings",
+        "ex_ante_costs",
+        "suitability",
+        "regulatory_disclosures",
+        "document_links",
+        "confirmation"
+      ],
+      "sections": {
+        "calculation": {
+          "fields": [
+            {
+              "label": "Effective shares",
+              "path": "/result/calculation/shares",
+              "value": "3",
+              "value_type": "string"
+            },
+            {
+              "label": "Estimated order volume raw",
+              "path": "/result/calculation/estimated_order_volume_raw",
+              "value": "218.64",
+              "value_type": "string"
+            },
+            {
+              "label": "Estimated order volume",
+              "path": "/result/calculation/estimated_order_volume",
+              "value": "218.64",
+              "value_type": "string"
+            }
+          ],
+          "title": "Calculation"
+        },
+        "confirmation": {
+          "fields": [
+            {
+              "label": "Confirmation ID",
+              "path": "/confirmation/id",
+              "value": "scb1_3a1dcd5e37be9ca8968f5def3a",
+              "value_type": "string"
+            },
+            {
+              "label": "Confirmation expiry (epoch)",
+              "path": "/confirmation/expires_at_epoch",
+              "value": 1792514080,
+              "value_type": "number"
+            }
+          ],
+          "title": "Confirmation"
+        },
+        "document_links": {
+          "fields": [
+            {
+              "label": "Client documents",
+              "path": "/result/document_links/client_documents",
+              "value": {
+                "label": "Client documents",
+                "url": "https://de.scalable.capital/dokumente"
+              },
+              "value_type": "object"
+            },
+            {
+              "label": "Primary KID",
+              "path": "/result/document_links/primary_kid",
+              "value": {
+                "label": "Key information document (KID)",
+                "url": "https://api.fundinfo.com/document/187234e097efa39e2262e756adc7ff42_97837/PRP_IT_it_IE00BL25JM42_YES_2026-03-02.pdf?apiKey=[redacted]"
+              },
+              "value_type": "object"
+            },
+            {
+              "label": "Secondary KID",
+              "path": "/result/document_links/secondary_kid",
+              "value": null,
+              "value_type": "null"
+            }
+          ],
+          "title": "Document links"
+        },
+        "ex_ante_costs": {
+          "fields": [
+            {
+              "label": "ID",
+              "path": "/result/ex_ante_costs/id",
+              "value": "uNVGhixHaw2nhApzFvKpJQ-IE00BL25JM42",
+              "value_type": "string"
+            },
+            {
+              "label": "Entry service amount",
+              "path": "/result/ex_ante_costs/entryCosts/serviceCosts/amount",
+              "value": 0.99,
+              "value_type": "number"
+            },
+            {
+              "label": "Entry service percentage (raw fraction, 1 = 100%)",
+              "path": "/result/ex_ante_costs/entryCosts/serviceCosts/percentage",
+              "value": 0.00453,
+              "value_type": "number"
+            },
+            {
+              "label": "Entry product amount",
+              "path": "/result/ex_ante_costs/entryCosts/productCosts/amount",
+              "value": 0,
+              "value_type": "number"
+            },
+            {
+              "label": "Entry product percentage (raw fraction, 1 = 100%)",
+              "path": "/result/ex_ante_costs/entryCosts/productCosts/percentage",
+              "value": 0,
+              "value_type": "number"
+            },
+            {
+              "label": "Entry total amount",
+              "path": "/result/ex_ante_costs/entryCosts/total/amount",
+              "value": 0.99,
+              "value_type": "number"
+            },
+            {
+              "label": "Entry total percentage (raw fraction, 1 = 100%)",
+              "path": "/result/ex_ante_costs/entryCosts/total/percentage",
+              "value": 0.00453,
+              "value_type": "number"
+            },
+            {
+              "label": "Ongoing service amount",
+              "path": "/result/ex_ante_costs/ongoingCosts/serviceCosts/amount",
+              "value": 0,
+              "value_type": "number"
+            },
+            {
+              "label": "Ongoing service percentage (raw fraction, 1 = 100%)",
+              "path": "/result/ex_ante_costs/ongoingCosts/serviceCosts/percentage",
+              "value": 0,
+              "value_type": "number"
+            },
+            {
+              "label": "Ongoing product amount",
+              "path": "/result/ex_ante_costs/ongoingCosts/productCosts/amount",
+              "value": 0.54,
+              "value_type": "number"
+            },
+            {
+              "label": "Ongoing product percentage (raw fraction, 1 = 100%)",
+              "path": "/result/ex_ante_costs/ongoingCosts/productCosts/percentage",
+              "value": 0.0025,
+              "value_type": "number"
+            },
+            {
+              "label": "Ongoing total amount",
+              "path": "/result/ex_ante_costs/ongoingCosts/total/amount",
+              "value": 0.54,
+              "value_type": "number"
+            },
+            {
+              "label": "Ongoing total percentage (raw fraction, 1 = 100%)",
+              "path": "/result/ex_ante_costs/ongoingCosts/total/percentage",
+              "value": 0.0025,
+              "value_type": "number"
+            },
+            {
+              "label": "Exit service amount",
+              "path": "/result/ex_ante_costs/exitCosts/serviceCosts/amount",
+              "value": 0.99,
+              "value_type": "number"
+            },
+            {
+              "label": "Exit service percentage (raw fraction, 1 = 100%)",
+              "path": "/result/ex_ante_costs/exitCosts/serviceCosts/percentage",
+              "value": 0.00453,
+              "value_type": "number"
+            },
+            {
+              "label": "Exit product amount",
+              "path": "/result/ex_ante_costs/exitCosts/productCosts/amount",
+              "value": 0,
+              "value_type": "number"
+            },
+            {
+              "label": "Exit product percentage (raw fraction, 1 = 100%)",
+              "path": "/result/ex_ante_costs/exitCosts/productCosts/percentage",
+              "value": 0,
+              "value_type": "number"
+            },
+            {
+              "label": "Exit total amount",
+              "path": "/result/ex_ante_costs/exitCosts/total/amount",
+              "value": 0.99,
+              "value_type": "number"
+            },
+            {
+              "label": "Exit total percentage (raw fraction, 1 = 100%)",
+              "path": "/result/ex_ante_costs/exitCosts/total/percentage",
+              "value": 0.00453,
+              "value_type": "number"
+            },
+            {
+              "label": "Initial year amount",
+              "path": "/result/ex_ante_costs/effectOnReturn/initialYearCosts/amount",
+              "value": 1.53,
+              "value_type": "number"
+            },
+            {
+              "label": "Initial year percentage (raw fraction, 1 = 100%)",
+              "path": "/result/ex_ante_costs/effectOnReturn/initialYearCosts/percentage",
+              "value": 0.00703,
+              "value_type": "number"
+            },
+            {
+              "label": "Following years amount",
+              "path": "/result/ex_ante_costs/effectOnReturn/followingYearsCosts/amount",
+              "value": 0.54,
+              "value_type": "number"
+            },
+            {
+              "label": "Following years percentage (raw fraction, 1 = 100%)",
+              "path": "/result/ex_ante_costs/effectOnReturn/followingYearsCosts/percentage",
+              "value": 0.0025,
+              "value_type": "number"
+            },
+            {
+              "label": "Final year amount",
+              "path": "/result/ex_ante_costs/effectOnReturn/finalYearCosts/amount",
+              "value": 1.53,
+              "value_type": "number"
+            },
+            {
+              "label": "Final year percentage (raw fraction, 1 = 100%)",
+              "path": "/result/ex_ante_costs/effectOnReturn/finalYearCosts/percentage",
+              "value": 0.00703,
+              "value_type": "number"
+            },
+            {
+              "label": "Incidental costs amount",
+              "path": "/result/ex_ante_costs/incidentalCosts/amount",
+              "value": null,
+              "value_type": "null"
+            },
+            {
+              "label": "Incidental costs percentage (raw fraction, 1 = 100%)",
+              "path": "/result/ex_ante_costs/incidentalCosts/percentage",
+              "value": null,
+              "value_type": "null"
+            },
+            {
+              "label": "Five years costs amount",
+              "path": "/result/ex_ante_costs/fiveYearsCosts/amount",
+              "value": null,
+              "value_type": "null"
+            },
+            {
+              "label": "Five years costs percentage (raw fraction, 1 = 100%)",
+              "path": "/result/ex_ante_costs/fiveYearsCosts/percentage",
+              "value": null,
+              "value_type": "null"
+            }
+          ],
+          "title": "Ex-ante costs"
+        },
+        "market_quote": {
+          "fields": [
+            {
+              "label": "Mid price",
+              "path": "/result/market_quote/mid_price",
+              "value": "72.77",
+              "value_type": "string"
+            },
+            {
+              "label": "Ask price",
+              "path": "/result/market_quote/ask_price",
+              "value": "72.88",
+              "value_type": "string"
+            },
+            {
+              "label": "Bid price",
+              "path": "/result/market_quote/bid_price",
+              "value": "72.66",
+              "value_type": "string"
+            },
+            {
+              "label": "Currency",
+              "path": "/result/market_quote/currency",
+              "value": "EUR",
+              "value_type": "string"
+            },
+            {
+              "label": "Is outdated",
+              "path": "/result/market_quote/is_outdated",
+              "value": false,
+              "value_type": "boolean"
+            },
+            {
+              "label": "Timestamp UTC",
+              "path": "/result/market_quote/timestamp_utc",
+              "value": "2026-10-20T16:19:28.949Z",
+              "value_type": "string"
+            }
+          ],
+          "title": "Market quote"
+        },
+        "price_warnings": {
+          "fields": [
+            {
+              "label": "Items",
+              "path": "/result/price_warnings/items",
+              "value": [],
+              "value_type": "array"
+            }
+          ],
+          "title": "Price warnings"
+        },
+        "regulatory_disclosures": {
+          "fields": [
+            {
+              "label": "Market data notice",
+              "path": "/result/regulatory_disclosures/market_data_notice",
+              "value": null,
+              "value_type": "null"
+            },
+            {
+              "label": "Execution instruction",
+              "path": "/result/regulatory_disclosures/execution_instruction",
+              "value": "I instruct Scalable Capital to place this order for execution on European Investor Exchange (EIX) valid for up to 360 days.",
+              "value_type": "string"
+            },
+            {
+              "label": "Ex-ante costs notice",
+              "path": "/result/regulatory_disclosures/ex_ante_costs_notice",
+              "value": "The information is based on the current buy price or the selected limit or stop price. The actual execution price may differ. Financial transaction taxes (https://de.scalable.capital/en/clean-page/financial-transaction-tax) may apply. Payments may be received which depend on factors that may only be quantifiable subsequently. The actual payments received are disclosed retrospectively.",
+              "value_type": "string"
+            }
+          ],
+          "title": "Regulatory disclosures"
+        },
+        "suitability": {
+          "fields": [
+            {
+              "label": "Source",
+              "path": "/result/suitability/source",
+              "value": "not_required",
+              "value_type": "string"
+            },
+            {
+              "label": "Type",
+              "path": "/result/suitability/type",
+              "value": null,
+              "value_type": "null"
+            },
+            {
+              "label": "Status",
+              "path": "/result/suitability/status",
+              "value": "NOT_REQUIRED",
+              "value_type": "string"
+            },
+            {
+              "label": "Action when unsuitable",
+              "path": "/result/suitability/action_when_unsuitable",
+              "value": null,
+              "value_type": "null"
+            },
+            {
+              "label": "Questionnaire required",
+              "path": "/result/suitability/questionnaire_required",
+              "value": false,
+              "value_type": "boolean"
+            },
+            {
+              "label": "Questionnaire reason",
+              "path": "/result/suitability/questionnaire_reason",
+              "value": null,
+              "value_type": "null"
+            },
+            {
+              "label": "Requires appropriateness warning acknowledgement",
+              "path": "/result/suitability/requires_appropriateness_warning_acknowledgement",
+              "value": false,
+              "value_type": "boolean"
+            }
+          ],
+          "title": "Suitability"
+        },
+        "tradability": {
+          "fields": [
+            {
+              "label": "Status",
+              "path": "/result/tradability/status",
+              "value": "TRADABLE_WITHOUT_APPROPRIATENESS",
+              "value_type": "string"
+            },
+            {
+              "label": "Selected venue",
+              "path": "/result/tradability/selected_venue",
+              "value": "SEIX",
+              "value_type": "string"
+            },
+            {
+              "label": "Selected venue label",
+              "path": "/result/tradability/selected_venue_label",
+              "value": "European Investor Exchange (EIX)",
+              "value_type": "string"
+            },
+            {
+              "label": "Selected venue status",
+              "path": "/result/tradability/selected_venue_status",
+              "value": "TRADABLE_WITHOUT_APPROPRIATENESS",
+              "value_type": "string"
+            },
+            {
+              "label": "Selected venue unavailability reason",
+              "path": "/result/tradability/selected_venue_unavailability_reason",
+              "value": null,
+              "value_type": "null"
+            },
+            {
+              "label": "Requires appropriateness",
+              "path": "/result/tradability/requires_appropriateness",
+              "value": false,
+              "value_type": "boolean"
+            },
+            {
+              "label": "Tradable",
+              "path": "/result/tradability/tradable",
+              "value": true,
+              "value_type": "boolean"
+            }
+          ],
+          "title": "Tradability"
+        },
+        "trade_intent": {
+          "fields": [
+            {
+              "label": "ISIN",
+              "path": "/result/intent/isin",
+              "value": "IE00BL25JM42",
+              "value_type": "string"
+            },
+            {
+              "label": "Requested shares",
+              "path": "/result/intent/shares",
+              "value": "3",
+              "value_type": "string"
+            },
+            {
+              "label": "Order type",
+              "path": "/result/intent/order_type",
+              "value": "market",
+              "value_type": "string"
+            },
+            {
+              "label": "Venue override",
+              "path": "/result/intent/venue_override",
+              "value": "SEIX",
+              "value_type": "string"
+            },
+            {
+              "label": "Locale",
+              "path": "/result/intent/locale",
+              "value": "en_DE",
+              "value_type": "string"
+            }
+          ],
+          "title": "Trade intent"
+        },
+        "warning": {
+          "fields": [
+            {
+              "label": "Kind",
+              "path": "/result/warning/kind",
+              "value": null,
+              "value_type": "null"
+            },
+            {
+              "label": "Title",
+              "path": "/result/warning/title",
+              "value": null,
+              "value_type": "null"
+            },
+            {
+              "label": "Version",
+              "path": "/result/warning/version",
+              "value": null,
+              "value_type": "null"
+            },
+            {
+              "label": "Locale",
+              "path": "/result/warning/locale",
+              "value": null,
+              "value_type": "null"
+            },
+            {
+              "label": "Body",
+              "path": "/result/warning/body",
+              "value": null,
+              "value_type": "null"
+            },
+            {
+              "label": "Acknowledgement text",
+              "path": "/result/warning/acknowledgement_text",
+              "value": null,
+              "value_type": "null"
+            }
+          ],
+          "title": "Warning"
+        }
+      }
+    },
+    "resolution": {
+      "account": "selected_context",
+      "portfolio": "selected_context"
+    },
+    "result": {
+      "calculation": {
+        "estimate_price": "72.88",
+        "estimate_price_basis": "ask_price",
+        "estimated_order_volume": "218.64",
+        "estimated_order_volume_raw": "218.64",
+        "is_whole_position_sold": false,
+        "shares": "3",
+        "sizing_price": "72.88",
+        "sizing_price_basis": "ask_price"
+      },
+      "document_links": {
+        "client_documents": {
+          "label": "Client documents",
+          "url": "https://de.scalable.capital/dokumente"
+        },
+        "primary_kid": {
+          "label": "Key information document (KID)",
+          "url": "https://api.fundinfo.com/document/187234e097efa39e2262e756adc7ff42_97837/PRP_IT_it_IE00BL25JM42_YES_2026-03-02.pdf?apiKey=[redacted]"
+        },
+        "secondary_kid": null
+      },
+      "ex_ante_costs": {
+        "effectOnReturn": {
+          "finalYearCosts": {
+            "amount": 1.53,
+            "percentage": 0.00703
+          },
+          "followingYearsCosts": {
+            "amount": 0.54,
+            "percentage": 0.0025
+          },
+          "initialYearCosts": {
+            "amount": 1.53,
+            "percentage": 0.00703
+          }
+        },
+        "entryCosts": {
+          "productCosts": {
+            "amount": 0,
+            "percentage": 0
+          },
+          "serviceCosts": {
+            "amount": 0.99,
+            "percentage": 0.00453
+          },
+          "total": {
+            "amount": 0.99,
+            "percentage": 0.00453
+          }
+        },
+        "exitCosts": {
+          "productCosts": {
+            "amount": 0,
+            "percentage": 0
+          },
+          "serviceCosts": {
+            "amount": 0.99,
+            "percentage": 0.00453
+          },
+          "total": {
+            "amount": 0.99,
+            "percentage": 0.00453
+          }
+        },
+        "fiveYearsCosts": null,
+        "id": "uNVGhixHaw2nhApzFvKpJQ-IE00BL25JM42",
+        "incidentalCosts": null,
+        "ongoingCosts": {
+          "productCosts": {
+            "amount": 0.54,
+            "percentage": 0.0025
+          },
+          "serviceCosts": {
+            "amount": 0,
+            "percentage": 0
+          },
+          "total": {
+            "amount": 0.54,
+            "percentage": 0.0025
+          }
+        }
+      },
+      "intent": {
+        "amount": null,
+        "isin": "IE00BL25JM42",
+        "limit_price": null,
+        "locale": "en_DE",
+        "order_type": "market",
+        "shares": "3",
+        "side": "buy",
+        "stop_price": null,
+        "venue_override": "SEIX"
+      },
+      "market_quote": {
+        "ask_price": "72.88",
+        "bid_price": "72.66",
+        "currency": "EUR",
+        "is_outdated": false,
+        "mid_price": "72.77",
+        "timestamp_utc": "2026-10-20T16:19:28.949Z"
+      },
+      "order_submission": {
+        "reason": "phase_1_preview_only",
+        "submitted": false
+      },
+      "pre_trade_checks_passed": true,
+      "price_warnings": {
+        "items": []
+      },
+      "regulatory_disclosures": {
+        "ex_ante_costs_notice": "The information is based on the current buy price or the selected limit or stop price. The actual execution price may differ. Financial transaction taxes (https://de.scalable.capital/en/clean-page/financial-transaction-tax) may apply. Payments may be received which depend on factors that may only be quantifiable subsequently. The actual payments received are disclosed retrospectively.",
+        "execution_instruction": "I instruct Scalable Capital to place this order for execution on European Investor Exchange (EIX) valid for up to 360 days.",
+        "market_data_notice": null
+      },
+      "suitability": {
+        "acknowledgement_flag": null,
+        "action_when_unsuitable": null,
+        "questionnaire_reason": null,
+        "questionnaire_required": false,
+        "requires_appropriateness_warning_acknowledgement": false,
+        "source": "not_required",
+        "status": "NOT_REQUIRED",
+        "type": null
+      },
+      "tradability": {
+        "requires_appropriateness": false,
+        "selected_venue": "SEIX",
+        "selected_venue_label": "European Investor Exchange (EIX)",
+        "selected_venue_sellable": null,
+        "selected_venue_status": "TRADABLE_WITHOUT_APPROPRIATENESS",
+        "selected_venue_unavailability_reason": null,
+        "status": "TRADABLE_WITHOUT_APPROPRIATENESS",
+        "tradable": true
+      },
+      "warning": null
+    }
+  },
+  "confirm": {
+    "account_id": "idRotUo7VqVp5PUjn8tnfW",
+    "confirmation": {
+      "consumed": true,
+      "id": "scb1_3a1dcd5e37be9ca8968f5def3a",
+      "intent_checksum": "a230ea58bd9c383b7baa0f100b5324baa6379eaa58fd94ca015f03dd639ce5c2"
+    },
+    "next_step": "completed",
+    "portfolio_id": "uNVGhixHaw2nhApzFvKpJQ",
+    "resolution": {
+      "account": "selected_context",
+      "portfolio": "selected_context"
+    },
+    "result": {
+      "calculation": {
+        "estimate_price": "72.88",
+        "estimate_price_basis": "ask_price",
+        "estimated_order_volume": "218.64",
+        "estimated_order_volume_raw": "218.64",
+        "is_whole_position_sold": false,
+        "shares": "3",
+        "sizing_price": "72.88",
+        "sizing_price_basis": "ask_price"
+      },
+      "ex_ante_costs": {
+        "effectOnReturn": {
+          "finalYearCosts": {
+            "amount": 1.53,
+            "percentage": 0.00703
+          },
+          "followingYearsCosts": {
+            "amount": 0.54,
+            "percentage": 0.0025
+          },
+          "initialYearCosts": {
+            "amount": 1.53,
+            "percentage": 0.00703
+          }
+        },
+        "entryCosts": {
+          "productCosts": {
+            "amount": 0,
+            "percentage": 0
+          },
+          "serviceCosts": {
+            "amount": 0.99,
+            "percentage": 0.00453
+          },
+          "total": {
+            "amount": 0.99,
+            "percentage": 0.00453
+          }
+        },
+        "exitCosts": {
+          "productCosts": {
+            "amount": 0,
+            "percentage": 0
+          },
+          "serviceCosts": {
+            "amount": 0.99,
+            "percentage": 0.00453
+          },
+          "total": {
+            "amount": 0.99,
+            "percentage": 0.00453
+          }
+        },
+        "fiveYearsCosts": null,
+        "id": "uNVGhixHaw2nhApzFvKpJQ-IE00BL25JM42",
+        "incidentalCosts": null,
+        "ongoingCosts": {
+          "productCosts": {
+            "amount": 0.54,
+            "percentage": 0.0025
+          },
+          "serviceCosts": {
+            "amount": 0,
+            "percentage": 0
+          },
+          "total": {
+            "amount": 0.54,
+            "percentage": 0.0025
+          }
+        }
+      },
+      "intent": {
+        "amount": null,
+        "isin": "IE00BL25JM42",
+        "limit_price": null,
+        "locale": "en_DE",
+        "order_type": "market",
+        "shares": "3",
+        "side": "buy",
+        "stop_price": null,
+        "venue_override": "SEIX"
+      },
+      "market_quote": {
+        "ask_price": "72.88",
+        "bid_price": "72.66",
+        "currency": "EUR",
+        "is_outdated": false,
+        "mid_price": "72.77",
+        "timestamp_utc": "2026-10-20T16:19:28.949Z"
+      },
+      "order_submission": {
+        "idempotency_key": "[redacted]",
+        "idempotency_reused": "[redacted]",
+        "is_marketable": true,
+        "order_id": "ctQmmXGDP8DiBQ4xonrHBb",
+        "submitted": true
+      },
+      "pre_trade_checks_passed": true,
+      "price_warnings": {
+        "items": []
+      },
+      "suitability": {
+        "acknowledgement_flag": null,
+        "action_when_unsuitable": null,
+        "questionnaire_reason": null,
+        "questionnaire_required": false,
+        "requires_appropriateness_warning_acknowledgement": false,
+        "source": "not_required",
+        "status": "NOT_REQUIRED",
+        "type": null
+      },
+      "tradability": {
+        "requires_appropriateness": false,
+        "selected_venue": "SEIX",
+        "selected_venue_label": "European Investor Exchange (EIX)",
+        "selected_venue_sellable": null,
+        "selected_venue_status": "TRADABLE_WITHOUT_APPROPRIATENESS",
+        "selected_venue_unavailability_reason": null,
+        "status": "TRADABLE_WITHOUT_APPROPRIATENESS",
+        "tradable": true
+      },
+      "warning": null
+    }
+  },
+  "order_id": "ctQmmXGDP8DiBQ4xonrHBb",
+  "reason": "order submitted",
+  "fill": {
+    "is_marketable": true,
+    "idempotency_reused": "[redacted]"
+  },
+  "mandate_snapshot": {
+    "limits": {
+      "max_order_pct_of_nav": 0.25,
+      "max_orders_per_day": 2,
+      "max_position_pct_of_nav": 0.4,
+      "min_order_eur": 25,
+      "cash_reserve_eur": 2.0,
+      "allow_market_orders": true,
+      "allow_limit_orders": false,
+      "allow_stop_orders": false,
+      "reject_on_price_warning": true,
+      "reject_on_appropriateness": true,
+      "preview_amount_tolerance": 0.01,
+      "preview_confirm_max_age_seconds": 600
+    },
+    "venue": {
+      "code": "SEIX",
+      "require_selected_venue_match": true
+    }
+  },
+  "quote": {
+    "isin": "IE00BL25JM42",
+    "name": "Xtrackers MSCI World Value (Acc)",
+    "security_type": "ETF",
+    "quote_mid_price": 72.77,
+    "quote_bid_price": 72.66,
+    "quote_ask_price": 72.88,
+    "quote_currency": "EUR",
+    "quote_timestamp_utc": "2026-10-20T16:19:28.949Z",
+    "quote_is_outdated": false
+  },
+  "estimated_eur": 218.31,
+  "finished_at": "2026-10-20T16:19:41+00:00"
+}

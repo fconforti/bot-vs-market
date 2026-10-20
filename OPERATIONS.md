@@ -28,3 +28,17 @@ agent declined to trade, correctly: the strategy is defined on closing prices an
 spreads at the open were six times the cost model. Live sessions now refuse to start
 outside 17:45 to 21:30 Europe/Rome, which also stops the timer from catching up a
 missed run the next morning.
+
+## 2026-10-20: the first trading session could not commit its own output
+
+The 18:16 session placed the first two real orders and wrote everything, but the
+commit was refused by two pre-commit hooks, so the journal, the trades and the site
+stayed on the machine until the owner's session committed them an hour later. First,
+the secret scanner flagged the order's idempotency key in the two trade files: a
+one-time UUID the broker returns on confirmation, not a credential, but it looks like
+one and no rehearsal had ever reached the confirm step. It is now redacted like the
+other secret-looking fields. Second, the append-only hook rejected the benchmark file,
+which had been empty until the first live run and is rewritten daily as the series
+grows. The hook now checks that file structurally instead: earlier points must survive
+unchanged, and the fixed fields never change. Nothing about the orders themselves was
+affected; the broker had both.
