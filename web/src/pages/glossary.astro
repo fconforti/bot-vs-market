@@ -27,6 +27,7 @@ const terms = [...site.glossary.terms].sort((a: any, b: any) => a.title.localeCo
   .index a:hover { background: var(--bg-sunk); color: var(--fg); }
   .gloss { padding: clamp(24px, 4vw, 48px); }
   .gloss :global(h3) { font-size: 1.3rem; padding-top: 1.1em; margin-top: 1.1em; border-top: 1px solid var(--line); }
+  .gloss :global(h3.top) { border-top: 0; padding-top: 0; margin-top: 0; }
   .gloss :global(h3:target) { color: var(--accent); }
   .gloss :global(h3:target + p) { background: var(--accent-soft); box-shadow: 0 0 0 8px var(--accent-soft); border-radius: 4px; }
   .gloss :global(.hidden) { display: none; }
@@ -35,6 +36,12 @@ const terms = [...site.glossary.terms].sort((a: any, b: any) => a.title.localeCo
 <script>
   const q = document.getElementById("q") as HTMLInputElement | null;
   const art = document.querySelector(".gloss");
+  // The first visible term carries no top border, also while filtering.
+  const markFirst = () => {
+    const visible = [...(art?.querySelectorAll("h3") ?? [])].filter((h) => !h.classList.contains("hidden"));
+    art?.querySelectorAll("h3").forEach((h) => h.classList.toggle("top", h === visible[0]));
+  };
+  markFirst();
   q?.addEventListener("input", () => {
     const needle = q.value.trim().toLowerCase();
     document.querySelectorAll<HTMLAnchorElement>(".index a").forEach((a) => {
@@ -47,5 +54,6 @@ const terms = [...site.glossary.terms].sort((a: any, b: any) => a.title.localeCo
       const hit = !needle || block.some((el) => el.textContent!.toLowerCase().includes(needle));
       block.forEach((el) => el.classList.toggle("hidden", !hit));
     });
+    markFirst();
   });
 </script>
