@@ -81,3 +81,34 @@ each item in its entry.
   Xetra close, so `data.py --refresh` stored an intraday price as the 2026-10-19 "close" and the
   algorithm ranked on it. Harmless at 18:15. If sessions can be started by hand at other times,
   `data.py` or `current.py` could refuse (or flag) a same-day bar fetched before 17:35 CET.
+- 2026-10-20 (live): **the first live session started at 09:01 CEST, not 18:15**, one minute
+  after commit `6f4b7f3` (runner network fix). I do not know whether it was started by hand,
+  or by the timer catching up (`Persistent=true` fires a missed run when the timer is
+  restarted; the 2026-10-19 18:15 run had failed on the network). The session declined to
+  trade. Nothing in code enforces the mandate's "Session 18:15": `session-info.py` only reports
+  the time and `guardrails.py` does not check it. Suggestion for the owner: have
+  `run-session.sh` (live only) or `session-info.py` refuse outside a window such as
+  17:45–21:00 Europe/Rome. Also decide whether a missed weekday run should be caught up at
+  all; with `Persistent=true` the catch-up can land at any hour.
+- 2026-10-20 (live): **the 2026-10-19 bar in the price cache is the 16:40 rehearsal's intraday
+  snapshot**, and today's refresh did not replace it (see `MISTAKES.md`). Two fixes: find out
+  why `refresh()` kept the cached value (does yfinance return the bar, or nothing?), and repair
+  the bar. More generally, `refresh()` should always re-fetch and overwrite the last few cached
+  bars, and should flag a bar that is identical across all instruments to the previous fetch.
+- 2026-10-20 (live): cost-model data point, at 09:00–09:04 CEST on EIX. VanEck Semiconductor
+  ETF bid/ask 88.76 / 90.12 (1.52%, against 0.02% at 16:41 the day before). S&P 500 Energy ETF
+  12.884 / 12.946 (0.48%). MSCI World 130.18 / 130.23 (0.04%). ETFs that hold US stocks are
+  quoted wide before New York opens. This supports the 18:15 session time, and suggests the
+  first live fills should be compared with the 0.25% model.
+- 2026-10-20 (live): **a second session on the same day cannot publish.** The runner commits
+  `journal/<date>.md` and `portfolio/<date>.json`, and `bin/check-append-only.py` then rejects
+  any later change to them. So after an off-schedule run, that day's 18:15 run fails at commit
+  (exit 5). Either the runner should skip a live run when today's journal is already
+  committed, or second sessions need their own file names (e.g. `<date>-2.md`).
+- 2026-10-20 (live): **`bin/build-site.py` crashes once a live snapshot exists**:
+  `TypeError: Object of type date is not JSON serializable` at `json.dumps` (line 294). The
+  likely source is line 273, `"as_of": state.as_of` (a `datetime.date`). It never ran before,
+  because there was no live snapshot. Fix: `.isoformat()`, or `json.dumps(..., default=str)`.
+  Also check `equity_curve()` dates and the benchmark series. Then add a test that builds the
+  site with one live snapshot present. Until it is fixed the public site does not show any
+  live session. Plumbing for the owner, not a strategy change.

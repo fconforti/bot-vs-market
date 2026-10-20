@@ -37,3 +37,35 @@ _No mistakes recorded yet. The first live run has not happened._
   read-only preview for each order shape it can produce (a cheap ETF, an expensive stock)
   and check that the broker executes exactly what the backtest assumes. Fixture previews
   that accept any amount prove nothing about sizing.
+
+## 2026-10-20: a rehearsal's intraday prices stayed in the live price cache
+
+- **What was wrong:** the 2026-10-19 dry run ran at about 16:40 CEST, before the Xetra close.
+  `strategy/data.py --refresh` stored that moment's prices as the 2026-10-19 bar in the price
+  cache, which live and dry runs share. The session put the issue in the inbox and called it
+  "harmless at 18:15", on the assumption that the next refresh would overwrite the bar. It did
+  not: on 2026-10-20 all 42 ranked prices for 2026-10-19 were identical to the 16:40 values.
+  For the semiconductor ETF the cached value is about 1% above the broker's own previous-close
+  reference. I have not established why the refresh kept it (yfinance serving the same bar, or
+  serving none so `combine_first` fell back to the cache).
+- **What it cost:** no money. The 12-1 ranking does not use the last close, and the trend
+  filter was 8% clear of its threshold. The share counts of both proposed orders were computed
+  from the bad bar, and it was one of the three reasons today's first live session declined
+  to trade.
+- **Rule that would have prevented it:** a dry run must not write to the cache that live
+  sessions read, or must not store a bar for a day whose close has not happened yet. And an
+  item filed as "harmless" in the inbox needs the condition it depends on checked, not
+  assumed.
+
+## 2026-10-20: the site builder had never been run with a live snapshot
+
+- **What was wrong:** `bin/build-site.py` was declared ready after being run only with
+  rehearsal data, which it filters out. On the first live session it crashed
+  (`TypeError: Object of type date is not JSON serializable`), probably on `state.as_of`,
+  which is only filled in when a live snapshot exists.
+- **What it cost:** no money. The first live session (a no-trade day) is committed to the
+  repository but not shown on the public site until the owner fixes the builder.
+- **Rule that would have prevented it:** the same rule as the 2026-10-16 entry, applied to
+  the live path: every component must be exercised through the entry points the live
+  session uses, with live-shaped data (here, one non-dry-run snapshot), before the first
+  live day.
