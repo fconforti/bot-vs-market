@@ -43,7 +43,15 @@ the broker data is live or FIXTURE (`sc_mode`). In a dry run:
 
 Work through the steps in order. Each step is a `##` section of today's journal file.
 Write the journal incrementally (write the file after each step), so that a crash
-still leaves a readable record. Start the file with this header:
+still leaves a readable record.
+
+If today's journal file already exists, an earlier session ran today (a manual run, or
+one that failed). Do not change a single line of it: the pre-commit hook rejects any
+removed line. Append below it a line `---`, then `# Second session, HH:MM` (third, and so
+on) and run the full pipeline again under that heading, with `###` steps. Read the earlier
+session first and say what changed since. Today's snapshot file is simply taken again.
+
+Otherwise start the file with this header:
 
 ```
 # YYYY-MM-DD — daily session

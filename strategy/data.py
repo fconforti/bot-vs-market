@@ -20,7 +20,8 @@ import json
 import os
 import sys
 import warnings
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime, time, timedelta, timezone
+from zoneinfo import ZoneInfo
 from pathlib import Path
 
 import pandas as pd
@@ -76,8 +77,87 @@ def save_cache(df: pd.DataFrame, note: dict | None = None) -> None:
     META.write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
 
 
-def refresh(*, full: bool = False, lookback_days: int = 30) -> tuple[pd.DataFrame, dict]:
+# Xetra closes at 17:30 CET. A bar for today fetched before this is an intraday price.
+CLOSE_FINAL_AFTER = time(17, 45)
+XETRA_TZ = ZoneInfo("Europe/Berlin")
+
+
+def drop_unfinished(fresh: pd.DataFrame, now: datetime) -> pd.DataFrame:
+    """Remove today's bar when the session has not closed yet (2026-10-19: a 16:40
+    refresh stored an intraday price as that day's close, and it stayed)."""
+    local = now.astimezone(XETRA_TZ)
+    if fresh.empty or local.time() >= CLOSE_FINAL_AFTER:
+        return fresh
+    return fresh[fresh.index.date < local.date()]
+
+
+def merge_window(fresh: pd.DataFrame, cached: pd.DataFrame) -> pd.DataFrame:
+    """Fresh data is authoritative inside its own window: a cached date it no longer
+    contains is dropped rather than kept, so a provisional bar cannot outlive the
+    source. Inside fresh dates, cached values still fill cells fresh lacks."""
+    if cached.empty:
+        return fresh
+    if fresh.empty:
+        return cached
+    keep = (cached.index < fresh.index.min()) | cached.index.isin(fresh.index)
+    return fresh.combine_first(cached[keep])
+
+
+def fill_from_hourly(fresh: pd.DataFrame, hourly: pd.DataFrame, days: list[date]) -> tuple[pd.DataFrame, list[str]]:
+    """Yahoo's daily series sometimes lags a completed day (2026-10-20: no 10-19 bar)
+    while its hourly series has it. For each given day missing from `fresh`, take the
+    close of the last hourly bar that starts at 17:00 Berlin or later (it ends at the
+    Xetra close). `hourly` is indexed by tz-aware timestamps."""
+    filled = []
+    if hourly.empty:
+        return fresh, filled
+    h = hourly.copy()
+    h.index = h.index.tz_convert(XETRA_TZ)
+    rows = {}
+    for d in days:
+        if pd.Timestamp(d) in fresh.index:
+            continue
+        bars = h[(h.index.date == d) & (h.index.time >= time(17, 0))]
+        if bars.empty:
+            continue
+        rows[pd.Timestamp(d)] = bars.iloc[-1]
+        filled.append(d.isoformat())
+    if not rows:
+        return fresh, filled
+    extra = pd.DataFrame.from_dict(rows, orient="index").reindex(columns=fresh.columns)
+    return pd.concat([fresh, extra]).sort_index(), filled
+
+
+def _download_hourly(tickers: list[str], days: int = 7) -> pd.DataFrame:
+    import yfinance as yf
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        raw = yf.download(tickers, period=f"{days}d", interval="60m", auto_adjust=True, progress=False,
+                          group_by="column", threads=True)
+    if raw is None or raw.empty:
+        return pd.DataFrame()
+    if isinstance(raw.columns, pd.MultiIndex):
+        return raw["Close"]
+    return raw[["Close"]].rename(columns={"Close": tickers[0]})
+
+
+def _completed_trading_days(since: date, now: datetime) -> list[date]:
+    from finance import mandate
+    man = mandate.load()
+    local = now.astimezone(XETRA_TZ)
+    last = local.date() if local.time() >= CLOSE_FINAL_AFTER else local.date() - timedelta(days=1)
+    out, d = [], since
+    while d <= last:
+        if man.is_trading_day(d):
+            out.append(d)
+        d += timedelta(days=1)
+    return out
+
+
+def refresh(*, full: bool = False, lookback_days: int = 30, now: datetime | None = None) -> tuple[pd.DataFrame, dict]:
     """Update the close cache. Returns (closes by ticker, report)."""
+    now = now or datetime.now(timezone.utc)
     u = load_universe()
     tickers = sorted(set(u["ticker"]))
     cached = pd.DataFrame() if full else load_cache()
@@ -85,18 +165,27 @@ def refresh(*, full: bool = False, lookback_days: int = 30) -> tuple[pd.DataFram
         start = HISTORY_START
     else:
         start = (cached.index.max() - timedelta(days=lookback_days)).strftime("%Y-%m-%d")
-    fresh = _download(tickers, start)
+    fresh = drop_unfinished(_download(tickers, start), now)
     if fresh.empty and cached.empty:
         raise RuntimeError("yfinance returned no data; check network and tickers")
-    merged = fresh if cached.empty else fresh.combine_first(cached)
+    # Completed trading days of the last week that the daily series does not have yet.
+    recent = [d for d in _completed_trading_days(now.date() - timedelta(days=7), now)
+              if pd.Timestamp(d) not in fresh.index]
+    filled: list[str] = []
+    if recent:
+        try:
+            fresh, filled = fill_from_hourly(fresh, _download_hourly(tickers), recent)
+        except Exception as exc:  # network or yfinance shape: report, do not guess
+            filled = [f"hourly fill failed: {exc}"]
+    merged = merge_window(fresh, cached)
     merged = merged.reindex(columns=tickers)
     merged = merged.dropna(how="all")
-    # Keep Xetra trading days only: drop rows where every ETF is NaN (weekends/holidays
-    # slip in when some listing trades on a day Xetra is closed).
     report = {
         "as_of": merged.index.max().strftime("%Y-%m-%d") if len(merged) else None,
         "missing": [t for t in tickers if t not in fresh.columns or fresh[t].dropna().empty],
         "stale": [],
+        "filled_from_hourly": filled,
+        "missing_days": [d.isoformat() for d in recent if pd.Timestamp(d) not in merged.index],
     }
     last_date = merged.index.max()
     for t in tickers:
@@ -199,6 +288,10 @@ def main(argv: list[str] | None = None) -> int:
                 print("MISSING (no data at all):", ", ".join(report["missing"]))
             for s in report["stale"]:
                 print(f"STALE: {s['ticker']} last close {s['last']}")
+            if report["filled_from_hourly"]:
+                print("FILLED FROM HOURLY BARS (daily series lagging):", ", ".join(report["filled_from_hourly"]))
+            if report["missing_days"]:
+                print("MISSING TRADING DAYS (no close anywhere yet):", ", ".join(report["missing_days"]))
     if args.check_live:
         rows = check_live(args.isin, all_instruments=args.all)
         result["check_live"] = rows

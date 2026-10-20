@@ -86,7 +86,10 @@ def write_snapshot(state: PortfolioState, raw: dict[str, Any], *, post_trade: bo
     payload = state.to_dict()
     payload["taken_at"] = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     payload["post_trade"] = post_trade
-    payload["raw"] = raw
+    # Raw broker payloads are published: scrub secret-looking keys and URL parameters
+    # exactly as trade files are (finance/trades.redact).
+    from .trades import redact
+    payload["raw"] = redact(raw)
     with path.open("w", encoding="utf-8") as fh:
         json.dump(payload, fh, indent=2, ensure_ascii=False, default=str)
         fh.write("\n")

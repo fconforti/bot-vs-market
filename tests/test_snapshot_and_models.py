@@ -63,3 +63,14 @@ def test_dry_run_attempts_do_not_count_against_live_limit(repo):
     t["status"] = "aborted"
     trades.write(p, t)
     assert trades.attempted_today(d) == 0
+
+
+def test_snapshot_raw_payloads_are_redacted(repo):
+    import json
+    from finance import portfolio
+    from finance.models import PortfolioState
+    state = PortfolioState(as_of=date(2026, 10, 20), nav=1000.0, cash=1000.0, buying_power=1000.0, positions=())
+    raw = {"holdings": {"items": [{"doc": "https://x.example/kid.pdf?apiKey=SECRET1&lang=it", "access_token": "SECRET2"}]}}
+    text = portfolio.write_snapshot(state, raw).read_text()
+    assert "SECRET1" not in text and "SECRET2" not in text
+    assert json.loads(text)["raw"]["holdings"]["items"][0]["doc"].endswith("apiKey=[redacted]&lang=it")

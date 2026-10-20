@@ -270,7 +270,7 @@ def build_data() -> dict:
         "research": research,
         "trades": rows,
         "portfolio": {
-            "state": {"as_of": state.as_of, "nav": state.nav, "cash": state.cash, "buying_power": state.buying_power} if state else None,
+            "state": {"as_of": state.as_of.isoformat(), "nav": state.nav, "cash": state.cash, "buying_power": state.buying_power} if state else None,
             "positions": positions,
             "benchmark": {"isin": man.benchmark_isin, "name": man.benchmark_name, "start_date": bench.get("start_date"),
                           "last": bench["series"][-1] if bench.get("series") else None},

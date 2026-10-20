@@ -69,3 +69,17 @@ def test_site_term_links_resolve():
         used |= set(re.findall(r'glossary/#([a-z0-9-]+)', s))
     used |= {"cagr", "drawdown", "sharpe-ratio", "volatility", "turnover", "nav"}   # strategy.astro termFor map
     assert used and not (used - ids), sorted(used - ids)
+
+
+def test_export_with_a_live_snapshot(repo):
+    """The first real snapshot (2026-10-20) crashed the exporter: nothing had ever
+    built the site from live data."""
+    _seed(repo)
+    from datetime import date
+    from finance import portfolio
+    from finance.models import PortfolioState
+    state = PortfolioState(as_of=date(2026, 10, 19), nav=1000.0, cash=1000.0, buying_power=1000.0, positions=())
+    portfolio.write_snapshot(state, {"overview": {}})
+    data = json.loads(_exporter().build().read_text())
+    assert data["live"] is True and data["home"]["nav"] == 1000.0
+    assert data["portfolio"]["state"]["as_of"] == "2026-10-19"

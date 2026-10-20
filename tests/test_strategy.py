@@ -177,3 +177,34 @@ def test_daily_check_set_rotates_over_the_universe():
         assert s[:2] == ["X00", "X05"] and len(s) == 2 + DAILY_SLICE and len(set(s)) == len(s)
         seen |= set(s)
     assert seen == set(isins)
+
+
+def test_refresh_never_keeps_an_intraday_bar():
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    idx = pd.to_datetime(["2026-10-16", "2026-10-19"])
+    fresh = pd.DataFrame({"A": [1.0, 2.0]}, index=idx)
+    berlin = ZoneInfo("Europe/Berlin")
+    before = data_mod.drop_unfinished(fresh, datetime(2026, 10, 19, 16, 40, tzinfo=berlin))
+    assert list(before.index) == [pd.Timestamp("2026-10-16")]
+    after = data_mod.drop_unfinished(fresh, datetime(2026, 10, 19, 18, 15, tzinfo=berlin))
+    assert len(after) == 2
+    # A cached provisional bar that the source no longer returns is dropped...
+    cached = pd.DataFrame({"A": [1.0, 9.9]}, index=idx)
+    merged = data_mod.merge_window(fresh.iloc[:1], cached)
+    assert list(merged.index) == [pd.Timestamp("2026-10-16")]
+    # ...but older history outside the fresh window is kept.
+    old = pd.DataFrame({"A": [0.5]}, index=pd.to_datetime(["2026-10-01"]))
+    assert len(data_mod.merge_window(fresh, pd.concat([old, cached]))) == 3
+
+
+def test_missing_daily_bar_is_filled_from_the_last_hourly_bar():
+    from datetime import date
+    fresh = pd.DataFrame({"A": [1.0]}, index=pd.to_datetime(["2026-10-16"]))
+    hours = pd.DatetimeIndex(["2026-10-19 16:00", "2026-10-19 17:00"]).tz_localize("Europe/Berlin")
+    hourly = pd.DataFrame({"A": [2.0, 2.5]}, index=hours)
+    out, filled = data_mod.fill_from_hourly(fresh, hourly, [date(2026, 10, 19)])
+    assert filled == ["2026-10-19"] and out.loc["2026-10-19", "A"] == 2.5
+    # No bar at or after 17:00 means the day is not complete: nothing is invented.
+    out, filled = data_mod.fill_from_hourly(fresh, hourly.iloc[:1], [date(2026, 10, 19)])
+    assert filled == [] and len(out) == 1

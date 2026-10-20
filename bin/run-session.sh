@@ -37,6 +37,16 @@ if [[ -f HALTED ]]; then
   exit 0
 fi
 
+# Live orders only in the evening window: after the Xetra close (the strategy reads
+# closing prices) and while EIX is open (until 22:00). On 2026-10-20 a 09:01 run saw
+# 1.5% spreads on a US-sector ETF. This also stops the timer's catch-up run after the
+# machine was off at 18:15. FINANCE_ANY_TIME=1 overrides it for a deliberate run.
+HHMM=$(TZ=Europe/Rome date +%H%M)
+if [[ $DRY_RUN == 0 && -z "${FINANCE_ANY_TIME:-}" ]] && (( 10#$HHMM < 1745 || 10#$HHMM >= 2130 )); then
+  echo "live sessions run between 17:45 and 21:30 Europe/Rome; it is $HHMM. Not running."
+  exit 0
+fi
+
 export FINANCE_DRY_RUN="$DRY_RUN"
 export FINANCE_AGENT=1
 export FINANCE_ROOT="$ROOT"
