@@ -12,7 +12,7 @@ Rules (all parameters in strategy/params.toml):
    `exit_band` below the SMA. In between, existing positions are held (no churn
    from the index hovering around its average).
 2. Ranking: 12-1 month momentum = close[t-21] / close[t-252] - 1 over the risk
-   sleeve (ETFs, stocks, ETCs, crypto ETP; cash proxies excluded).
+   sleeve (ETFs, stocks, ETCs, crypto ETP).
 3. Exits, in the first `rebalance_window_days` trading days of each month only:
    momentum below zero (absolute momentum) or rank worse than `hold_rank`.
    Outside the window a position is only sold by the trend filter.

@@ -6,9 +6,10 @@ Current version: **v002** (2026-10-19). Live algorithm: `strategy/current.py`, p
 
 ## v002 in plain language
 
-A slow, trend-filtered momentum rotation over a fixed list of 44 liquid instruments
-(24 ETFs, 2 gold ETCs, 1 bitcoin ETP, 15 large-cap stocks, 2 cash-like ETFs that are
-never bought). Everything is priced in EUR on Xetra/gettex listings.
+A slow, trend-filtered momentum rotation over a fixed list of 42 liquid instruments
+(24 ETFs, 2 gold ETCs, 1 bitcoin ETP, 15 large-cap stocks). Everything is priced in
+EUR on Xetra/gettex listings. When the trend is off, the account holds cash at the
+broker; there is no cash-like instrument on the list.
 
 1. **Trend filter with a band.** New positions are only opened while the MSCI World
    ETF (`IE00B4L5Y983`) closes above its 200-day simple moving average. Everything is
@@ -16,8 +17,8 @@ never bought). Everything is priced in EUR on Xetra/gettex listings.
    The band exists because the index crosses its average many times a year; without
    it the strategy sold and re-bought the whole book on every wobble.
 2. **Ranking.** 12-1 month momentum: `close[t-21] / close[t-252] - 1`, computed after
-   each close on the risk sleeve (everything except the two cash ETFs). Instruments
-   with fewer than 260 days of history are not ranked.
+   each close on every instrument in the list. Instruments with fewer than 260 days
+   of history are not ranked.
 3. **Holding rule.** Hold up to 4 positions, equal target weight 25% of NAV each.
    Free slots are filled, any day, with the best-ranked instruments not already held,
    provided their momentum is positive.
@@ -90,6 +91,17 @@ Chart: `research/backtests/v002.png`. The period ends 2026-10-19 for v002 and
   algorithm and the account disagree about something.
 
 ## Changelog
+
+### Universe trim (2026-10-20, no new version)
+
+Two cash-like ETFs (Xtrackers II EUR Overnight Rate Swap, iShares eb.rexx Government
+Germany 0-1yr) were removed from `strategy/universe.csv` and from the CLI allow-list.
+They were left over from the brief's idea of parking cash in a short-duration bond ETF
+when the trend is off; v001 dropped that rule (the account simply holds cash) and no
+version ranked or bought them. On EUR 1,000 the idea is not worth revisiting: a few
+months at about 2% a year is roughly EUR 5, which two EUR 0.99 fees nearly eat. The
+backtest is unchanged (it never traded them; `research/backtests/v002.json` still
+records 44 instruments as of its run date).
 
 ### v002 (2026-10-19) whole-share sizing
 

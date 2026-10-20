@@ -16,7 +16,7 @@ const blob = (f: string) => `${site.repo_url}/blob/main/${f}`;
 const buyable = (u.etf || 0) + (u.stock || 0) + (u.etc || 0) + (u.crypto || 0);
 const decisions = [
   { title: "What it can buy", fact: `${buyable} instruments`, term: "etf-etc-etp",
-    text: `A fixed list: ${u.etf || 0} ETFs, ${u.stock || 0} large-cap stocks, ${u.etc || 0} gold ETCs and ${u.crypto || 0} bitcoin ETP, all priced in EUR. The ${u.cash || 0} cash-like ETFs on the list are never bought.` },
+    text: `A fixed list: ${u.etf || 0} ETFs, ${u.stock || 0} large-cap stocks, ${u.etc || 0} gold ETCs and ${u.crypto || 0} bitcoin ETP, all priced in EUR. When the trend is off, the account simply holds cash.` },
   { title: "When it invests", fact: "Only in an uptrend", term: "trend-filter",
     text: `New buys only while the MSCI World is above its ${tr.sma_days}-day average. Everything is sold if it closes ${pc(tr.exit_band)} below it.` },
   { title: "What it picks", fact: `The top ${se.top_n} by momentum`, term: "momentum-12-1",

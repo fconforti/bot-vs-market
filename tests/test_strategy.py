@@ -23,8 +23,6 @@ def synthetic_market(as_of: date, trend_up: bool = True, n: int = 400) -> Market
     for i, row in enumerate(sleeve.itertuples()):
         rate = 0.0025 - i * 0.0001          # first rows strongest; later ones negative momentum
         cols[row.isin] = 100.0 * np.cumprod(1 + np.full(n, rate))
-    for row in u[u["type"] == "cash"].itertuples():
-        cols[row.isin] = 100.0 * np.cumprod(1 + np.full(n, 0.00005))
     df = pd.DataFrame(cols, index=idx)
     if not trend_up:
         # Put the benchmark under its SMA200 by crashing the last 60 days.

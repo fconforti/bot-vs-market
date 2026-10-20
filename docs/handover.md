@@ -8,7 +8,7 @@ Written by the build session on 2026-10-18. Read this before the first live run.
   plus: market orders only (`allow_limit_orders = false`), venue `SEIX` (EIX), reject on
   any price warning or appropriateness requirement, 1% preview tolerance for buys.
 - **Strategy v001**: `strategy/current.py` (pure `generate()`), `params.toml`,
-  `universe.csv` (44 instruments), `data.py` (yfinance cache + live quote cross-check),
+  `universe.csv` (42 instruments), `data.py` (yfinance cache + live quote cross-check),
   `backtest.py` (same-day-close execution, EUR 0.99/order, spreads). Frozen copy in
   `strategy/versions/v001_2026-10-18.*`, results in `research/backtests/v001.*`,
   reasoning and caveats in `STRATEGY.md`.
@@ -65,7 +65,7 @@ Both ran on 2026-10-18, a Saturday, with `FINANCE_TODAY` replaying a weekday.
    app or drop it from `strategy/universe.csv` (that is a strategy change: new version).
 4. **Session lifetime.** Not documented. The daily run detects an expired session and
    journals an abort; you will need to `sc login` again at some point.
-5. **Ticker mapping.** All 44 yfinance tickers downloaded, but a wrong mapping would
+5. **Ticker mapping.** All 42 yfinance tickers downloaded, but a wrong mapping would
    only show up as a large close-vs-quote gap. `strategy/data.py --check-live` prints
    those once logged in; run it before the first live session.
 

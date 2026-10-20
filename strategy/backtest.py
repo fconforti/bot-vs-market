@@ -40,7 +40,7 @@ from finance import mandate as mandate_mod  # noqa: E402
 from finance.models import MarketData, PortfolioState, Position, ProposedOrder  # noqa: E402
 from strategy import data as data_mod  # noqa: E402
 
-SPREAD = {"etf": 0.0025, "etc": 0.0025, "cash": 0.0010, "stock": 0.0050, "crypto": 0.0025}
+SPREAD = {"etf": 0.0025, "etc": 0.0025, "stock": 0.0050, "crypto": 0.0025}
 TRADING_DAYS = 252
 
 
