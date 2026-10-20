@@ -126,10 +126,19 @@ def latest_state(day: date | None = None, *, dry_run: bool = False) -> Portfolio
     return load_snapshot(files[-1]) if files else None
 
 
+def last_snapshot_per_day() -> list[Path]:
+    """One live snapshot per day, the last written: the post-trade file when the day
+    traded, otherwise the pre-trade one. What the site shows as "the portfolio"."""
+    by_day: dict[str, Path] = {}
+    for p in list_snapshots(include_post=True):
+        by_day[p.name[:10]] = p    # sorted, and "x.post.json" sorts after "x.json"
+    return [by_day[d] for d in sorted(by_day)]
+
+
 def equity_curve() -> list[dict[str, Any]]:
-    """[{date, nav, cash}] from live snapshots (pre-trade, non dry-run)."""
+    """[{date, nav, cash}] from live snapshots (end of day: post-trade when it traded)."""
     out = []
-    for p in list_snapshots():
+    for p in last_snapshot_per_day():
         try:
             s = load_snapshot(p)
         except (OSError, ValueError, KeyError):

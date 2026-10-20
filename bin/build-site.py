@@ -258,7 +258,7 @@ def build_data() -> dict:
     journal = read_entries(paths.JOURNAL)
     research = read_entries(paths.RESEARCH)
     all_trades = [t for t in trades.load_all() if not t.get("dry_run")]   # rehearsals are not published
-    live_snaps = portfolio.list_snapshots()
+    live_snaps = portfolio.last_snapshot_per_day()   # post-trade file when the day traded
     state = portfolio.load_snapshot(live_snaps[-1]) if live_snaps else None
     bench = portfolio.load_benchmark()
     bench_by_date = {r["date"]: r["value"] for r in bench.get("series", [])}

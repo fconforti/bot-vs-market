@@ -1,14 +1,14 @@
 {
- "built_at": "2026-10-20 16:32 UTC",
+ "built_at": "2026-10-20 16:37 UTC",
  "repo_url": "https://github.com/fconforti/bot-vs-market",
  "site_url": "https://fconforti.github.io/bot-vs-market/",
  "version": "v002",
  "initial_eur": 1000.0,
  "live": true,
  "home": {
-  "nav": 1000.0,
-  "cash": 1000.0,
-  "n_positions": 0,
+  "nav": 997.15,
+  "cash": 598.46,
+  "n_positions": 2,
   "live_days": 1,
   "start_date": "2026-10-20",
   "ret_total": 0.0,
@@ -22,7 +22,7 @@
  "curve": [
   {
    "date": "2026-10-20",
-   "nav": 1000.0,
+   "nav": 997.15,
    "benchmark": 1000.0
   }
  ],
@@ -55,7 +55,7 @@
    "eur_amount": null,
    "quantity": 3.0,
    "est_price": 72.88,
-   "pnl_pct": -0.0015093715697035437,
+   "pnl_pct": -0.0015779363336991814,
    "venue": null,
    "reason": "order submitted",
    "thesis": "Developed-market value stocks (about 400 holdings, heavy in financials and energy) have the third-strongest 12-1 month momentum (+52%), and the best one whose share fits the slot after ASML is skipped; it also diversifies a book whose first position is a concentrated semiconductor fund. Proven wrong",
@@ -74,7 +74,7 @@
    "eur_amount": null,
    "quantity": 2.0,
    "est_price": 90.46,
-   "pnl_pct": -0.0059695113862479054,
+   "pnl_pct": -0.0029294715896528434,
    "venue": null,
    "reason": "order submitted",
    "thesis": "The semiconductor ETF has the strongest 12-1 month momentum in the universe (+96%) while world equities trade 8% above their 200-day average; v002 holds such leaders for months, until the monthly exit window finds momentum negative or rank worse than 7, or the trend filter exits. Proven wrong if the",
@@ -86,11 +86,36 @@
  "portfolio": {
   "state": {
    "as_of": "2026-10-20",
-   "nav": 1000.0,
-   "cash": 1000.0,
-   "buying_power": 1000.0
+   "nav": 997.15,
+   "cash": 598.46,
+   "buying_power": 598.46
   },
-  "positions": [],
+  "positions": [
+   {
+    "isin": "IE00BL25JM42",
+    "name": "Xtrackers MSCI World Value (Acc)",
+    "quantity": 3.0,
+    "price": 72.765,
+    "value_eur": 218.3,
+    "weight": 0.2189239332096475,
+    "fifo_price": 72.88,
+    "unrealised": -0.0015779363336991814,
+    "thesis": "Developed-market value stocks (about 400 holdings, heavy in financials and energy) have the third-strongest 12-1 month momentum (+52%), and the best one whose share fits the slot after ASML is skipped; it also diversifies a book whose first position is a concentrated semiconductor fund. Proven wrong",
+    "trade_id": "2026-10-20-02"
+   },
+   {
+    "isin": "IE00BMC38736",
+    "name": "VanEck Semiconductor (Acc)",
+    "quantity": 2.0,
+    "price": 90.195,
+    "value_eur": 180.39,
+    "weight": 0.1809055809055809,
+    "fifo_price": 90.46,
+    "unrealised": -0.0029294715896528434,
+    "thesis": "The semiconductor ETF has the strongest 12-1 month momentum in the universe (+96%) while world equities trade 8% above their 200-day average; v002 holds such leaders for months, until the monthly exit window finds momentum negative or rank worse than 7, or the trend filter exits. Proven wrong if the",
+    "trade_id": "2026-10-20-01"
+   }
+  ],
   "benchmark": {
    "isin": "IE00B4L5Y983",
    "name": "iShares Core MSCI World UCITS ETF (Acc)",

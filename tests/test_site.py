@@ -161,3 +161,22 @@ def test_second_session_the_same_day_keeps_both_parts():
     assert "Second session, 18:20" in reader and "Third buy." in reader and "later ok" not in reader
     assert "later ok" in tech and "guardrails said ok" in tech
     assert meta["orders"].startswith("3 proposed")
+
+
+def test_site_shows_the_post_trade_snapshot(repo):
+    """2026-10-20: the first trading day's site still said "all cash" because the
+    exporter read the pre-trade snapshot only. The portfolio page and the equity
+    curve must use the last snapshot of each day."""
+    _seed(repo)
+    from datetime import date
+    from finance import portfolio
+    from finance.models import PortfolioState, Position
+    pre = PortfolioState(as_of=date(2026, 10, 20), nav=1000.0, cash=1000.0, buying_power=1000.0, positions=())
+    pos = Position(isin="IE00BMC38736", name="VanEck Semiconductor", quantity=2, price=90.2, value_eur=180.4)
+    post = PortfolioState(as_of=date(2026, 10, 20), nav=997.2, cash=816.8, buying_power=816.8, positions=(pos,))
+    portfolio.write_snapshot(pre, {})
+    portfolio.write_snapshot(post, {}, post_trade=True)
+    data = json.loads(_exporter().build().read_text())
+    assert data["portfolio"]["state"]["cash"] == 816.8
+    assert [p["isin"] for p in data["portfolio"]["positions"]] == ["IE00BMC38736"]
+    assert [r["nav"] for r in portfolio.equity_curve()] == [997.2]
