@@ -113,7 +113,11 @@ a.term:hover { color: var(--accent); text-decoration-color: var(--accent); }
 .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 table.data { width: 100%; border-collapse: collapse; font-size: .9rem; }
 table.data th { text-align: left; font-weight: 600; font-size: .72rem; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); padding: 14px 16px; border-bottom: 1px solid var(--line-strong); white-space: nowrap; }
-table.data td { padding: 14px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.data td { padding: 14px 16px; border-bottom: 1px solid var(--line); vertical-align: top; white-space: nowrap; }
+/* On a narrow screen the card scrolls sideways instead of squeezing columns: cells keep
+   their width; only long text (names, reasons) wraps, at a readable width. */
+table.data td.wrap-text { white-space: normal; min-width: 13rem; }
+table.data td.why { white-space: normal; }
 table.data tr:last-child td { border-bottom: 0; }
 table.data tbody tr:hover td { background: color-mix(in srgb, var(--bg-sunk) 55%, transparent); }
 table.data .r { text-align: right; white-space: nowrap; }
@@ -157,9 +161,12 @@ table.data .sub { display: block; font-size: .78rem; color: var(--muted); margin
 .prose pre code { background: none; border: 0; padding: 0; overflow-wrap: normal; }
 .prose .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1.2em 0; }
 .prose table { width: 100%; border-collapse: collapse; font-size: .86rem; margin: 0; }
-.prose .table-scroll table { min-width: 34rem; }
-.prose .table-scroll:has(th:nth-child(3):last-child) table, .prose .table-scroll:has(th:nth-child(2):last-child) table { min-width: 0; }
+/* Tables size to their content (each cell up to a readable measure) and the wrapper
+   scrolls sideways when that is wider than the screen; columns never get squeezed. */
+.prose .table-scroll table { width: max-content; min-width: 100%; }
+.prose .table-scroll :is(td, th) { max-width: 20rem; }
 .prose th, .prose td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.prose th { white-space: nowrap; }
 .prose :is(th, td):first-child { padding-left: 0; }
 .prose :is(th, td):last-child { padding-right: 0; }
 .prose :is(h1, h2, h3, h4) code { font-size: .72em; vertical-align: .1em; }

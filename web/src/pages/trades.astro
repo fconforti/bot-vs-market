@@ -27,7 +27,7 @@ const count = (s: string) => trades.filter((t: any) => t.status === s).length;
                 <tr>
                   <td><a href={url(`journal/#${t.journal_anchor}`)} class="num">{t.date}</a><span class="sub mono">{t.id}</span></td>
                   <td><span class={`side ${t.side}`}>{t.side}</span></td>
-                  <td>{t.name || t.isin}<span class="sub mono">{t.isin}</span></td>
+                  <td class="wrap-text">{t.name || t.isin}<span class="sub mono">{t.isin}</span></td>
                   <td class="r num">{t.eur_amount != null ? eur(t.eur_amount) : t.quantity != null ? `${t.quantity} sh` : "—"}</td>
                   <td><span class={`tag ${statusTone(t.status)}`}>{t.status}</span></td>
                   <td class="r num">{t.est_price != null ? t.est_price.toFixed(2) : "—"}</td>

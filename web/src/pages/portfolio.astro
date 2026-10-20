@@ -35,7 +35,7 @@ const initial = new Intl.NumberFormat("en-IE").format(site.initial_eur);
             <tbody>
               {pf.positions.length ? pf.positions.map((p: any) => (
                 <tr>
-                  <td>{p.name}<span class="sub mono">{p.isin}</span></td>
+                  <td class="wrap-text">{p.name}<span class="sub mono">{p.isin}</span></td>
                   <td class="r num">{p.quantity}</td>
                   <td class="r num">{eur(p.price)}</td>
                   <td class="r num">{eur(p.value_eur)}</td>
