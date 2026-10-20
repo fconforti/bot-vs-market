@@ -53,20 +53,86 @@ def strip_h1(text: str) -> str:
     return text
 
 
+HEADER_RE = re.compile(r"^- \*\*([^*]+):\*\*\s*(.+?)\s*$")
+# Entries before 2026-10-21 have numbered pipeline sections and no "Technical log";
+# these sections are the reader-facing ones, everything else is machinery.
+LEGACY_READER = ("4. Market view", "5. Position review", "7. Decision")
+
+
+def split_entry(text: str) -> tuple[str, str, dict]:
+    """One journal or research file -> (reader markdown, technical markdown, header meta).
+    A file holds one or more sessions, each starting with an h1. In a session, everything
+    from '## Technical log' on is technical. The '- **Key:** value' bullets under the h1
+    are the header: they are returned as meta and not rendered (the page shows them as
+    chips); the last session's header wins."""
+    reader, tech, meta = [], [], {}
+    sessions = [c for c in re.split(r"(?m)^(?=# )", text) if c.strip()]
+    for n, chunk in enumerate(sessions):
+        lines = chunk.splitlines()
+        title = lines[0].lstrip("#").strip()
+        body: list[str] = []
+        for line in lines[1:]:
+            m = HEADER_RE.match(line.strip())
+            if m and not any(l.strip() for l in body):
+                meta[m.group(1).strip().lower()] = m.group(2)
+            else:
+                body.append(line)
+        r, t = _split_sections(body)
+        if n:  # a second session the same day: keep its title as a heading in both parts
+            r = [f"## {title}", ""] + r
+            t = [f"## {title}", ""] + t if t else t
+        reader += r + [""]
+        tech += t + ([""] if t else [])
+    return "\n".join(reader).strip() + "\n", "\n".join(tech).strip() + "\n", meta
+
+
+def _split_sections(lines: list[str]) -> tuple[list[str], list[str]]:
+    reader, tech = [], []
+    if any(l.strip().lower() == "## technical log" for l in lines):
+        cur = reader
+        for l in lines:
+            if l.strip().lower() == "## technical log":
+                cur = tech
+                continue
+            cur.append(l)
+        return reader, tech
+    cur = reader
+    for l in lines:
+        if l.startswith("## "):
+            cur = reader if l[3:].strip().startswith(LEGACY_READER) else tech
+            if cur is reader:
+                l = re.sub(r"^## \d+\.\s*", "## ", l)   # "4. Market view" -> "Market view"
+        cur.append(l)
+    return reader, tech
+
+
+def section_body(text: str, *names: str) -> str | None:
+    """Body of the first '## <name>' section found, trying names in order."""
+    for name in names:
+        m = re.search(rf"(?ms)^## {re.escape(name)}\s*$\n(.*?)(?=^## |\Z)", text)
+        if m and m.group(1).strip():
+            return m.group(1).strip()
+    return None
+
+
 def read_entries(directory: Path) -> list[dict]:
     """Live entries only. Dry-run rehearsals (*-dryrun*.md) stay in the repo but are
-    not published."""
+    not published. Each entry carries the reader-facing html, the technical log html
+    (folded away on the site) and the header meta."""
     out = []
     for p in sorted(directory.glob("????-??-??*.md"), reverse=True):
         if "dryrun" in p.stem:
             continue
         text = p.read_text(encoding="utf-8")
-        m = re.search(r"\*\*Status:\*\*\s*([^\n(]+)", text)
-        status = m.group(1).strip() if m else None
+        reader, tech, meta = split_entry(text)
+        status = (meta.get("status") or "").split("(")[0].strip() or None
         title_m = re.match(r"#\s+(.+)", text.lstrip())
+        summary = section_body(reader, "The day", "The week", "Decision", "7. Decision")
         out.append({"date": p.stem, "anchor": p.stem, "status": status,
                     "title": title_m.group(1).strip() if title_m else p.stem,
-                    "html": md(text), "excerpt_html": excerpt(text)})
+                    "meta": {k: v for k, v in meta.items() if k != "status"},
+                    "html": md(reader), "tech_html": md(tech) if tech.strip() else "",
+                    "excerpt_html": md(summary) if summary else excerpt(reader)})
     return out
 
 
@@ -76,10 +142,28 @@ def drop_rehearsal_sections(text: str) -> str:
     out, skipping = [], False
     for line in text.splitlines():
         if line.startswith("## "):
-            skipping = "dry run" in line.lower() or "dry-run" in line.lower() or "rehearsal" in line.lower()
+            skipping = bool(re.search(r"\((dry.run|rehearsal)[^)]*\)", line, re.I))
         if not skipping:
             out.append(line)
     return "\n".join(out) + "\n"
+
+
+def split_ops(text: str) -> tuple[str, str]:
+    """MISTAKES.md is for decisions that turned out wrong. Entries about the machinery
+    (data, tooling, network) belong in OPERATIONS.md; the ones written to MISTAKES.md
+    before that split existed are reclassified in place, append-only, by a later entry
+    listing them as '- ops: <heading>'. Headings containing '(ops)' and listed headings
+    go to the Operations page. Returns (decision entries, operational entries)."""
+    listed = {m.group(1).strip() for m in re.finditer(r"(?m)^- ops:\s*(.+?)\s*$", text)}
+    kept, moved = [], []
+    cur: list[str] | None = None
+    for line in text.splitlines():
+        if line.startswith("## "):
+            h = line[3:].strip()
+            cur = moved if ("(ops)" in h.lower() or h in listed) else kept
+        if cur is not None:
+            cur.append(line)
+    return "\n".join(kept).strip() + "\n", "\n".join(moved).strip() + "\n"
 
 
 def excerpt(text: str, max_lines: int = 30) -> str:
@@ -246,6 +330,8 @@ def build_data() -> dict:
         })
     mistakes_md = paths.MISTAKES.read_text(encoding="utf-8") if paths.MISTAKES.exists() else "# Mistakes\n\nNone recorded yet."
     mistakes_md = drop_rehearsal_sections(mistakes_md)
+    decisions_md, ops_from_mistakes_md = split_ops(sections_only(mistakes_md))
+    operations_md = paths.OPERATIONS.read_text(encoding="utf-8") if paths.OPERATIONS.exists() else ""
     glossary_path = paths.DOCS / "glossary.md"
     glossary_md = glossary_path.read_text(encoding="utf-8") if glossary_path.exists() else "# Glossary\n\n(not written yet)"
     mandate_md = (paths.ROOT / "MANDATE.md").read_text(encoding="utf-8")
@@ -276,7 +362,9 @@ def build_data() -> dict:
                           "last": bench["series"][-1] if bench.get("series") else None},
         },
         "strategy": {**strategy_doc(strategy_md), **strategy_facts(), "backtests": backtests},
-        "mistakes_html": md(sections_only(mistakes_md)),
+        "mistakes_html": md(decisions_md) if decisions_md.strip() else "",
+        "operations": {"html": md(sections_only(operations_md)) if operations_md.strip() else "",
+                       "from_mistakes_html": md(ops_from_mistakes_md) if ops_from_mistakes_md.strip() else ""},
         "glossary": {"html": md(glossary_body(glossary_md), anchors=True), "terms": glossary_terms(glossary_md)},
         "mandate_html": md(strip_h1(mandate_md)),
         "venue": man.venue if hasattr(man, "venue") else None,

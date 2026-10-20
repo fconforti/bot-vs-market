@@ -69,3 +69,13 @@ _No mistakes recorded yet. The first live run has not happened._
   the live path: every component must be exercised through the entry points the live
   session uses, with live-shaped data (here, one non-dry-run snapshot), before the first
   live day.
+
+## 2026-10-20 (ops): operational failures move to OPERATIONS.md
+
+This file is for decisions that turned out wrong: trades, refusals, market views,
+strategy flaws, execution that cost more than the model. Failures of the machinery
+(data, tooling, network, bugs) now go to `OPERATIONS.md`. The two entries above from
+2026-10-20 are of that kind, so the site lists them under Operations:
+
+- ops: 2026-10-20: a rehearsal's intraday prices stayed in the live price cache
+- ops: 2026-10-20: the site builder had never been run with a live snapshot

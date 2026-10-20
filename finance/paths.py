@@ -19,6 +19,7 @@ MANDATE_TOML = ROOT / "mandate.toml"
 HALTED = ROOT / "HALTED"
 INBOX = RESEARCH / "inbox.md"
 MISTAKES = ROOT / "MISTAKES.md"
+OPERATIONS = ROOT / "OPERATIONS.md"
 BENCHMARK = PORTFOLIO / "benchmark.json"
 PRICE_CACHE = DATA / "prices"
 

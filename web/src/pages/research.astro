@@ -15,12 +15,18 @@ const entries = site.research;
       <article class="card entry" id={e.anchor}>
         <header class="meta"><a href={`#${e.anchor}`}>{fmtDate(e.date)}</a></header>
         <div class="prose wide" set:html={e.html} />
+        {e.tech_html && (
+          <details class="tech">
+            <summary>Technical log <span>commands, backtests, raw output</span></summary>
+            <div class="prose wide" set:html={e.tech_html} />
+          </details>
+        )}
       </article>
     )) : <Empty title="No research entries yet">The first weekly review runs on the Saturday after the first live week.</Empty>}
   </div>
 </Base>
 <style>
-  .list { display: grid; gap: 24px; }
+  .list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
   .entry { padding: clamp(20px, 3.4vw, 40px); }
   .meta { margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
   .meta a { font-weight: 600; color: var(--fg); text-decoration: none; }

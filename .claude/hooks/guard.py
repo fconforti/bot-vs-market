@@ -68,7 +68,7 @@ def main() -> None:
             deny(f"writes outside the repo are forbidden: {raw}")
         rel_s = rel.as_posix()
         today = os.environ.get("FINANCE_TODAY") or date.today().isoformat()
-        append_only_ok = {"research/inbox.md", "MISTAKES.md"}
+        append_only_ok = {"research/inbox.md", "MISTAKES.md", "OPERATIONS.md"}
         if rel_s in append_only_ok or "-dryrun" in p.name:
             return
         for d in ("journal/", "trades/", "portfolio/"):

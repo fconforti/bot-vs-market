@@ -39,6 +39,14 @@ record. Your default outcome is "no change, here is why".
 
 ## Pipeline
 
+The entry has the same two-part layout as the daily journal. The top is for the
+public reader: `## The week` (what happened to the portfolio and why, in plain
+language), `## Hypothesis`, `## Result`, `## Decision`. Then `## Technical log`, with
+the steps below as `###` sections, every command, output and backtest table. Outside
+the Technical log: no file names, commands or machine talk. Start the file with the
+header bullets (`- **Status:**`, `- **Strategy:** vNNN -> vNNN`) under the h1.
+
+
 Write `research/YYYY-MM-DD.md` incrementally, one `##` section per step.
 
 ### 0. Facts
@@ -52,7 +60,7 @@ file still holds. Compare the week's realised NAV path with what the backtest's 
 numbers imply (`research/backtests/<current version>.json`). Be quantitative.
 
 ### 2. Inbox and mistakes
-Read `research/inbox.md` and `MISTAKES.md`. List each item and what you will do
+Read `research/inbox.md`, `MISTAKES.md` and `OPERATIONS.md`. List each item and what you will do
 with it: test now, defer, or dismiss with a reason.
 
 ### 3. One hypothesis

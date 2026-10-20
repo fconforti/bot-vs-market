@@ -8,7 +8,7 @@ const entries = site.journal;
 ---
 <Base title="Journal" current="journal/">
   <PageHead eyebrow="Daily sessions" title="Journal">
-    One <Term id="journal">entry</Term> per session, newest first. Entries are never edited after the day they were written. Corrections go in later entries and on the <a href={url("mistakes/")}>mistakes</a> page.
+    One <Term id="journal">entry</Term> per session, newest first: the portfolio, the market, what the strategy called for and what was done. The commands and raw output behind each entry are folded under "Technical log". Entries are never edited after the day they were written; corrections go in later entries and on the <a href={url("mistakes/")}>mistakes</a> page.
   </PageHead>
   <div class="wrap">
     {entries.length ? (
@@ -23,8 +23,16 @@ const entries = site.journal;
               <header class="meta">
                 <a class="date" href={`#${e.anchor}`}>{fmtDate(e.date)}</a>
                 {e.status && <span class={`tag ${statusTone(e.status)}`}>{e.status}</span>}
+                {e.meta?.strategy && <span class="chip">{e.meta.strategy}</span>}
+                {e.meta?.orders && <span class="chip soft">{e.meta.orders.replace(/\s*\(.*\)\s*$/, "")}</span>}
               </header>
               <div class="prose wide" set:html={e.html} />
+              {e.tech_html && (
+                <details class="tech">
+                  <summary>Technical log <span>commands, data checks, raw output</span></summary>
+                  <div class="prose wide" set:html={e.tech_html} />
+                </details>
+              )}
             </article>
           ))}
         </div>
@@ -42,9 +50,11 @@ const entries = site.journal;
   .toc a:hover { background: var(--bg-sunk); }
   .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
   .dot.good { background: var(--pos); } .dot.bad { background: var(--neg); } .dot.info { background: var(--accent); }
-  .entries { display: grid; gap: 24px; }
+  .entries { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
   .entry { padding: clamp(20px, 3.4vw, 40px); }
-  .meta { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+  .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+  .chip { font-family: var(--font-mono); font-size: .78rem; color: var(--fg-soft); background: var(--bg-sunk); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; }
+  .chip.soft { font-family: var(--font-sans); color: var(--muted); }
   .date { font-weight: 600; color: var(--fg); text-decoration: none; }
   @media (max-width: 860px) { .layout { grid-template-columns: minmax(0, 1fr); } .toc { display: none; } }
 </style>

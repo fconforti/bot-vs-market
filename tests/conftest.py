@@ -38,6 +38,7 @@ def repo(tmp_path, monkeypatch):
     monkeypatch.setattr(paths, "HALTED", root / "HALTED")
     monkeypatch.setattr(paths, "INBOX", root / "research" / "inbox.md")
     monkeypatch.setattr(paths, "MISTAKES", root / "MISTAKES.md")
+    monkeypatch.setattr(paths, "OPERATIONS", root / "OPERATIONS.md")
     monkeypatch.setattr(paths, "BENCHMARK", root / "portfolio" / "benchmark.json")
     monkeypatch.setenv("FINANCE_TODAY", TODAY)
     monkeypatch.delenv("FINANCE_DRY_RUN", raising=False)

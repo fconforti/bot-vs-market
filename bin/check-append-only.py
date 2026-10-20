@@ -11,7 +11,7 @@ the same day, so a second session that day can refresh the snapshot and continue
 journal: "never changed after the day they are written". A journal file may only grow,
 even on its own day; the earlier version stays in git history either way.
 
-Also rejects removing lines from MISTAKES.md (append-only file).
+Also rejects removing lines from MISTAKES.md and OPERATIONS.md (append-only files).
 """
 from __future__ import annotations
 
@@ -58,7 +58,7 @@ def main() -> int:
                 problems.append(f"{status} {path}")
             elif path.startswith("journal/") and (n := removed_lines(path)):
                 problems.append(f"lines removed from today's journal {path}: {n} (it may only grow)")
-        if path == "MISTAKES.md" and status in ("M", "D"):
+        if path in ("MISTAKES.md", "OPERATIONS.md") and status in ("M", "D"):
             if n := removed_lines(path):
                 problems.append(f"lines removed from {path}: {n}")
     if problems:

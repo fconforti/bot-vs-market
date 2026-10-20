@@ -61,6 +61,7 @@ def main() -> int:
         "snapshot_file": f"portfolio/{today.isoformat()}{suffix}.json",
         "inbox_file": "research/inbox.md",
         "mistakes_file": "MISTAKES.md",
+        "operations_file": "OPERATIONS.md",
     }
     print(json.dumps(out, indent=2))
     return 0

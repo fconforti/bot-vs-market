@@ -23,7 +23,10 @@ def _seed(root):
     (root / "journal" / "2026-10-19.md").write_text("# 2026-10-19 — daily session\n\n- **Status:** completed\n\nLive entry.\n")
     (root / "journal" / "2026-10-20-dryrun.md").write_text("# 2026-10-20 — daily session\n\n- **Status:** completed\n\nREHEARSAL TEXT\n")
     (root / "MISTAKES.md").write_text("# Mistakes\n\nIntro.\n\n## 2026-10-19: live slip\n\nReal.\n\n"
-                                      "## 2026-10-20 (dry run): rehearsal slip\n\nREHEARSAL TEXT\n")
+                                      "## 2026-10-20 (dry run): rehearsal slip\n\nREHEARSAL TEXT\n"
+                                      "## 2026-10-20: the cache broke\n\nPLUMBING\n\n"
+                                      "## 2026-10-21 (ops): split\n\n- ops: 2026-10-20: the cache broke\n")
+    (root / "OPERATIONS.md").write_text("# Operations log\n\nIntro.\n\n## 2026-10-19: wifi\n\nDROPPED\n")
 
 
 def test_export_skips_dry_runs(repo):
@@ -46,6 +49,10 @@ def test_export_skips_dry_runs(repo):
     assert [e["date"] for e in data["journal"]] == ["2026-10-19"]
     assert [t["id"] for t in data["trades"]] == [trades.load(live)["id"]]
     assert "live slip" in data["mistakes_html"] and "rehearsal slip" not in data["mistakes_html"]
+    # machinery entries leave the Mistakes page for the Operations page, append-only
+    assert "PLUMBING" not in data["mistakes_html"] and "(ops)" not in data["mistakes_html"]
+    assert "PLUMBING" in data["operations"]["from_mistakes_html"]
+    assert "DROPPED" in data["operations"]["html"] and "Intro." not in data["operations"]["html"]
     assert data["live"] is False and data["home"]["nav"] is None
 
 
@@ -83,3 +90,74 @@ def test_export_with_a_live_snapshot(repo):
     data = json.loads(_exporter().build().read_text())
     assert data["live"] is True and data["home"]["nav"] == 1000.0
     assert data["portfolio"]["state"]["as_of"] == "2026-10-19"
+
+
+JOURNAL_NEW = """# 2026-10-21 — daily session
+- **Status:** completed
+- **Mode:** live
+- **Strategy:** v002
+- **Orders:** 2 proposed, 2 executed, 0 rejected (both filled)
+
+## The day
+Bought two ETFs. NAV EUR 998.
+
+## Market view
+Quiet.
+
+## Decision
+Accepted both orders.
+
+## Technical log
+### 0. Session facts
+```
+{"date": "2026-10-21"}
+```
+### 8. Execution
+guardrails said ok
+"""
+
+JOURNAL_LEGACY = """# 2026-10-20 — daily session
+- **Status:** no-trade
+- **Strategy:** v002
+
+## 0. Session facts
+JSON DUMP
+
+## 1. State
+NAV table
+
+## 4. Market view
+Bounce.
+
+## 7. Decision
+Refused.
+
+## 11. Publish
+build failed
+"""
+
+
+def test_journal_entries_split_reader_part_from_technical_log(repo):
+    _seed(repo)
+    (repo / "journal" / "2026-10-21.md").write_text(JOURNAL_NEW)
+    (repo / "journal" / "2026-10-20.md").write_text(JOURNAL_LEGACY)
+    data = json.loads(_exporter().build().read_text())
+    new, legacy = data["journal"][0], data["journal"][1]
+    assert new["status"] == "completed" and new["meta"] == {"mode": "live", "strategy": "v002", "orders": "2 proposed, 2 executed, 0 rejected (both filled)"}
+    assert "Bought two ETFs" in new["html"] and "guardrails" not in new["html"] and "<li>" not in new["html"]
+    assert "guardrails said ok" in new["tech_html"] and "Session facts" in new["tech_html"]
+    assert new["excerpt_html"].strip() == "<p>Bought two ETFs. NAV EUR 998.</p>"
+    # before the split existed: market view, positions and decision stay open, the rest folds
+    assert "JSON DUMP" not in legacy["html"] and "build failed" not in legacy["html"]
+    assert "Bounce." in legacy["html"] and "<h2>Market view</h2>" in legacy["html"] and "NAV table" not in legacy["html"]
+    assert "JSON DUMP" in legacy["tech_html"] and "build failed" in legacy["tech_html"] and "NAV table" in legacy["tech_html"]
+    assert legacy["excerpt_html"].strip() == "<p>Refused.</p>"
+
+
+def test_second_session_the_same_day_keeps_both_parts():
+    mod = _exporter()
+    text = JOURNAL_NEW + "\n---\n\n# Second session, 18:20\n- **Status:** completed\n- **Orders:** 3 proposed, 3 executed, 0 rejected\n\n## The day\nThird buy.\n\n## Technical log\n### 8. Execution\nlater ok\n"
+    reader, tech, meta = mod.split_entry(text)
+    assert "Second session, 18:20" in reader and "Third buy." in reader and "later ok" not in reader
+    assert "later ok" in tech and "guardrails said ok" in tech
+    assert meta["orders"].startswith("3 proposed")

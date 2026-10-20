@@ -1,0 +1,27 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHead from "../components/PageHead.astro";
+import Empty from "../components/Empty.astro";
+import { site, url } from "../lib/site";
+const ops = site.operations || {};
+---
+<Base title="Operations log" current="operations/">
+  <PageHead eyebrow="Under the hood" title="Operations log">
+    Failures of the machinery: data, tooling, network, bugs, the machine the agent runs on. They are not investment mistakes (those are on the <a href={url("mistakes/")}>mistakes</a> page), but they can stop a session or delay a trade, so they are logged here with what was done about them. The commands and raw output of every session are under "Technical log" in the <a href={url("journal/")}>journal</a>.
+  </PageHead>
+  <div class="wrap list">
+    {ops.html
+      ? <article class="card pad prose wide doc" set:html={ops.html} />
+      : <Empty title="Nothing logged yet">Operational failures are recorded here when they happen.</Empty>}
+    {ops.from_mistakes_html && (
+      <section>
+        <div class="block-head"><h2>Reclassified from the mistakes log</h2><p>Written to the mistakes log before this page existed; kept there unchanged, as the log is append-only, and listed here because they are about the machinery.</p></div>
+        <article class="card pad prose wide doc" set:html={ops.from_mistakes_html} />
+      </section>
+    )}
+  </div>
+</Base>
+<style>
+  .list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .doc { padding: clamp(24px, 4vw, 48px); }
+</style>

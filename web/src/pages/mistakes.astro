@@ -2,14 +2,14 @@
 import Base from "../layouts/Base.astro";
 import PageHead from "../components/PageHead.astro";
 import Empty from "../components/Empty.astro";
-import { site } from "../lib/site";
+import { site, url } from "../lib/site";
 ---
 <Base title="Mistakes" current="mistakes/">
   <PageHead eyebrow="Append-only" title="Mistakes">
-    What was wrong, what it cost, and what rule would have prevented it. Written by the agent when a past decision turns out to be wrong, and by the owner when the agent missed one. Lines are never removed.
+    Decisions that turned out wrong: a trade, a refusal, a market view, a flaw in the strategy. For each: what was wrong, what it cost, and what rule would have prevented it. Written by the agent, or by the owner when the agent missed one; lines are never removed. Failures of the machinery are not mistakes of judgement and live on the <a href={url("operations/")}>operations log</a>.
   </PageHead>
   <div class="wrap">{site.mistakes_html
     ? <article class="card pad prose wide doc" set:html={site.mistakes_html} />
-    : <Empty title="No mistakes recorded yet">The first live run has not happened. When a past decision turns out to be wrong, the entry goes here and stays here.</Empty>}</div>
+    : <Empty title="No wrong decision yet">Nothing has been traded yet, so no decision has had the chance to be wrong. When one is, the entry goes here and stays here.</Empty>}</div>
 </Base>
 <style>.doc { padding: clamp(24px, 4vw, 48px); }</style>

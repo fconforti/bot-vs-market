@@ -16,7 +16,8 @@ parameters or the universe. Prefer doing nothing over doing something unjustifie
   Never call `sc broker trade ...` yourself, never use `--confirm`. The hooks will block
   you, and trying is itself a reportable mistake.
 - Never edit past journal entries, trade files, snapshots or research entries. If
-  something was wrong, write the correction in today's entry and in `MISTAKES.md`.
+  something was wrong, write the correction in today's entry and in `MISTAKES.md`
+  (a wrong decision) or `OPERATIONS.md` (a failure of the machinery).
 - Any CLI error, auth failure, malformed output, or a guardrails `aborted`/`unknown`
   status means: stop trading for today, write what happened, finish the journal.
   Never retry a confirm. Never work around a failing check.
@@ -41,17 +42,17 @@ the broker data is live or FIXTURE (`sc_mode`). In a dry run:
 
 ## Pipeline
 
-Work through the steps in order. Each step is a `##` section of today's journal file.
-Write the journal incrementally (write the file after each step), so that a crash
-still leaves a readable record.
+The journal entry has two parts. The top is for the public reader: someone following
+the experiment who does not care how the machine works. The bottom, `## Technical log`,
+is where every command, output and check goes; the site folds it away. Outside the
+Technical log: no file names, commands, scripts, hooks, timers, exit codes, JSON, and
+nothing about the owner's machine. If a technical problem affects the day, say so in
+one plain sentence ("yesterday's prices were not final, so I did not trade") and put
+the details in the Technical log.
 
-If today's journal file already exists, an earlier session ran today (a manual run, or
-one that failed). Do not change a single line of it: the pre-commit hook rejects any
-removed line. Append below it a line `---`, then `# Second session, HH:MM` (third, and so
-on) and run the full pipeline again under that heading, with `###` steps. Read the earlier
-session first and say what changed since. Today's snapshot file is simply taken again.
-
-Otherwise start the file with this header:
+Write the journal incrementally (save after every step) so that a crash still leaves
+a readable record. Start the file with this skeleton and fill the sections in as the
+steps produce them:
 
 ```
 # YYYY-MM-DD — daily session
@@ -59,22 +60,45 @@ Otherwise start the file with this header:
 - **Mode:** live | dry-run (live data) | dry-run (FIXTURE data)
 - **Strategy:** vNNN
 - **Orders:** 0 proposed, 0 executed, 0 rejected
+
+## The day
+(step 11)
+
+## Market view
+(step 4)
+
+## Positions
+(step 5)
+
+## Decision
+(step 7)
+
+## Technical log
+### 0. Session facts
 ```
 
-Update the header at the end.
+Steps 4, 5 and 7 are written into the sections above; every other step is a `###`
+section of the Technical log, in order. Update the header at the end.
+
+If today's journal file already exists, an earlier session ran today (a manual run, or
+one that failed). Do not change a single line of it: the pre-commit hook rejects any
+removed line. Append below it a line `---`, then `# Second session, HH:MM` (third, and so
+on) with the same skeleton, and run the full pipeline again. Its header describes the
+whole day (orders of both sessions). Read the earlier session first and say what
+changed since. Today's snapshot file is simply taken again.
 
 ### 0. Session facts
-Run `uv run python bin/session-info.py`. If `trading_day` is false (weekend or Xetra
-holiday), write a short "market closed" entry with the date, the reason, and the
-latest NAV from the most recent snapshot in `portfolio/`, set the status to
-`market-closed`, and stop.
+Run `uv run python bin/session-info.py` and paste the output. If `trading_day` is false
+(weekend or Xetra holiday), write one paragraph under `## The day` (the date, the
+reason, the latest NAV from the most recent snapshot in `portfolio/`), set the status
+to `market-closed`, and stop.
 
 ### 1. State
-Run `uv run python bin/snapshot.py` (add `--dry-run` in a dry run). Summarise NAV,
+Run `uv run python bin/snapshot.py` (add `--dry-run` in a dry run). Tabulate NAV,
 cash, buying power, every position with weight and unrealised P&L versus FIFO price,
 pending orders if any, P&L versus the previous snapshot and versus the benchmark
-(`portfolio/benchmark.json`). If the snapshot fails, the session is aborted: write why
-and skip to step 10.
+(`portfolio/benchmark.json`). These numbers also open "The day" in step 11. If the
+snapshot fails, the session is aborted: write why and skip to step 10.
 
 ### 2. Memory
 Read the last 10 entries in `journal/`, `STRATEGY.md`, `research/inbox.md` and
@@ -91,23 +115,23 @@ calendar for the next 5 trading days, and news for each current holding (also tr
 journal. If the data looks broken (missing benchmark, stale prices, large gaps), say so
 here; it is a valid reason to refuse to trade in step 7.
 
-### 4. Market view
-Five to ten sentences on what the market did and what is scheduled. Written before any
-order decision. Opinions are allowed; label them as such.
+### 4. Market view (written into `## Market view`)
+Five to ten sentences on what the market did and what is scheduled, with the sources
+as links. Written before any order decision. Opinions are allowed; label them as such.
 
-### 5. Position review
+### 5. Position review (written into `## Positions`)
 For each holding: the original thesis (quote it from the trade file), whether it is
 intact, and what the algorithm says (hold, trim, exit). No position changes outside the
-algorithm.
+algorithm. With no holdings, one line: "No positions.".
 
 ### 6. Algorithm output
 Run `uv run python strategy/current.py` and paste the JSON output verbatim in a fenced
 block: the signals (trend filter, ranking) and the proposed orders with rationale.
 Then explain in plain words what it proposes and why.
 
-### 7. Decision
+### 7. Decision (written into `## Decision`)
 Either accept the algorithm's orders as they are, or refuse to trade with a written
-reason. Valid reasons to refuse: data looks broken, the broker data does not reconcile,
+reason, in plain language: what the strategy wanted to do, what will be done, and why. Valid reasons to refuse: data looks broken, the broker data does not reconcile,
 a major scheduled event tomorrow for a proposed instrument, a mismatch between the
 snapshot and the algorithm's assumptions, or anything that would make a careful human
 pause. You may not add, resize or substitute orders. Partial acceptance (executing some
@@ -141,14 +165,24 @@ Run `uv run python bin/snapshot.py --post-trade` (plus `--dry-run` in a dry run)
 report fills, new cash and positions. For executed orders, note the estimated order
 volume from the preview and the quote at the time.
 
-### 10. Mistakes and inbox
-If any past decision now looks wrong, append to `MISTAKES.md` (append-only: add a
-dated entry at the end, never remove lines) what was wrong, what it cost, and what
-rule would have prevented it. Put strategy ideas and observations for the weekly
-research session into `research/inbox.md` (append, dated). Not every day has a
+### 10. Mistakes, operations and inbox
+`MISTAKES.md` is for decisions that turned out wrong: a trade, a refusal, a market
+view, a strategy flaw, execution that cost more than the model. If a past decision now
+looks wrong, append (append-only: a dated entry at the end, never remove lines) what
+was wrong, what it cost, and what rule would have prevented it. Not every day has a
 mistake; do not invent one.
+`OPERATIONS.md` is for failures of the machinery: data, tooling, network, bugs, the
+machine. Append a dated entry when one affected the session, with what happened and
+what it blocked. Never put these in `MISTAKES.md`.
+Put strategy ideas and observations for the weekly research session into
+`research/inbox.md` (append, dated).
 
-### 11. Publish
-Finalise the header (status, mode, order counts). Run `uv run python bin/build-site.py`.
-The runner script commits and pushes; do not push yourself. End with a three-line
-summary of the day for the log.
+### 11. The day, then publish
+Write `## The day`: three to six short paragraphs for the reader, in plain language,
+in this order: the portfolio now (NAV, cash, positions, change since the previous
+session and since the start, against the benchmark); what the market did, in a
+sentence or two; what the strategy called for, what was done or not, and why. Euros
+and percentages, no code, no file names. This is what the home page shows.
+Then finalise the header (status, mode, order counts) and run
+`uv run python bin/build-site.py`. The runner script commits and pushes; do not push
+yourself. End with a three-line summary of the day for the log.

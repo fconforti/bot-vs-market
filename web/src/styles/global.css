@@ -143,7 +143,17 @@ table.data .sub { display: block; font-size: .78rem; color: var(--muted); margin
 .prose li::marker { color: var(--muted); }
 .prose strong { color: var(--fg); font-weight: 600; }
 .prose code { font-family: var(--font-mono); font-size: .84em; background: var(--bg-sunk); border: 1px solid var(--line); padding: .08em .35em; border-radius: 5px; overflow-wrap: anywhere; }
-.prose pre { background: var(--bg-sunk); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 14px 16px; overflow-x: auto; font-size: .8rem; line-height: 1.55; }
+.prose pre { background: var(--bg-sunk); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 14px 16px; overflow-x: auto; max-width: 100%; font-size: .8rem; line-height: 1.55; }
+.prose img, .prose svg { max-width: 100%; height: auto; }
+
+/* Folded technical part of a journal or research entry */
+.tech { margin-top: 28px; border-top: 1px solid var(--line); padding-top: 14px; }
+.tech > summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 10px; color: var(--fg-soft); font-size: .92rem; font-weight: 600; }
+.tech > summary::-webkit-details-marker { display: none; }
+.tech > summary::before { content: ""; width: 0; height: 0; border: 5px solid transparent; border-left: 7px solid var(--muted); margin-right: 2px; transition: transform .2s; }
+.tech[open] > summary::before { transform: rotate(90deg); }
+.tech > summary span { font-weight: 400; color: var(--muted); font-size: .85rem; }
+.tech > .prose { margin-top: 18px; }
 .prose pre code { background: none; border: 0; padding: 0; overflow-wrap: normal; }
 .prose .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1.2em 0; }
 .prose table { width: 100%; border-collapse: collapse; font-size: .86rem; margin: 0; }
@@ -157,6 +167,7 @@ table.data .sub { display: block; font-size: .78rem; color: var(--muted); margin
 .prose blockquote { margin: 1em 0; padding: .2em 0 .2em 1em; border-left: 3px solid var(--line-strong); color: var(--muted); }
 .prose hr { border: 0; border-top: 1px solid var(--line); margin: 2em 0; }
 .prose a { overflow-wrap: anywhere; }
+.prose :is(p, li, dd, blockquote) { overflow-wrap: anywhere; }   /* bare URLs and long tokens in agent-written text */
 
 /* ---------- reveal ---------- */
 @media (prefers-reduced-motion: no-preference) {
