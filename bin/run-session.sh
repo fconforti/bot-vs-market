@@ -7,7 +7,8 @@
 # Exit 0 on a completed session (including a deliberate "no trade" or an abort that
 # was journaled), 3 when the session could not even start (e.g. sc not logged in),
 # the agent's exit code when it failed, 4 when the push failed, 5 when the commit
-# was refused (a pre-commit hook: secret scan or append-only). Any non-zero exit
+# was refused (a pre-commit hook: secret scan or append-only), 7 when the network
+# never came up. Any non-zero exit
 # makes systemd run finance-alert@.service, which emails the owner.
 set -euo pipefail
 
@@ -41,6 +42,13 @@ export FINANCE_AGENT=1
 export FINANCE_ROOT="$ROOT"
 export PATH="$HOME/.local/bin:$PATH"
 
+# shellcheck source=bin/net.sh
+source "$ROOT/bin/net.sh"
+if ! wait_for_network 600; then
+  echo "network unavailable for 10 minutes; not starting."
+  exit 7
+fi
+
 # --- broker session ---------------------------------------------------------
 if sc whoami --json >/dev/null 2>&1; then
   export FINANCE_SC_MODE=live
@@ -65,7 +73,7 @@ else
       } > "$JOURNAL"
       uv run python bin/build-site.py >/dev/null || true
       git add -A && git commit -q -m "session: $TODAY (aborted: sc not logged in)" || true
-      git push -q || echo "push failed (GH_TOKEN missing or network)"
+      push_with_retry || echo "push failed (GH_TOKEN missing or network)"
     fi
     echo "sc not logged in; aborted and journaled."
     exit 3
@@ -115,7 +123,7 @@ if [[ -n "$(git status --porcelain)" ]]; then
   git commit -q -m "session: $TODAY$SUFFIX" || { PUSH_RC=5; echo "commit failed (pre-commit hook?)"; }
 fi
 if [[ $DRY_RUN == 0 && $PUSH_RC == 0 ]]; then
-  git push -q || { PUSH_RC=4; echo "push failed (GH_TOKEN missing or network)"; }
+  push_with_retry || { PUSH_RC=4; echo "push failed (GH_TOKEN missing or network)"; }
 else
   echo "not pushing (dry run or commit failed)"
 fi

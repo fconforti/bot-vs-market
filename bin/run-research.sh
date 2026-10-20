@@ -33,6 +33,13 @@ export FINANCE_AGENT=1
 export FINANCE_ROOT="$ROOT"
 export FINANCE_SESSION=research
 export PATH="$HOME/.local/bin:$PATH"
+
+# shellcheck source=bin/net.sh
+source "$ROOT/bin/net.sh"
+if ! wait_for_network 600; then
+  echo "network unavailable for 10 minutes; not starting."
+  exit 7
+fi
 if sc whoami --json >/dev/null 2>&1; then export FINANCE_SC_MODE=live; else export FINANCE_SC_MODE=none; fi
 
 PROMPT="$(cat prompts/research.md)"
@@ -69,7 +76,7 @@ if [[ -n "$(git status --porcelain)" ]]; then
   git add -A
   git commit -q -m "research: $TODAY" || { PUSH_RC=5; echo "commit failed (pre-commit hook?)"; }
 fi
-if [[ $DRY_RUN == 0 && $PUSH_RC == 0 ]]; then git push -q || { PUSH_RC=4; echo "push failed"; }; else echo "not pushing (dry run or commit failed)"; fi
+if [[ $DRY_RUN == 0 && $PUSH_RC == 0 ]]; then push_with_retry || { PUSH_RC=4; echo "push failed"; }; else echo "not pushing (dry run or commit failed)"; fi
 echo "=== done $(date -Is)"
 # Whatever the agent wrote is still committed above; a failed agent or push fails the unit.
 if [[ $AGENT_RC != 0 ]]; then exit "$AGENT_RC"; fi
