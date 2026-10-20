@@ -212,7 +212,13 @@ def sections_only(text: str) -> str:
 def glossary_body(text: str) -> str:
     """The terms only: the page header already carries the intro above the first term."""
     i = text.find("\n### ")
-    return text[i + 1:] if i >= 0 else strip_h1(text)
+    if i < 0:
+        return strip_h1(text)
+    # Alphabetical, like the menu next to it (the source file is grouped by topic).
+    parts = re.split(r"(?m)^(?=### )", text[i + 1:])
+    parts = [p for p in parts if p.strip()]
+    parts.sort(key=lambda p: p.splitlines()[0][4:].strip().casefold())
+    return "\n".join(p.rstrip() + "\n" for p in parts)
 
 
 def glossary_terms(text: str) -> list[dict]:
