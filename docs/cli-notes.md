@@ -35,6 +35,9 @@ Exit codes: `0` ok, `1` generic error, `10` validation error, `20` auth/config e
 - Access tokens refresh automatically using a refresh token. Session lifetime is not
   documented. Expect to re-run `sc login` occasionally; the daily run detects exit
   code 20 and aborts with a "needs re-login" journal entry.
+  Observed: the login of 2026-10-19 ~15:57 was gone by 2026-10-21 18:17
+  (`no_session`), i.e. it lasted at most about 50 hours, despite daily use. Watch
+  the next one to see whether that is a fixed lifetime.
 - `SC_CONFIG_DIR` overrides the config directory.
 - `sc login --local-read-only` blocks write commands locally. Useful for a first week
   of paper trading: the guardrails preview still works, the confirm is refused by
