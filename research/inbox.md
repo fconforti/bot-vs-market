@@ -127,3 +127,30 @@ each item in its entry.
   must have a preview value "within 2% of quantity x quote"; `bin/guardrails.py` uses
   `SELL_VOLUME_TOLERANCE = 0.03` for that check (lines 183/190, reported as "tolerance 3%"
   in today's trade files). One of the two should change so they agree.
+- 2026-10-22 (live): **login lifetime is not fixed.** The 2026-10-22 08:43 login failed at about
+  19:05 (`refresh_relogin_required`: refresh succeeded, verification of the new token failed),
+  about 10 hours; the first lasted about 50. A login made in the morning may not survive to
+  18:15. For the owner: is there any CLI or account setting that controls this? If not, the
+  runner's pre-session check is the only defence, and a failure *during* the session (as today)
+  costs the day. Worth logging the login time and the failure time each time to find a pattern.
+- 2026-10-22 (live): **`data.py --refresh` drops instruments silently on partial yfinance
+  failures.** First run: 11 tickers with no data; second run two minutes later: 6 different
+  ones. A single refresh therefore leaves the held ETFs on stale closes, and `--check-live`
+  then flags a false 4.4% gap on the semiconductor ETF. Suggestion: retry the failed tickers
+  within `refresh()` (two or three passes) and report which remain missing. Allianz still has no
+  21/22 Oct bar. Plumbing, not strategy.
+- 2026-10-22 (live): the snapshot runs before the price refresh, so `portfolio/benchmark.json`'s
+  last point in the snapshot was 2026-10-20 although the 2026-10-22 benchmark close was
+  available minutes later. Check whether the benchmark series is filled in later (site build)
+  or whether the session order should be refresh first, snapshot second.
+- 2026-10-22 (live): concentration, concrete case. With slots 1 and 3 held (semiconductors,
+  world value), v002 proposed slots 2 and 4 as the S&P 500 Energy ETF and the MSCI World Energy
+  ETF: two funds dominated by the same US oil majors, 44% of NAV in one sector, and the value
+  ETF itself is "heavy in financials and energy". The orders were not placed (login failure),
+  but they will likely be proposed again. Same request as 2026-10-15/16: measure in the
+  backtest how often the top-4 contains two funds of the same sector, and what a
+  one-per-sector rule would have done, before proposing anything.
+- 2026-10-22 (live): the semiconductor ETF fell 4.9% on the day after Lam Research's results
+  (the event the 2026-10-20 session accepted at entry), and is down 5.0% from its fill. Data
+  point for the research loop on whether known single-holding earnings within a few days of
+  entry are worth a rule; one case proves nothing.

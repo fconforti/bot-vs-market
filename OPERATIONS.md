@@ -60,3 +60,22 @@ calls that cannot place an order are retried on network errors (an order confirm
 never is), the pre-session check retries for about five minutes, and a broker that
 stays unreachable is reported as such instead of as a missing login. The session was
 then started by hand the same evening.
+
+## 2026-10-22: the broker login failed in the middle of the evening session
+
+The session started by hand at 18:52 passed its login check, took the portfolio
+snapshot and began comparing prices with the broker's quotes. At about 19:05 a quote
+request failed with `refresh_relogin_required` ("Token refresh succeeded but the
+refreshed access token failed verification. Run 'sc login'."), and the login check
+then reported "not logged in". This was an authentication failure, not the network:
+the error came back from the broker, and earlier calls in the same minute had worked.
+The login dated from 08:43 that morning, so it lasted about ten hours, not the
+roughly fifty of the first one. Trading stopped for the day as the rules require. The
+strategy's two proposed buys (two energy ETFs) were not sent. The owner needs to log
+in again before the next session.
+
+Also on the same evening, the price source returned no data for 11 of 42 instruments
+on the first refresh and for 6 others on a second refresh two minutes later. After
+both runs every instrument had prices for the day except Allianz (none for 21 or 22
+October). It did not affect the decision; Allianz cannot be bought at this account
+size.
