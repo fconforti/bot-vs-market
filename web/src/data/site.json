@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-21 16:17 UTC",
+ "built_at": "2026-10-22 16:17 UTC",
  "repo_url": "https://github.com/fconforti/bot-vs-market",
  "site_url": "https://fconforti.github.io/bot-vs-market/",
  "version": "v002",
@@ -14,7 +14,7 @@
   "ret_total": 0.0,
   "ret_vs_bench": 0.0,
   "last_session": {
-   "date": "2026-10-21",
+   "date": "2026-10-22",
    "status": "aborted",
    "excerpt_html": "<ul>\n<li>Written by <code>bin/run-session.sh</code>, not by the agent.</li>\n</ul>"
   }
@@ -27,6 +27,19 @@
   }
  ],
  "journal": [
+  {
+   "date": "2026-10-22",
+   "anchor": "2026-10-22",
+   "status": "aborted",
+   "title": "2026-10-22 — aborted before start",
+   "meta": {
+    "reason": "`sc whoami` failed: the Scalable CLI session is missing or expired. No orders were placed.",
+    "action for the owner": "run `sc login` on the machine, then `sc whoami --json`."
+   },
+   "html": "<ul>\n<li>Written by <code>bin/run-session.sh</code>, not by the agent.</li>\n</ul>",
+   "tech_html": "",
+   "excerpt_html": "<ul>\n<li>Written by <code>bin/run-session.sh</code>, not by the agent.</li>\n</ul>"
+  },
   {
    "date": "2026-10-21",
    "anchor": "2026-10-21",
