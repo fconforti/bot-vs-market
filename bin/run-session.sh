@@ -5,7 +5,7 @@
 #   bin/run-session.sh --dry-run   preview only, never confirms, never pushes
 #
 # Exit 0 on a completed session (including a deliberate "no trade" or an abort that
-# was journaled), 3 when the session could not even start (e.g. sc not logged in),
+# was journaled), 3 when sc is not logged in, 8 when the broker stayed unreachable,
 # the agent's exit code when it failed, 4 when the push failed, 5 when the commit
 # was refused (a pre-commit hook: secret scan or append-only), 7 when the network
 # never came up. Any non-zero exit
