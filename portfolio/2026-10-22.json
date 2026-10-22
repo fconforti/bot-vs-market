@@ -1,6 +1,6 @@
 {
   "as_of": "2026-10-22",
-  "nav": 986.91,
+  "nav": 987.18,
   "cash": 598.46,
   "buying_power": 598.46,
   "positions": [
@@ -8,8 +8,8 @@
       "isin": "IE00BL25JM42",
       "name": "Xtrackers MSCI World Value (Acc)",
       "quantity": 3.0,
-      "price": 72.22,
-      "value_eur": 216.66,
+      "price": 72.365,
+      "value_eur": 217.1,
       "fifo_price": 72.88,
       "security_type": "ETF"
     },
@@ -17,15 +17,15 @@
       "isin": "IE00BMC38736",
       "name": "VanEck Semiconductor (Acc)",
       "quantity": 2.0,
-      "price": 85.905,
-      "value_eur": 171.81,
+      "price": 85.81,
+      "value_eur": 171.62,
       "fifo_price": 90.46,
       "security_type": "ETF"
     }
   ],
   "pending_buy_orders_eur": 0.0,
   "dry_run": false,
-  "taken_at": "2026-10-22T16:54:05+00:00",
+  "taken_at": "2026-10-22T19:17:22+00:00",
   "post_trade": false,
   "raw": {
     "whoami": {
@@ -45,47 +45,47 @@
       "account_id": "idRotUo7VqVp5PUjn8tnfW",
       "performance": [
         {
-          "simpleAbsoluteReturn": -13.09,
+          "simpleAbsoluteReturn": -12.82,
           "timeframe": "MAX"
         },
         {
-          "simpleAbsoluteReturn": -13.09,
-          "timeframe": "SIX_MONTHS"
-        },
-        {
-          "simpleAbsoluteReturn": -13.09,
+          "simpleAbsoluteReturn": -12.82,
           "timeframe": "THREE_MONTHS"
         },
         {
-          "simpleAbsoluteReturn": -12.35,
+          "simpleAbsoluteReturn": -12.82,
+          "timeframe": "ONE_MONTH"
+        },
+        {
+          "simpleAbsoluteReturn": -12.08,
           "timeframe": "INTRADAY"
         },
         {
-          "simpleAbsoluteReturn": -12.35,
+          "simpleAbsoluteReturn": -12.08,
           "timeframe": "TWO_DAYS"
         },
         {
-          "simpleAbsoluteReturn": -13.09,
-          "timeframe": "ONE_YEAR"
+          "simpleAbsoluteReturn": -12.82,
+          "timeframe": "SIX_MONTHS"
         },
         {
-          "simpleAbsoluteReturn": -13.09,
+          "simpleAbsoluteReturn": -12.82,
           "timeframe": "ONE_WEEK"
         },
         {
-          "simpleAbsoluteReturn": -13.09,
-          "timeframe": "ONE_MONTH"
+          "simpleAbsoluteReturn": -12.82,
+          "timeframe": "ONE_YEAR"
         }
       ],
       "portfolio_id": "uNVGhixHaw2nhApzFvKpJQ",
       "timestamps": {
         "inventory_timestamp_utc": "2026-10-22T01:13:26.448Z",
-        "valuation_timestamp_utc": "2026-10-22T16:53:59.992Z"
+        "valuation_timestamp_utc": "2026-10-22T19:17:08.433Z"
       },
       "valuation": {
         "crypto": 0,
-        "securities": 388.45,
-        "total": 986.91
+        "securities": 388.72,
+        "total": 987.18
       }
     },
     "holdings": {
@@ -101,10 +101,10 @@
           "quantity": 3,
           "quote_currency": "EUR",
           "quote_is_outdated": false,
-          "quote_mid_price": 72.22,
-          "quote_timestamp_utc": "2026-10-22T16:53:56.499Z",
+          "quote_mid_price": 72.365,
+          "quote_timestamp_utc": "2026-10-22T19:17:01.433Z",
           "security_type": "ETF",
-          "valuation": 216.66,
+          "valuation": 217.1,
           "valuation_currency": "EUR"
         },
         {
@@ -116,10 +116,10 @@
           "quantity": 2,
           "quote_currency": "EUR",
           "quote_is_outdated": false,
-          "quote_mid_price": 85.905,
-          "quote_timestamp_utc": "2026-10-22T16:53:47.791Z",
+          "quote_mid_price": 85.81,
+          "quote_timestamp_utc": "2026-10-22T19:16:56.374Z",
           "security_type": "ETF",
-          "valuation": 171.81,
+          "valuation": 171.62,
           "valuation_currency": "EUR"
         }
       ],
@@ -138,6 +138,6 @@
       "portfolio_id": "uNVGhixHaw2nhApzFvKpJQ",
       "possible_taxes": 0
     },
-    "reconciliation_gap_eur": 0.02
+    "reconciliation_gap_eur": 0.0
   }
 }

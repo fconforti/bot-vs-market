@@ -154,3 +154,13 @@ each item in its entry.
   (the event the 2026-10-20 session accepted at entry), and is down 5.0% from its fill. Data
   point for the research loop on whether known single-holding earnings within a few days of
   entry are worth a rule; one case proves nothing.
+- 2026-10-22 (live, third session): Allianz's 12-1 momentum went from +32.0% (rank 10, last
+  close 2026-10-20) to +23.4% (rank 17) once its 21–22 October closes arrived. The window
+  seems to be anchored on each instrument's own last date, so a stale instrument is ranked on
+  a window shifted against the others. Check in `strategy/` whether this is the case, and
+  whether a stale instrument should be excluded from ranking instead (it did not affect any
+  order here: Allianz does not fit a slot).
+- 2026-10-22 (live, third session): rule interpretation used today: after an auth failure,
+  "stop trading for today" was applied to the calendar day, so a later session that day with
+  a restored login also refused. If the owner meant "this session", say so in the prompt or
+  MANDATE.md.
