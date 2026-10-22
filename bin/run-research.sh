@@ -40,7 +40,7 @@ if ! wait_for_network 600; then
   echo "network unavailable for 10 minutes; not starting."
   exit 7
 fi
-if sc whoami --json >/dev/null 2>&1; then export FINANCE_SC_MODE=live; else export FINANCE_SC_MODE=none; fi
+if uv run python bin/broker-check.py; then export FINANCE_SC_MODE=live; else export FINANCE_SC_MODE=none; fi
 
 PROMPT="$(cat prompts/research.md)"
 ALLOWED=(

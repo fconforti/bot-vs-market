@@ -42,3 +42,21 @@ which had been empty until the first live run and is rewritten daily as the seri
 grows. The hook now checks that file structurally instead: earlier points must survive
 unchanged, and the fixed fields never change. Nothing about the orders themselves was
 affected; the broker had both.
+
+## 2026-10-21: no session, the broker login had expired
+
+The CLI login made on 2026-10-19 at about 15:57 was gone by the 18:17 run two days
+later (`no_session`). The session aborted at its first check, as designed, and no
+order was proposed. Scalable does not document the login lifetime; the next login
+will show whether two days is fixed. The owner logged in again on 2026-10-22 at 08:43.
+
+## 2026-10-22: a valid login was reported as expired
+
+The 18:16 run aborted as "not logged in", but the login was valid. The CLI could not
+reach Scalable's sign-in server to verify it (`network_error`, `internal_error`): on
+the same Wi-Fi, two calls out of three failed and the third succeeded. The runner
+treated any failed check as an expired login and did not retry. Since then, broker
+calls that cannot place an order are retried on network errors (an order confirmation
+never is), the pre-session check retries for about five minutes, and a broker that
+stays unreachable is reported as such instead of as a missing login. The session was
+then started by hand the same evening.

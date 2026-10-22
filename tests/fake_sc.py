@@ -56,6 +56,15 @@ def main(argv):
         return 10
     env = json.loads(path.read_text(encoding="utf-8"))
     exit_code = int(env.pop("_exit", 0))
+    fail_times = int(env.pop("_fail_times", 0))
+    if fail_times:   # the first N calls fail like a dropped connection
+        counter = path.with_name(path.name + ".count")
+        n = int(counter.read_text()) if counter.exists() else 0
+        counter.write_text(str(n + 1))
+        if n < fail_times:
+            print(json.dumps({"ok": False, "command": key, "error": {"code": "network_error",
+                              "message": "fake sc: error sending request"}}))
+            return 30
 
     prices = {}
     pfile = fixtures / "prices.json"

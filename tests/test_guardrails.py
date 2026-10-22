@@ -259,3 +259,31 @@ def test_bug_in_checks_never_confirms(gr, repo, fake_sc, snapshot, monkeypatch):
     t = trades.load(p)
     assert t["status"] == "aborted" and "synthetic bug" in t["reason"]
     assert fake_sc.trade_calls(confirm=True) == []
+
+
+def test_read_calls_retry_transient_errors(fake_sc):
+    """2026-10-22: a valid login failed `sc whoami` on network errors and the session
+    aborted as "not logged in". Read-only calls retry; the third attempt succeeds."""
+    from finance import sc
+    fake_sc.patch("whoami.json", _fail_times=2)
+    sc.whoami()
+    assert [c[0] for c in fake_sc.calls()] == ["whoami"] * 3
+
+
+def test_retries_give_up_and_report_transient(fake_sc):
+    from finance import sc
+    fake_sc.patch("whoami.json", _fail_times=10)
+    with pytest.raises(sc.ScError) as exc:
+        sc.whoami()
+    assert sc.is_transient(exc.value) and len(fake_sc.calls()) == 4
+
+
+def test_confirm_is_never_retried(fake_sc):
+    """A lost confirm response may hide a placed order: one attempt only."""
+    from finance import sc
+    fake_sc.patch("broker.trade.buy.confirm.json", _fail_times=1)
+    args = sc.trade_args("buy", "IE00B4L5Y983", eur_amount=None, quantity=1, order_type="market",
+                         limit_price=None, stop_price=None, venue=None, confirm="abc")
+    with pytest.raises(sc.ScError):
+        sc.trade_confirm(args)
+    assert len(fake_sc.trade_calls(confirm=True)) == 1

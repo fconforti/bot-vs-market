@@ -54,6 +54,7 @@ def fake_sc(tmp_path, monkeypatch):
     monkeypatch.setenv("SC_BIN", str(REPO / "tests" / "fake_sc.py"))
     monkeypatch.setenv("FINANCE_SC_FIXTURES", str(fx))
     monkeypatch.setenv("FINANCE_SC_CALLLOG", str(log))
+    monkeypatch.setenv("FINANCE_SC_RETRY_DELAYS", "0,0,0")
 
     class Fake:
         dir = fx

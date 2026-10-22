@@ -14,6 +14,7 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import time
 from dataclasses import dataclass
 from typing import Any
 
@@ -68,8 +69,37 @@ def _safe_env() -> dict[str, str]:
     return dict(os.environ)
 
 
+# This machine's Wi-Fi drops requests a few times a day; on 2026-10-22 `sc whoami`
+# failed on two calls out of three with network_error/internal_error while the login
+# was valid. Calls that cannot place an order are retried on such errors. A confirm
+# (`--confirm`) is never retried: a lost response may hide an order that was placed.
+TRANSIENT_CODES = {"network_error", "internal_error", "timeout", "service_unavailable"}
+
+
+def retry_delays() -> list[float]:
+    raw = os.environ.get("FINANCE_SC_RETRY_DELAYS", "5,15,30")
+    return [float(x) for x in raw.split(",") if x.strip()]
+
+
+def is_transient(exc: "ScError") -> bool:
+    return exc.exit_code == EXIT_NETWORK or (exc.error_code or "") in TRANSIENT_CODES
+
+
 def run(args: list[str], *, timeout: int = DEFAULT_TIMEOUT) -> ScResult:
-    """Run `sc <args> --json` and return the parsed `data`. Raises ScError otherwise."""
+    """Run `sc <args> --json` and return the parsed `data`. Raises ScError otherwise.
+    Transient failures are retried, except for order confirmations."""
+    delays = [] if "--confirm" in args else retry_delays()
+    for attempt in range(len(delays) + 1):
+        try:
+            return _run_once(args, timeout=timeout)
+        except ScError as exc:
+            if attempt >= len(delays) or not is_transient(exc):
+                raise
+            time.sleep(delays[attempt])
+    raise AssertionError("unreachable")
+
+
+def _run_once(args: list[str], *, timeout: int) -> ScResult:
     argv = [sc_bin(), *args]
     if "--json" not in argv:
         argv.append("--json")

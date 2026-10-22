@@ -60,7 +60,12 @@ if ! wait_for_network 600; then
 fi
 
 # --- broker session ---------------------------------------------------------
-if sc whoami --json >/dev/null 2>&1; then
+# Retries network errors for about five minutes; tells "not logged in" (3) apart from
+# "broker unreachable" (8). Before 2026-10-22 both were reported as an expired login.
+BROKER_RC=0
+BROKER_MSG="$(uv run python bin/broker-check.py)" || BROKER_RC=$?
+echo "broker check: $BROKER_MSG"
+if [[ $BROKER_RC == 0 ]]; then
   export FINANCE_SC_MODE=live
 else
   if [[ $DRY_RUN == 1 ]]; then
@@ -72,21 +77,30 @@ else
   else
     export FINANCE_SC_MODE=none
     JOURNAL="journal/$TODAY.md"
+    if [[ $BROKER_RC == 8 ]]; then
+      WHY="the broker could not be reached for about five minutes (network errors); the login itself was not the problem"
+      ACTION="nothing, unless it repeats; the next scheduled run tries again"
+      SHORT="broker unreachable"
+    else
+      WHY="the Scalable CLI session is missing or expired"
+      ACTION="run \`sc login\` on the machine, then \`sc whoami --json\`"
+      SHORT="sc not logged in"
+    fi
     if [[ ! -f "$JOURNAL" ]]; then
       {
         echo "# $TODAY — aborted before start"
         echo
         echo "- **Status:** aborted"
-        echo "- **Reason:** \`sc whoami\` failed: the Scalable CLI session is missing or expired. No orders were placed."
-        echo "- **Action for the owner:** run \`sc login\` on the machine, then \`sc whoami --json\`."
+        echo "- **Reason:** $WHY. No orders were placed."
+        echo "- **Action for the owner:** $ACTION."
         echo "- Written by \`bin/run-session.sh\`, not by the agent."
       } > "$JOURNAL"
       uv run python bin/build-site.py >/dev/null || true
-      git add -A && git commit -q -m "session: $TODAY (aborted: sc not logged in)" || true
+      git add -A && git commit -q -m "session: $TODAY (aborted: $SHORT)" || true
       push_with_retry || echo "push failed (GH_TOKEN missing or network)"
     fi
-    echo "sc not logged in; aborted and journaled."
-    exit 3
+    echo "$SHORT; aborted and journaled."
+    exit "$BROKER_RC"
   fi
 fi
 
