@@ -164,3 +164,25 @@ each item in its entry.
   "stop trading for today" was applied to the calendar day, so a later session that day with
   a restored login also refused. If the owner meant "this session", say so in the prompt or
   MANDATE.md.
+- 2026-10-23 (live, 21:17): **fills 3 and 4.** S&P 500 Energy ETF, 17 at 13.232 (the ask);
+  MSCI World Energy ETF, 3 at 74.76 (the ask). Both spreads were about 0.75% (13.132/13.232,
+  74.20/74.76), three times the model's 0.25% for ETFs; cost vs mid +0.38% each. Vs the Xetra
+  close almost nothing (+0.05%, -0.04%), because the funds kept moving after 17:30. Four fills
+  so far: spreads 0.30%, 0.59%, 0.75%, 0.75%. Two of them were at 21:17, after the Xetra close,
+  so this sample is not the 18:15 one; keep separating fills by time of day before changing the
+  model.
+- 2026-10-23 (live): the MSCI World Energy preview at 19:17:55Z carried a quote timestamped
+  19:10:09Z (almost 8 minutes old) with `is_outdated: false`. The fill came at that same ask, so
+  it cost nothing today. Worth a guardrail check: reject or flag a preview whose quote is older
+  than, say, 2 minutes. Plumbing, for the owner.
+- 2026-10-23 (live): **the concentration is now in the portfolio.** After today's buys about
+  45% of NAV is in the two energy ETFs (the same US majors dominate both) and another 22% in the
+  value ETF, which is itself heavy in energy and financials. Bought on a day both rose 4%+ on
+  US-Iran headlines. Same request as 2026-10-15/16 and 2026-10-22: measure in the backtest how
+  often the top-4 holds two funds of the same sector and what a one-per-sector rule would do.
+- 2026-10-23 (live): this session started at 21:13, three hours after the scheduled 18:15,
+  because the 18:16 run aborted on the login. Orders filled at 21:17, while US markets were
+  still open and well after the Xetra close used for sizing. The strategy's prices were final,
+  but the fills reflect three more hours of trading. If late manual reruns become common, the
+  research session should check whether the cost model and the "close plus half spread"
+  assumption still hold for them.
