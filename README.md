@@ -18,6 +18,7 @@ This section is kept current by whoever last worked on the repo (the build agent
 
 | Date | State |
 |---|---|
+| 2026-10-23 | Aborted again: the login made the evening before was deleted by the CLI itself. Upstream bug (ScalableCapital/scalable-cli#38): if the check after a token refresh hits one dropped network request, sc 1.1.0 throws away a valid login. **sc upgraded to 1.2.0**, which keeps the login and returns a retryable error. Scalable's documented limits: 20-minute access token, **24 hours idle**, **7 days maximum from `sc login`**. A keep-alive timer (`finance-keepalive.timer`, every 8 hours) covers the idle limit over weekends; the owner still has to log in once a week. |
 | 2026-10-22 | Two days without a session. 10-21: the broker login had expired after at most about 50 hours. 10-22: the login was valid, but Scalable's sign-in server was intermittently unreachable over Wi-Fi and the runner reported it as an expired login. Read-only broker calls now retry on network errors (confirms never do), the pre-session check (`bin/broker-check.py`) retries for about five minutes and tells "not logged in" apart from "unreachable". 65 tests pass. |
 | 2026-10-20 | Site: journal entries are split into a reader-facing part and a folded "Technical log" (the daily prompt now writes them that way; older entries are split by section). Mistakes page shows wrong decisions only; failures of the machinery go to `OPERATIONS.md` and a new Operations page (footer link). Two technical entries already in `MISTAKES.md` are reclassified there, append-only. Fixed page overflow from code blocks and bare URLs. Universe trimmed from 44 to 42 instruments: the two cash-like ETFs no version ever bought are gone, also from the CLI allow-list. |
 | 2026-10-20 | **Live, no trade yet.** Timers on since 2026-10-19 (daily 18:15, research Saturday 10:00). The first scheduled run (10-19 18:16) exited at once on a live-only bash bug; the retry died on the machine's Wi-Fi (about 20 drops a day), as had the 16:03 dry run. A manual 09:01 run on 10-20 declined both buys: wrong time, 1.5% morning spreads, and a cached 10-19 'close' that was an intraday price. Fixed since: runners wait for the network and retry pushes; live sessions only run 17:45 to 21:30; the price refresh never stores an unfinished bar and fills a day Yahoo's daily series lacks from its last hourly bar; the site builds from live snapshots; a second session on the same day can append to the journal (only that day, only by adding lines); snapshots are redacted like trade files. Email alerts built, not yet configured. 58 tests pass. **Evening: first two real orders executed** (2 VanEck Semiconductor ETF, 3 Xtrackers MSCI World Value ETF, EUR 1.98 in fees). The session's commit was refused by two pre-commit hooks (the confirm response's idempotency key looked like a secret; the benchmark series file changed for the first time), so the site was published by hand that evening; both hooks fixed. |
@@ -154,10 +155,9 @@ site and never feed the equity curve.
 
 ```sh
 mkdir -p ~/.config/systemd/user
-cp systemd/finance.service systemd/finance.timer \
-   systemd/finance-research.service systemd/finance-research.timer ~/.config/systemd/user/
+cp systemd/finance*.service systemd/finance*.timer ~/.config/systemd/user/
 systemctl --user daemon-reload
-systemctl --user enable --now finance.timer finance-research.timer
+systemctl --user enable --now finance.timer finance-research.timer finance-keepalive.timer
 systemctl --user list-timers
 journalctl --user -u finance.service -f
 ```

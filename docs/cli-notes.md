@@ -2,7 +2,7 @@
 
 What the tool actually exposes, learned from `sc capabilities --json` (saved as
 `docs/sc-capabilities.json`), `sc <cmd> --help`, the README and the public Rust source
-of `ScalableCapital/scalable-cli` (v1.1.0). Everything in this repo is built against
+of `ScalableCapital/scalable-cli` (v1.1.0; running 1.2.0 since 2026-10-23). Everything in this repo is built against
 this, not against assumptions. Items marked **VERIFY** need a logged-in account; the read-only ones were verified on 2026-10-19.
 
 ## Envelope and exit codes
@@ -38,6 +38,14 @@ Exit codes: `0` ok, `1` generic error, `10` validation error, `20` auth/config e
   Observed: the login of 2026-10-19 ~15:57 was gone by 2026-10-21 18:17
   (`no_session`), i.e. it lasted at most about 50 hours, despite daily use. Watch
   the next one to see whether that is a fixed lifetime.
+  **Documented since (vendor automation guide, "Session lifetimes and refresh"):**
+  access token 20 minutes (refreshed by the CLI), idle timeout 24 hours without an
+  authenticated request (read-only requests count), maximum 7 days from `sc login`.
+  The short lifetimes we saw were not these limits but upstream bug #38: in 1.1.0 a
+  transient failure while verifying a refreshed token (one dropped DNS packet is
+  enough) deleted the session (`refresh_relogin_required`). Fixed in 1.2.0, which
+  saves the rotated refresh token first and returns `refresh_retryable` (exit 30);
+  `finance.sc` retries that like a network error.
 - `SC_CONFIG_DIR` overrides the config directory.
 - `sc login --local-read-only` blocks write commands locally. Useful for a first week
   of paper trading: the guardrails preview still works, the confirm is refused by

@@ -71,9 +71,11 @@ def _safe_env() -> dict[str, str]:
 
 # This machine's Wi-Fi drops requests a few times a day; on 2026-10-22 `sc whoami`
 # failed on two calls out of three with network_error/internal_error while the login
-# was valid. Calls that cannot place an order are retried on such errors. A confirm
+# was valid. Calls that cannot place an order are retried on such errors, and on
+# `refresh_retryable` (sc >= 1.2.0: the refresh token was rotated and saved, only the
+# verification failed; the vendor says to retry the same command). A confirm
 # (`--confirm`) is never retried: a lost response may hide an order that was placed.
-TRANSIENT_CODES = {"network_error", "internal_error", "timeout", "service_unavailable"}
+TRANSIENT_CODES = {"network_error", "internal_error", "timeout", "service_unavailable", "refresh_retryable"}
 
 
 def retry_delays() -> list[float]:

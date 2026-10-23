@@ -130,9 +130,9 @@ Then enable the timers:
 
 ```sh
 mkdir -p ~/.config/systemd/user
-cp systemd/finance.service systemd/finance.timer systemd/finance-research.service systemd/finance-research.timer ~/.config/systemd/user/
+cp systemd/finance*.service systemd/finance*.timer ~/.config/systemd/user/
 systemctl --user daemon-reload
-systemctl --user enable --now finance.timer finance-research.timer
+systemctl --user enable --now finance.timer finance-research.timer finance-keepalive.timer
 systemctl --user list-timers
 loginctl enable-linger filippo   # otherwise the timers only fire while you are logged in
 ```

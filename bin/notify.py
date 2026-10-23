@@ -47,6 +47,13 @@ def _journalctl(unit: str, lines: int = 40) -> str:
 
 
 def failure_message(unit: str) -> tuple[str, str]:
+    if "keepalive" in unit:
+        return ("Bot vs Market: Scalable login expired, no trading until you log in",
+                f"The keep-alive check ({unit}) found no valid Scalable CLI login at "
+                f"{datetime.now().astimezone():%Y-%m-%d %H:%M %Z}.\n\n"
+                "Fix: on the machine, run `sc login`, then `sc whoami --json`.\n"
+                "Logins last at most seven days from `sc login`, whatever the bot does.\n\n"
+                f"--- journalctl --user -u {unit} ---\n{_journalctl(unit)}")
     kind = "research" if "research" in unit else "session"
     logs = sorted(STATE_DIR.glob("research-*.log" if kind == "research" else "session-*.log"),
                   key=lambda p: p.stat().st_mtime)

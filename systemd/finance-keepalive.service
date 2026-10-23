@@ -1,0 +1,20 @@
+[Unit]
+Description=finance: keep the Scalable CLI login alive (read-only whoami)
+# Scalable ends a CLI login after 24 hours without a request (vendor automation
+# guide, "Session lifetimes and refresh"); a weekend is longer than that. Any
+# read-only request resets the idle timer. Exit 3 means the login is gone, and
+# the alert tells the owner; 8 (broker unreachable) is not worth an email.
+After=network-online.target
+Wants=network-online.target
+OnFailure=finance-alert@%n.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/personal/bot-vs-market
+EnvironmentFile=%h/.secrets/finance.env
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=XDG_STATE_HOME=%h/.local/state
+ExecStart=/usr/bin/uv run python bin/broker-check.py
+SuccessExitStatus=8
+TimeoutStartSec=15min
+Nice=10

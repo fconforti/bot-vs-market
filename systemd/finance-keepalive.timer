@@ -1,0 +1,10 @@
+[Unit]
+Description=finance: Scalable CLI keep-alive every 8 hours (idle timeout is 24 hours)
+
+[Timer]
+OnCalendar=*-*-* 06,14,22:00 Europe/Rome
+RandomizedDelaySec=600
+Unit=finance-keepalive.service
+
+[Install]
+WantedBy=timers.target

@@ -79,3 +79,16 @@ on the first refresh and for 6 others on a second refresh two minutes later. Aft
 both runs every instrument had prices for the day except Allianz (none for 21 or 22
 October). It did not affect the decision; Allianz cannot be bought at this account
 size.
+
+## 2026-10-23: the CLI deleted a valid login, again
+
+The 18:16 run aborted at its pre-session check: `refresh_relogin_required`. The owner
+had logged in the evening before at 21:14, and the session of 2026-10-22 died the same
+way in mid-run. This is a known bug in the Scalable CLI 1.1.0 (upstream issue #38):
+after refreshing its 20-minute access token, the CLI verifies the new token against
+Scalable's signing keys, and if that one network request fails, it deletes the login.
+On this Wi-Fi a dropped request is common. Version 1.2.0, released on 2026-10-22,
+keeps the login and returns a retryable error instead; it was installed the same
+evening, signature verified. Scalable also documents that a login ends after 24 hours
+without any request, and after seven days in any case. A keep-alive check every eight
+hours now covers weekends; the seven-day limit means the owner logs in once a week.
