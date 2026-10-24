@@ -6,7 +6,7 @@
     bin/notify.py --test                              # check the setup
 
 Reads from the environment (systemd: EnvironmentFile=%h/.secrets/finance.env;
-interactively: direnv). Store them with `framework secret set finance <KEY>`:
+interactively: direnv). Store them with `erin secret set finance <KEY>`:
 
     ALERT_EMAIL     where alerts go, also the Gmail account that sends them
     SMTP_PASSWORD   a Google app password for that account
@@ -90,7 +90,7 @@ def send(subject: str, body: str) -> None:
     to = os.environ.get("ALERT_EMAIL")
     password = os.environ.get("SMTP_PASSWORD")
     if not to or not password:
-        raise SystemExit("ALERT_EMAIL and SMTP_PASSWORD must be set (framework secret set finance <KEY>)")
+        raise SystemExit("ALERT_EMAIL and SMTP_PASSWORD must be set (erin secret set finance <KEY>)")
     msg = EmailMessage()
     msg["From"] = f"Bot vs Market <{to}>"
     msg["To"] = to

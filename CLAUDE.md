@@ -18,7 +18,7 @@ The build spec is `CLAUDE_BRIEF.md`. This file describes the machine as it actua
 
 ## Unattended runs (systemd)
 
-- direnv does not run under systemd, so the services must load the token themselves: `EnvironmentFile=%h/.secrets/finance.env`, instead of the brief's `~/.config/finance/env`. If the services need other secrets, the owner adds them with `framework secret set finance <KEY>`, which writes to the same file.
+- direnv does not run under systemd, so the services must load the token themselves: `EnvironmentFile=%h/.secrets/finance.env`, instead of the brief's `~/.config/finance/env`. If the services need other secrets, the owner adds them with `erin secret set finance <KEY>`, which writes to the same file.
 - With `GH_TOKEN` in the environment, `git push` over HTTPS works as-is. No `GIT_SSH_COMMAND` is needed.
 - User services only run while the owner is logged in unless lingering is on (`loginctl enable-linger filippo`; currently off). Document this in the README next to the enable commands. As the brief says, don't enable anything.
 - `claude -p` uses this machine's existing Claude Code login. No `ANTHROPIC_API_KEY` is needed unless the owner decides to add one.

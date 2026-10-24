@@ -113,8 +113,8 @@ tail. Alerts never go through GitHub, because the repo is public. Setup, once:
 
 ```sh
 # Google account > Security > 2-Step Verification > App passwords: create one for "Bot vs Market"
-framework secret set finance ALERT_EMAIL      # the Gmail address; alerts are sent from and to it
-framework secret set finance SMTP_PASSWORD    # the 16-character app password
+erin secret set finance ALERT_EMAIL      # the Gmail address; alerts are sent from and to it
+erin secret set finance SMTP_PASSWORD    # the 16-character app password
 direnv reload && uv run python bin/notify.py --test
 cp systemd/finance-alert@.service ~/.config/systemd/user/
 ```
