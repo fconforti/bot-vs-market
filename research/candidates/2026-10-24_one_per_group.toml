@@ -1,0 +1,71 @@
+# Candidate 2026-10-24 one_per_group: strategy/params.toml (v002) plus [groups].
+# Everything above [groups] is identical to v002.
+version = "candidate_one_per_group"
+
+[trend]
+isin = "IE00B4L5Y983"
+sma_days = 200
+exit_band = 0.03
+
+[momentum]
+lookback_days = 252
+skip_days = 21
+min_history_days = 260
+
+[selection]
+top_n = 4
+hold_rank = 7
+rebalance_window_days = 3
+exit_on_negative_momentum = true
+exits_only_in_rebalance_window = true
+sleeve_types = ["etf", "stock", "etc", "crypto"]
+
+[sizing]
+target_weight = 0.25
+order_cap_pct_of_nav = 0.24
+min_order_eur = 100
+price_buffer = 0.01
+cash_reserve_eur = 5
+max_orders_per_day = 2
+
+# Near-duplicates: at most one held per group (entry rule only). Written on 2026-10-24
+# from what the instruments hold, before any backtest of this rule was run; not tuned.
+# Instruments not listed are their own group (broad indices, factor funds, single
+# stocks outside the tech cluster, bitcoin, clean energy).
+[groups]
+energy = [
+  "IE00BM67HM91",  # Xtrackers MSCI World Energy
+  "IE00B42NKQ00",  # iShares S&P 500 Energy
+]
+tech = [
+  "IE00BM67HT60",  # Xtrackers MSCI World IT
+  "IE00B3WJKG14",  # iShares S&P 500 IT
+  "IE00BMC38736",  # VanEck Semiconductor
+  "IE00B53SZB19",  # iShares NASDAQ 100
+  "NL0010273215",  # ASML
+  "US67066G1040",  # NVIDIA
+  "US5949181045",  # Microsoft
+  "US0378331005",  # Apple
+]
+financials = [
+  "IE00BM67HL84",  # Xtrackers MSCI World Financials
+  "IE00B4JNQZ49",  # iShares S&P 500 Financials
+]
+health = [
+  "IE00BM67HK77",  # Xtrackers MSCI World Health Care
+  "IE00B43HR379",  # iShares S&P 500 Health Care
+]
+gold = [
+  "DE000A0S9GB0",  # Xetra-Gold
+  "IE00B4ND3602",  # iShares Physical Gold
+  "IE00B6R52036",  # iShares Gold Producers
+]
+broad_world_us = [
+  "IE00B4L5Y983",  # iShares Core MSCI World
+  "IE00B5BMR087",  # iShares Core S&P 500
+]
+europe = [
+  "DE0005933931",  # iShares Core DAX
+  "DE0002635307",  # iShares STOXX Europe 600
+  "IE00B53L3W79",  # iShares Core EURO STOXX 50
+]

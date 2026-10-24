@@ -92,6 +92,21 @@ Chart: `research/backtests/v002.png`. The period ends 2026-10-19 for v002 and
 
 ## Changelog
 
+### Research 2026-10-24 (no new version)
+
+Tested one hypothesis: at most one holding per group of near-duplicate instruments
+(two energy ETFs, the tech/semiconductor cluster, and so on), applied at entries only.
+Groups and the adoption bar were written before the run. The bar was about risk (max
+drawdown at least 3 points better, full period and out of sample) and it failed:
+-25.3% vs -25.1% full period, -17.3% vs -20.2% out of sample. CAGR was higher
+(17.4% vs 16.7%, out of sample 22.9% vs 18.4%) but lower in sample, mostly from one
+year (2024), with 21% more trades. Rejected; not to be retested with other groupings.
+Details: `research/2026-10-24.md`, `research/candidates/2026-10-24_one_per_group.*`.
+
+Correction to the v002 entry below: share-count buys are checked against a preview
+value within **3%** of quantity x quote (`SELL_VOLUME_TOLERANCE = 0.03` in
+`bin/guardrails.py`), not 2%. The code was right; the text was wrong.
+
 ### Universe trim (2026-10-20, no new version)
 
 Two cash-like ETFs (Xtrackers II EUR Overnight Rate Swap, iShares eb.rexx Government
