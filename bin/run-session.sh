@@ -93,7 +93,7 @@ else
         echo "- **Status:** aborted"
         echo "- **Reason:** $WHY. No orders were placed."
         echo "- **Action for the owner:** $ACTION."
-        echo "- Written by \`bin/run-session.sh\`, not by the agent."
+        echo "- This note was added automatically by the scheduler; the agent never started."
       } > "$JOURNAL"
       uv run python bin/build-site.py >/dev/null || true
       git add -A && git commit -q -m "session: $TODAY (aborted: $SHORT)" || true
