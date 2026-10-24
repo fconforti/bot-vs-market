@@ -29,7 +29,7 @@ The build spec is `CLAUDE_BRIEF.md`. This file describes the machine as it actua
 - `gitleaks` 8.30.1 (system package): use it for the pre-commit secret scan, as a local hook calling the system binary.
 - `uv` (system package). Python 3.13 is installed through uv; uv downloads 3.12 by itself if the project pins it.
 - Not installed: `pre-commit`. Use `uv tool run pre-commit` or `uvx pre-commit` rather than installing it system-wide.
-- Installing anything new: system packages come from the official Arch repos via `sudo pacman -S --needed`. Never `pacman -Sy <pkg>`. Ask the owner before using the AUR or running downloaded install scripts. Record every install in `~/system/tools.md`.
+- Installing anything new: system packages come from the official Arch repos via `sudo pacman -S --needed`. Never `pacman -Sy <pkg>`. Ask the owner before using the AUR or running downloaded install scripts. Record every install in `~/erinos/tools.md`.
 
 ## Missing input
 
