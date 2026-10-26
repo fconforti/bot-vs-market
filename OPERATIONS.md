@@ -92,3 +92,15 @@ keeps the login and returns a retryable error instead; it was installed the same
 evening, signature verified. Scalable also documents that a login ends after 24 hours
 without any request, and after seven days in any case. A keep-alive check every eight
 hours now covers weekends; the seven-day limit means the owner logs in once a week.
+
+## 2026-10-26: a bad price row from a year ago distorted the momentum ranking
+
+The price cache holds a row for 2025-10-24 in which five funds (Xtrackers MSCI World
+Value, Momentum, Quality and Minimum Volatility, and iShares Gold Producers) are 15–17%
+higher than on the days before and after; most other ETFs have no price that day at
+all. The moves are not real. On 2026-10-26 that row was exactly the 12-month lookback
+point, so the value fund, which the portfolio holds, showed momentum of +30% instead of
+about +50% and dropped from rank 4 to 11. It blocked nothing and changed no order: all
+slots were full and it was not a monthly exit day. On an exit day, rank 11 would have
+sold the fund. The row leaves the calculation the next day and cannot return to it. The
+cache was not edited; a check for one-day spikes is filed in the research inbox.
