@@ -21,3 +21,9 @@ cleared on 2026-10-24 by the research session
 - **Event week with about 45% of NAV in oil companies.** FOMC 28 Oct, ECB 29 Oct, and
   ExxonMobil (30 Oct) and Chevron report this week. Nothing to do for the daily session;
   a data point for how the concentration accepted on 2026-10-23 behaves around events.
+
+## 2026-10-27
+
+- **Spike diagnosis confirmed.** With the 2025-10-24 row out of the t-252 point, the five
+  affected ETFs returned to their usual ranks (value ETF 11th -> 4th, momentum +47.9%).
+  The row is still in the cache; the 2026-10-26 guard proposal and backtest check stand.
