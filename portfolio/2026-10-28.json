@@ -1,0 +1,858 @@
+{
+  "as_of": "2026-10-28",
+  "nav": 1003.73,
+  "cash": 147.26,
+  "buying_power": 147.26,
+  "positions": [
+    {
+      "isin": "IE00B42NKQ00",
+      "name": "iShares S&P 500 Energy Sector (Acc)",
+      "quantity": 17.0,
+      "price": 13.121,
+      "value_eur": 223.06,
+      "fifo_price": 13.232,
+      "security_type": "ETF"
+    },
+    {
+      "isin": "IE00BL25JM42",
+      "name": "Xtrackers MSCI World Value (Acc)",
+      "quantity": 3.0,
+      "price": 73.915,
+      "value_eur": 221.74,
+      "fifo_price": 72.88,
+      "security_type": "ETF"
+    },
+    {
+      "isin": "IE00BM67HM91",
+      "name": "Xtrackers MSCI World Energy (Acc)",
+      "quantity": 3.0,
+      "price": 74.23,
+      "value_eur": 222.69,
+      "fifo_price": 74.76,
+      "security_type": "ETF"
+    },
+    {
+      "isin": "IE00BMC38736",
+      "name": "VanEck Semiconductor (Acc)",
+      "quantity": 2.0,
+      "price": 94.49,
+      "value_eur": 188.98,
+      "fifo_price": 90.46,
+      "security_type": "ETF"
+    }
+  ],
+  "pending_buy_orders_eur": 0.0,
+  "dry_run": false,
+  "taken_at": "2026-10-28T17:16:27+00:00",
+  "post_trade": false,
+  "raw": {
+    "whoami": {
+      "result": {
+        "personOverview": {
+          "externalId": null,
+          "id": "idRotUo7VqVp5PUjn8tnfW",
+          "locale": "it_IT",
+          "personalDetails": {
+            "firstName": "Filippo",
+            "lastName": "Conforti"
+          }
+        }
+      }
+    },
+    "overview": {
+      "account_id": "idRotUo7VqVp5PUjn8tnfW",
+      "performance": [
+        {
+          "simpleAbsoluteReturn": 3.73,
+          "timeframe": "MAX"
+        },
+        {
+          "simpleAbsoluteReturn": 3.73,
+          "timeframe": "THREE_MONTHS"
+        },
+        {
+          "simpleAbsoluteReturn": 3.73,
+          "timeframe": "ONE_YEAR"
+        },
+        {
+          "simpleAbsoluteReturn": 4.95,
+          "timeframe": "ONE_WEEK"
+        },
+        {
+          "simpleAbsoluteReturn": 3.73,
+          "timeframe": "SIX_MONTHS"
+        },
+        {
+          "simpleAbsoluteReturn": 7.77,
+          "timeframe": "TWO_DAYS"
+        },
+        {
+          "simpleAbsoluteReturn": 3.73,
+          "timeframe": "ONE_MONTH"
+        },
+        {
+          "simpleAbsoluteReturn": 7.77,
+          "timeframe": "INTRADAY"
+        }
+      ],
+      "portfolio_id": "uNVGhixHaw2nhApzFvKpJQ",
+      "timestamps": {
+        "inventory_timestamp_utc": "2026-10-28T01:18:48.649Z",
+        "valuation_timestamp_utc": "2026-10-28T17:16:27.171Z"
+      },
+      "valuation": {
+        "crypto": 0,
+        "securities": 856.47,
+        "total": 1003.73
+      }
+    },
+    "holdings": {
+      "account_id": "idRotUo7VqVp5PUjn8tnfW",
+      "count": 4,
+      "crypto_count": 32,
+      "crypto_items": [
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1135202120",
+              "name": "21shares Aave",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Aave",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "AAVE"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1102728750",
+              "name": "21shares Cardano ETP",
+              "position": null
+            },
+            {
+              "isin": "DE000A3GVKY4",
+              "name": "Bitwise Physical Cardano",
+              "position": null
+            },
+            {
+              "isin": "GB00BNRRF659",
+              "name": "CoinShares Physical Staked Cardano",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Cardano",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "ADA"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1146882316",
+              "name": "21shares Algorand ETP",
+              "position": null
+            },
+            {
+              "isin": "GB00BNRRF105",
+              "name": "CoinShares Physical Staked Algorand",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Algorand",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "ALGO"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1396281391",
+              "name": "21shares Aptos Staking ETP",
+              "position": null
+            },
+            {
+              "isin": "DE000A4AJWU3",
+              "name": "Bitwise Aptos Staking",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Aptos",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "APT"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1304867463",
+              "name": "21shares Arbitrum ETP",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Arbitrum",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "ARB"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "GB00BNRRF980",
+              "name": "CoinShares Physical Staked Cosmos",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Cosmos Hub",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "ATOM"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1135202088",
+              "name": "21shares Avalanche ETP",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Avalanche",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "AVAX"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH0496454155",
+              "name": "21shares Binance BNB ETP",
+              "position": null
+            },
+            {
+              "isin": "GB00BVLNRK36",
+              "name": "CoinShares BNB Staking",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Binance Coin",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "BNB"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH0454664001",
+              "name": "21shares Bitcoin ETP",
+              "position": null
+            },
+            {
+              "isin": "DE000A27Z304",
+              "name": "Bitwise Physical Bitcoin",
+              "position": null
+            },
+            {
+              "isin": "GB00BLD4ZL17",
+              "name": "CoinShares Physical Bitcoin",
+              "position": null
+            },
+            {
+              "isin": "XS2376095068",
+              "name": "Invesco Physical Bitcoin",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Bitcoin",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "BTC"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1431521033",
+              "name": "21shares Dogecoin ETP",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Dogecoin",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "DOGE"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH0593331561",
+              "name": "21shares Polkadot ETP",
+              "position": null
+            },
+            {
+              "isin": "GB00BNRRFW10",
+              "name": "CoinShares Physical Staked Polkadot",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Polkadot",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "DOT"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH0454664027",
+              "name": "21shares Ethereum Staking ETP",
+              "position": null
+            },
+            {
+              "isin": "DE000A3GMKD7",
+              "name": "Bitwise Physical Ethereum",
+              "position": null
+            },
+            {
+              "isin": "GB00BLD4ZM24",
+              "name": "CoinShares Physical Staked Ethereum",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Ethereum",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "ETH"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1471826029",
+              "name": "21shares Hyperliquid Staking ETP",
+              "position": null
+            },
+            {
+              "isin": "GB00BVBJQ593",
+              "name": "CoinShares Hyperliquid Staking",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Hyperliquid",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "HYPE"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1360612134",
+              "name": "21shares Injective Staking ETP",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Injective",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "INJ"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1275043318",
+              "name": "21shares Lido DAO ETP",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Lido DAO",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "LDO"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1100083471",
+              "name": "21shares Chainlink ETP",
+              "position": null
+            },
+            {
+              "isin": "GB00BMWB4910",
+              "name": "CoinShares Physical Chainlink",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Chainlink",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "LINK"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "DE000A3GN5J9",
+              "name": "Bitwise Physical Litecoin",
+              "position": null
+            },
+            {
+              "isin": "GB00BLD4ZP54",
+              "name": "CoinShares Physical Litecoin",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Litecoin",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "LTC"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1129538448",
+              "name": "21shares Polygon ETP",
+              "position": null
+            },
+            {
+              "isin": "GB00BNRRB013",
+              "name": "CoinShares Polygon Staking",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Polygon",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "MATIC"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1162108893",
+              "name": "21shares NEAR Protocol Staking",
+              "position": null
+            },
+            {
+              "isin": "DE000A4A5GV2",
+              "name": "Bitwise NEAR Staking ETP",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "NEAR Protocol",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "NEAR"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1396389921",
+              "name": "21shares Ondo",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Ondo",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "ONDO"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1304867455",
+              "name": "21shares Optimism ETP",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Optimism",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "OP"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1396389939",
+              "name": "21shares Pyth Network",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Pyth Network",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "PYTH"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1396343266",
+              "name": "21shares Render",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Render Token",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "RENDER"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1114873776",
+              "name": "21shares Solana ETP Staking",
+              "position": null
+            },
+            {
+              "isin": "DE000A3GVKZ1",
+              "name": "Bitwise Physical Solana",
+              "position": null
+            },
+            {
+              "isin": "GB00BNRRFY34",
+              "name": "CoinShares Physical Staked Solana",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Solana",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "SOL"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1258969042",
+              "name": "21shares Stacks Staking ETP",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Stacks",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "STX"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1360612159",
+              "name": "21shares Sui Staking ETP",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Sui",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "SUI"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1326116832",
+              "name": "21shares Celestia Staking ETP",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Celestia",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "TIA"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1297762812",
+              "name": "21shares Gram Staking",
+              "position": null
+            },
+            {
+              "isin": "GB00BVBM1L91",
+              "name": "CoinShares Toncoin Staking",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Toncoin",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "TON"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1135202096",
+              "name": "21shares Uniswap ETP",
+              "position": null
+            },
+            {
+              "isin": "GB00BNRRG624",
+              "name": "CoinShares Physical Uniswap",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Uniswap",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "UNI"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH1109575535",
+              "name": "21shares Stellar ETP",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Stellar",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "XLM"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH0454664043",
+              "name": "21shares XRP ETP",
+              "position": null
+            },
+            {
+              "isin": "DE000A3GYNB0",
+              "name": "Bitwise Physical XRP",
+              "position": null
+            },
+            {
+              "isin": "GB00BLD4ZN31",
+              "name": "CoinShares Physical XRP",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "XRP",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "XRP"
+        },
+        {
+          "etp_positions": [
+            {
+              "isin": "CH0491507486",
+              "name": "21shares Tezos ETP Staking",
+              "position": null
+            },
+            {
+              "isin": "GB00BMWB4803",
+              "name": "CoinShares Physical Staked Tezos",
+              "position": null
+            }
+          ],
+          "kind": "crypto",
+          "name": "Tezos",
+          "position": {
+            "filled": 0,
+            "pending": 0,
+            "sellable": 0
+          },
+          "ticker": "XTZ"
+        }
+      ],
+      "items": [
+        {
+          "blocked_quantity": 0,
+          "fifo_price": 13.232,
+          "isin": "IE00B42NKQ00",
+          "kind": "security",
+          "name": "iShares S&P 500 Energy Sector (Acc)",
+          "pending_quantity": 0,
+          "quantity": 17,
+          "quote_currency": "EUR",
+          "quote_is_outdated": false,
+          "quote_mid_price": 13.121,
+          "quote_timestamp_utc": "2026-10-28T17:16:20.622Z",
+          "security_type": "ETF",
+          "valuation": 223.06,
+          "valuation_currency": "EUR"
+        },
+        {
+          "blocked_quantity": 0,
+          "fifo_price": 72.88,
+          "isin": "IE00BL25JM42",
+          "kind": "security",
+          "name": "Xtrackers MSCI World Value (Acc)",
+          "pending_quantity": 0,
+          "quantity": 3,
+          "quote_currency": "EUR",
+          "quote_is_outdated": false,
+          "quote_mid_price": 73.915,
+          "quote_timestamp_utc": "2026-10-28T17:16:22.096Z",
+          "security_type": "ETF",
+          "valuation": 221.74,
+          "valuation_currency": "EUR"
+        },
+        {
+          "blocked_quantity": 0,
+          "fifo_price": 74.76,
+          "isin": "IE00BM67HM91",
+          "kind": "security",
+          "name": "Xtrackers MSCI World Energy (Acc)",
+          "pending_quantity": 0,
+          "quantity": 3,
+          "quote_currency": "EUR",
+          "quote_is_outdated": false,
+          "quote_mid_price": 74.23,
+          "quote_timestamp_utc": "2026-10-28T16:59:21.357Z",
+          "security_type": "ETF",
+          "valuation": 222.69,
+          "valuation_currency": "EUR"
+        },
+        {
+          "blocked_quantity": 0,
+          "fifo_price": 90.46,
+          "isin": "IE00BMC38736",
+          "kind": "security",
+          "name": "VanEck Semiconductor (Acc)",
+          "pending_quantity": 0,
+          "quantity": 2,
+          "quote_currency": "EUR",
+          "quote_is_outdated": false,
+          "quote_mid_price": 94.49,
+          "quote_timestamp_utc": "2026-10-28T17:16:21.818Z",
+          "security_type": "ETF",
+          "valuation": 188.98,
+          "valuation_currency": "EUR"
+        }
+      ],
+      "portfolio_id": "uNVGhixHaw2nhApzFvKpJQ",
+      "security_count": 4
+    },
+    "cash_breakdown": {
+      "account_id": "idRotUo7VqVp5PUjn8tnfW",
+      "available_credit_line": 0,
+      "available_for_derivatives": 147.26,
+      "buying_power": 147.26,
+      "buying_power_without_credit": 147.26,
+      "cash_balance": 147.26,
+      "derivatives_buying_power": 147.26,
+      "loaned": 0,
+      "pending_buy_orders_amount": 0,
+      "portfolio_id": "uNVGhixHaw2nhApzFvKpJQ",
+      "possible_taxes": 0
+    },
+    "reconciliation_gap_eur": 0.0
+  }
+}

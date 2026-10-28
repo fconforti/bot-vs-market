@@ -79,3 +79,16 @@ strategy flaws, execution that cost more than the model. Failures of the machine
 
 - ops: 2026-10-20: a rehearsal's intraday prices stayed in the live price cache
 - ops: 2026-10-20: the site builder had never been run with a live snapshot
+
+## 2026-10-27: the market view gave the wrong Brent price
+
+- **What was wrong:** the 2026-10-27 market view said Brent "slipped below USD 110 a
+  barrel". Brent settled that day at USD 113.88 (down USD 1.93); it was US crude (WTI) that
+  fell to about USD 100. The figure came from a single intraday live blog, read as a
+  summary, and was not checked against a settlement report.
+- **What it cost:** no money and no decision: no order was proposed and the market view
+  did not affect the no-trade outcome. It did overstate how far oil had fallen on a day
+  when about 45% of the portfolio is in oil companies, and it was published.
+- **Rule that would have prevented it:** a price level in the market view (oil, an index)
+  needs either a closing or settlement report as its source, or the word "intraday" with
+  the time; when two sources disagree, quote both or neither.

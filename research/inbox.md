@@ -27,3 +27,11 @@ cleared on 2026-10-24 by the research session
 - **Spike diagnosis confirmed.** With the 2025-10-24 row out of the t-252 point, the five
   affected ETFs returned to their usual ranks (value ETF 11th -> 4th, momentum +47.9%).
   The row is still in the cache; the 2026-10-26 guard proposal and backtest check stand.
+
+## 2026-10-28
+
+- **Exit-window margins three sessions out.** Before the first exit window (2–4 Nov), the
+  weakest holding (world energy ETF) ranks 5th at +44.3%, 12.8 points above 7th place
+  (Gold Producers, +31.5%). The two energy ETFs and the value ETF sit within 3.7 points
+  of each other, so they will tend to move in ranks together; a sharp oil reversal could
+  push all three down at once, which v002 would act on in a single window.
