@@ -35,3 +35,11 @@ cleared on 2026-10-24 by the research session
   (Gold Producers, +31.5%). The two energy ETFs and the value ETF sit within 3.7 points
   of each other, so they will tend to move in ranks together; a sharp oil reversal could
   push all three down at once, which v002 would act on in a single window.
+
+## 2026-10-29
+
+- **Spender vs supplier capex reactions.** Alphabet fell 10–12% on capex outrunning cash
+  flow, yet the semiconductor ETF (its suppliers) lost only 0.74%. A data point, not a
+  rule: v002 ignores news by design. If a research session ever looks at a news or
+  event filter, the question is whether hyperscaler capex shocks lead semiconductor
+  momentum breaks by weeks, which 12-1 momentum would only see a month late.

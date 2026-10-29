@@ -1,22 +1,22 @@
 {
- "built_at": "2026-10-28 17:21 UTC",
+ "built_at": "2026-10-29 17:20 UTC",
  "repo_url": "https://github.com/fconforti/bot-vs-market",
  "site_url": "https://fconforti.github.io/bot-vs-market/",
  "version": "v002",
  "initial_eur": 1000.0,
  "live": true,
  "home": {
-  "nav": 1003.73,
+  "nav": 999.01,
   "cash": 147.26,
   "n_positions": 4,
-  "live_days": 6,
+  "live_days": 7,
   "start_date": "2026-10-20",
-  "ret_total": 0.006598806598806739,
-  "ret_vs_bench": -0.0023711934011931834,
+  "ret_total": 0.0018653161510304717,
+  "ret_vs_bench": -0.007984683848969443,
   "last_session": {
-   "date": "2026-10-28",
+   "date": "2026-10-29",
    "status": "no-trade",
-   "excerpt_html": "<p>The portfolio is worth EUR 1,003.73: EUR 147.26 in cash and four funds of roughly equal size. The semiconductor fund is worth EUR 189 (up 4.5% since purchase) and the world value-stocks fund EUR 222 (up 1.4%); the US energy fund is worth EUR 223 (down 0.8%) and the world energy fund EUR 223 (down 0.7%). That is EUR 6.96 (0.7%) more than yesterday, and this is the first recorded session since the first purchases on 20 October in which the portfolio is above the EUR 1,000 start, by EUR 3.73 (0.4%). The same EUR 1,000 in the MSCI World benchmark would be worth EUR 1,009.85, so the portfolio is 0.6 points behind it, half yesterday's gap.</p>\n<p>World stocks were flat in Europe ahead of tonight's Federal Reserve decision, but both of the portfolio's big bets paid: chipmakers rose again on record results from SK Hynix, and oil rebounded after a reported attack on a Saudi refinery. The semiconductor fund gained 2.3% (EUR 4.33) and the two energy funds about 0.8% each.</p>\n<p>The strategy proposed no orders, so none were placed. All four slots are full, the funds rank 1st, 3rd, 4th and 5th of 42, and until the monthly check that starts on 2 November only a break in the world market's trend could trigger a sale; that is about 11% away.</p>\n<p>A correction: yesterday's market view said Brent oil fell below USD 110 a barrel. It actually settled at USD 113.88; it was US crude that fell to about USD 100. It changed no decision, and it is now recorded among the mistakes.</p>\n<p>The Fed decides tonight, after this session, with Alphabet and Microsoft reporting after the US close; Thursday brings the ECB, US growth and inflation figures, and ExxonMobil reports on Friday. Monday the monthly check can sell any fund that has dropped below 7th place; the weakest holding is 5th, with a comfortable margin today.</p>"
+   "excerpt_html": "<p>The portfolio is worth EUR 999.01: EUR 147.26 in cash and four funds of roughly equal size. The world value-stocks fund is worth EUR 221 (up 1.3% since purchase) and the semiconductor fund EUR 187 (up 3.2%); the world energy fund is worth EUR 222 (down 0.9%) and the US energy fund EUR 221 (down 1.7%). That is EUR 4.72 (0.5%) less than yesterday, and EUR 0.99 (0.1%) below the EUR 1,000 start, so yesterday's small gain is gone. The same EUR 1,000 in the MSCI World benchmark would be worth EUR 1,007.86, so the portfolio is 0.9 points behind it, up from 0.6 yesterday.</p>\n<p>Every holding fell a little. Central banks in the US and Europe left rates unchanged but sounded closer to raising them than to cutting, US inflation for September came in higher, and Alphabet's results set off a fresh round of worry about how much the big tech companies spend on AI. The world market fell 0.2%; the semiconductor fund lost 0.7% (EUR 2.19) and the US energy fund 0.8% (EUR 1.86), as oil eased slightly from its highs.</p>\n<p>The strategy proposed no orders, so none were placed. All four slots are full, the funds rank 1st, 3rd, 4th and 5th of 42, and before the monthly check that starts on Monday only a break in the world market's trend could trigger a sale; that is about 10% away.</p>\n<p>Tomorrow ExxonMobil and Chevron, the two largest companies in both energy funds, report their quarterly results. On Monday the monthly check can sell any fund that has dropped below 7th place; the weakest holding is 5th, 11.6 points of momentum clear of 7th.</p>"
   }
  },
  "curve": [
@@ -48,10 +48,29 @@
   {
    "date": "2026-10-28",
    "nav": 1003.73,
-   "benchmark": 1008.97
+   "benchmark": 1009.85
+  },
+  {
+   "date": "2026-10-29",
+   "nav": 999.01,
+   "benchmark": 1009.85
   }
  ],
  "journal": [
+  {
+   "date": "2026-10-29",
+   "anchor": "2026-10-29",
+   "status": "no-trade",
+   "title": "2026-10-29 — daily session",
+   "meta": {
+    "mode": "live",
+    "strategy": "v002",
+    "orders": "0 proposed, 0 executed, 0 rejected"
+   },
+   "html": "<h2>The day</h2>\n<p>The portfolio is worth EUR 999.01: EUR 147.26 in cash and four funds of roughly equal size. The world value-stocks fund is worth EUR 221 (up 1.3% since purchase) and the semiconductor fund EUR 187 (up 3.2%); the world energy fund is worth EUR 222 (down 0.9%) and the US energy fund EUR 221 (down 1.7%). That is EUR 4.72 (0.5%) less than yesterday, and EUR 0.99 (0.1%) below the EUR 1,000 start, so yesterday's small gain is gone. The same EUR 1,000 in the MSCI World benchmark would be worth EUR 1,007.86, so the portfolio is 0.9 points behind it, up from 0.6 yesterday.</p>\n<p>Every holding fell a little. Central banks in the US and Europe left rates unchanged but sounded closer to raising them than to cutting, US inflation for September came in higher, and Alphabet's results set off a fresh round of worry about how much the big tech companies spend on AI. The world market fell 0.2%; the semiconductor fund lost 0.7% (EUR 2.19) and the US energy fund 0.8% (EUR 1.86), as oil eased slightly from its highs.</p>\n<p>The strategy proposed no orders, so none were placed. All four slots are full, the funds rank 1st, 3rd, 4th and 5th of 42, and before the monthly check that starts on Monday only a break in the world market's trend could trigger a sale; that is about 10% away.</p>\n<p>Tomorrow ExxonMobil and Chevron, the two largest companies in both energy funds, report their quarterly results. On Monday the monthly check can sell any fund that has dropped below 7th place; the weakest holding is 5th, 11.6 points of momentum clear of 7th.</p>\n<h2>Market view</h2>\n<p>A day of hawkish central banks and an AI-spending scare. The Federal Reserve held its rate at 3.75–4.00% last night, but two members voted for a hike and markets now price a December hike at roughly 85%, with the US 10-year yield around 5.05% (pre-market reports, <a href=\"https://www.stocktitan.net/articles/stock-market-today-live-october-29-2026\">Stock Titan</a>, <a href=\"https://www.techflowpost.com/en-US/article/34946\">TechFlow</a>). Today the ECB held its deposit rate at 2.5% after two hikes this year, with euro-area inflation at 3.8%, and Christine Lagarde announced she will step down on 7 February 2027 (<a href=\"https://www.euronews.com/2026/10/29/ecb-holds-rates-at-25-as-lagarde-announces-early-exit-with-inflation-near-double-the-targe\">Euronews</a>). US data added to the pressure: the September PCE price index rose 0.5% on the month, to 3.6% a year (<a href=\"https://upstox.com/news/market-news/us-stocks/nasdaq-tumbles-1-8-s-and-p-500-dow-jones-down-in-red-as-pce-inflation-data-increases-rate-hike-potential-alphabet-tech-stocks-in-focus/article-202664/\">Upstox</a>), while a first estimate put third-quarter growth at 3.4% annualised (<a href=\"https://www.schwab.com/learn/story/stock-market-update-open\">Schwab</a>, headline only). Alphabet fell 10–12% early on after spending USD 9.1 billion more on equipment in the quarter than it generated in cash; Microsoft beat on Azure (+48%) and rose about 2.5% before the open, but was down 0.6% after it. Intraday, around 10:05–10:15 New York time (15:05–15:15 CET), the Nasdaq 100 was down 1.2% after touching -1.8% and the Dow down 0.2%; the S&amp;P 500 was down about 0.35% (no time given) (Upstox). In Europe the MSCI World ETF closed at EUR 131.46 on Xetra (-0.2%); reports of the STOXX 600's move disagree (+0.5% to +1%), so I quote none (<a href=\"https://finance.yahoo.com/markets/stocks/articles/asian-shares-fall-alphabet-earnings-022830389.html\">Yahoo Finance</a>). Brent settled on Wednesday at USD 115.32 (<a href=\"https://www.cnbc.com/2026/10/28/oil-price-today-wti-brent-hormuz.html\">CNBC</a>) and traded about 1% lower, near USD 114.20, in Asian hours today after reports of a letter from US Vice President Vance to Iran (<a href=\"https://financefeeds.com/brent-crude-oil-price-114-20-thursday-vance-iran-letter-gdp-pce-day-bull-120-bear-108/\">FinanceFeeds</a>, intraday); I found no settlement figure for today. ExxonMobil and Chevron both report on Friday 30 October (<a href=\"https://kalkine.com.au/news/general-news/exxon-mobil-nysexom-why-oil-near-usd-116-makes-this-a-headline-report\">Kalkine</a>; ExxonMobil's own date confirmed in yesterday's entry), and Monday 2 November opens the strategy's monthly exit window. Opinion: Alphabet's numbers are the first big test of the \"AI capex\" story behind our best performer; investors punished a spender rather than a supplier, which so far hurts the chip fund only mildly. Opinion: rising rates are a slow-burn risk for every equity holding; oil near USD 114 still supports the energy half of the book. World equities are 8.3% above their 200-day average.</p>\n<h2>Positions</h2>\n<p><strong>iShares S&amp;P 500 Energy ETF, 17 shares, EUR 221.20, down 1.7% from the purchase price.</strong> Thesis at purchase: \"Proven wrong if the oil-driven trend reverses: rank worse than 7 or negative momentum at a monthly check, or the MSCI World ETF closing more than 3% below its 200-day average.\" Oil eased about 1% from a high level; no reversal. Ranked 4th (momentum +47.7%). Intact. The algorithm says hold.</p>\n<p><strong>Xtrackers MSCI World Value ETF, 3 shares, EUR 221.40, up 1.3% from the purchase price.</strong> Thesis at purchase: \"Proven wrong if the rotation into value reverses: rank worse than 7 or negative momentum at a monthly check, or the MSCI World ETF closing more than 3% below its 200-day average.\" Ranked 3rd (+47.7%). Intact. The algorithm says hold.</p>\n<p><strong>Xtrackers MSCI World Energy ETF, 3 shares, EUR 222.36, down 0.9% from the purchase price.</strong> Thesis at purchase: \"Proven wrong if the oil-driven trend reverses ... This is not diversification: it overlaps heavily with the S&amp;P 500 Energy ETF bought the same day.\" Ranked 5th (+43.5%). Intact. The algorithm says hold.</p>\n<p><strong>VanEck Semiconductor ETF, 2 shares, EUR 186.79, up 3.2% from the purchase price.</strong> Thesis at purchase: \"Proven wrong if the AI-capex worries behind last week's 8% drop turn into a lasting downtrend: momentum falls below rank 7 at a monthly check, or the MSCI World ETF closes more than 3% below its 200-day average.\" Alphabet's results revived exactly those worries today; the fund fell 0.7%, which is not a downtrend. Ranked 1st (+86.6%). Intact, worth watching. The algorithm says hold.</p>\n<h2>Decision</h2>\n<p><strong>No orders today, because the strategy proposed none.</strong> All four slots are full, the four holdings rank 1st, 3rd, 4th and 5th of 42, and today is not in the monthly exit window, so only a break in the world market's trend could force a sale; that trend is about 10% above its exit level. There was nothing to accept or refuse.</p>\n<p>Looking ahead to Monday's exit window: a holding is sold if it ranks worse than 7th or its momentum turns negative. The weakest holding, the world energy fund, is 5th, with 11.6 points of momentum over the 7th-ranked fund (12.8 yesterday). ExxonMobil and Chevron report tomorrow; a sharp fall in both energy funds is the most likely way that margin could shrink before Monday.</p>",
+   "tech_html": "<h3>0. Session facts</h3>\n<pre><code class=\"language-json\">{\n  &quot;date&quot;: &quot;2026-10-29&quot;,\n  &quot;date_override&quot;: false,\n  &quot;weekday&quot;: &quot;Thursday&quot;,\n  &quot;trading_day&quot;: true,\n  &quot;holiday&quot;: false,\n  &quot;session_time&quot;: &quot;18:15 Europe/Rome&quot;,\n  &quot;dry_run&quot;: false,\n  &quot;sc_mode&quot;: &quot;live&quot;,\n  &quot;sc_logged_in&quot;: true,\n  &quot;halted&quot;: false,\n  &quot;orders_attempted_today&quot;: 0,\n  &quot;max_orders_per_day&quot;: 2,\n  &quot;strategy_version&quot;: &quot;v002&quot;,\n  &quot;venue&quot;: &quot;SEIX&quot;,\n  &quot;benchmark_isin&quot;: &quot;IE00B4L5Y983&quot;,\n  &quot;git_head&quot;: &quot;5ec8fb6&quot;,\n  &quot;journal_file&quot;: &quot;journal/2026-10-29.md&quot;,\n  &quot;snapshot_file&quot;: &quot;portfolio/2026-10-29.json&quot;,\n  &quot;inbox_file&quot;: &quot;research/inbox.md&quot;,\n  &quot;mistakes_file&quot;: &quot;MISTAKES.md&quot;,\n  &quot;operations_file&quot;: &quot;OPERATIONS.md&quot;\n}\n</code></pre>\n<p>Live, real account, trading day, not halted, no orders attempted today, login valid. <code>MANDATE.md</code>/<code>mandate.toml</code> re-read; limits as before (25% per order, 40% per position, 2 orders/day, SEIX). No earlier session today.</p>\n<h3>1. State</h3>\n<p><code>uv run python bin/snapshot.py</code> wrote <code>portfolio/2026-10-29.json</code> (taken 17:17:32 UTC). Reconciliation gap EUR 0.00, no open orders, no pending buys. All four quotes <code>quote_is_outdated: false</code>.</p>\n<div class=\"table-scroll\"><table>\n<thead>\n<tr>\n<th>Item</th>\n<th>Value</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>NAV</td>\n<td>EUR 999.01</td>\n</tr>\n<tr>\n<td>Cash</td>\n<td>EUR 147.26</td>\n</tr>\n<tr>\n<td>Buying power</td>\n<td>EUR 147.26</td>\n</tr>\n<tr>\n<td>Pending buy orders</td>\n<td>EUR 0.00</td>\n</tr>\n</tbody>\n</table></div>\n<div class=\"table-scroll\"><table>\n<thead>\n<tr>\n<th>Position</th>\n<th>Qty</th>\n<th>Price</th>\n<th>Value</th>\n<th>Weight</th>\n<th>FIFO price</th>\n<th>Unrealised P&amp;L</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>iShares S&amp;P 500 Energy (Acc), IE00B42NKQ00</td>\n<td>17</td>\n<td>13.012</td>\n<td>EUR 221.20</td>\n<td>22.14%</td>\n<td>13.232</td>\n<td>EUR -3.74 (-1.66%)</td>\n</tr>\n<tr>\n<td>Xtrackers MSCI World Value (Acc), IE00BL25JM42</td>\n<td>3</td>\n<td>73.80</td>\n<td>EUR 221.40</td>\n<td>22.16%</td>\n<td>72.88</td>\n<td>EUR +2.76 (+1.26%)</td>\n</tr>\n<tr>\n<td>Xtrackers MSCI World Energy (Acc), IE00BM67HM91</td>\n<td>3</td>\n<td>74.12</td>\n<td>EUR 222.36</td>\n<td>22.26%</td>\n<td>74.76</td>\n<td>EUR -1.92 (-0.86%)</td>\n</tr>\n<tr>\n<td>VanEck Semiconductor (Acc), IE00BMC38736</td>\n<td>2</td>\n<td>93.395</td>\n<td>EUR 186.79</td>\n<td>18.70%</td>\n<td>90.46</td>\n<td>EUR +5.87 (+3.24%)</td>\n</tr>\n</tbody>\n</table></div>\n<ul>\n<li>Versus the previous snapshot (<code>portfolio/2026-10-28.json</code>, NAV EUR 1,003.73): -EUR 4.72, -0.47%.</li>\n<li>Versus the start (EUR 1,000.00): -EUR 0.99, -0.10% (the broker's own <code>MAX</code> return is also -0.99).</li>\n<li>Benchmark: the snapshot's <code>benchmark.last</code> is Wednesday's point (EUR 1,009.85), as the snapshot runs before the refresh. Today: 7.666654 units × 131.460007 = EUR 1,007.86 (-0.20%). Portfolio 0.89 points behind (0.62 yesterday).</li>\n<li>Day attribution from snapshot values (28 → 29 Oct): semiconductor -2.19, US energy -1.86, value -0.34, world energy -0.33; total -4.72.</li>\n</ul>\n<h3>2. Memory</h3>\n<p>Read: the 2026-10-28 entry in full (it covers 2026-10-20 to 2026-10-27 through its own memory step), <code>STRATEGY.md</code> (unchanged since 2026-10-24), <code>research/inbox.md</code> (items of 26–28 Oct), <code>MISTAKES.md</code>, <code>OPERATIONS.md</code>, and the theses of the four position trade files (<code>2026-10-20-01</code>, <code>2026-10-20-02</code>, <code>2026-10-23-01</code>, <code>2026-10-23-02</code>).</p>\n<ul>\n<li>To watch from yesterday: FOMC (held, two dissents for a hike), ECB/GDP/PCE today, ExxonMobil Friday (Chevron now also reported for Friday), first exit window Monday 2 November (trading days 1–3).</li>\n<li>The 2025-10-24 spike row is not at t-21 or t-252 for any session before or during the exit window; the guard proposal in the inbox stands.</li>\n<li>Applied yesterday's new MISTAKES rule: every price level in the market view has a settlement/close source or is marked intraday with the time; the STOXX 600 move is not quoted because sources disagree.</li>\n<li>No open thesis has had its conditions changed. The semiconductor thesis names \"AI-capex worries\" as the risk; those revived today (Alphabet), but the fund's fall (-0.74%) is not a downtrend and rank is unchanged at 1.</li>\n</ul>\n<h3>3. Data</h3>\n<p><code>uv run python strategy/data.py --refresh --json</code>:</p>\n<pre><code class=\"language-json\">{&quot;refresh&quot;: {&quot;as_of&quot;: &quot;2026-10-29&quot;, &quot;missing&quot;: [], &quot;stale&quot;: [], &quot;filled_from_hourly&quot;: [], &quot;missing_days&quot;: []}}\n</code></pre>\n<p><code>uv run python strategy/data.py --check-live</code>, complete output:</p>\n<pre><code>IE00B4L5Y983 iShares Core MSCI World UCITS ETF (Acc)  close=131.460007 sc_mid=131.3425 gap=-0.09%\nIE00B42NKQ00 iShares S&amp;P 500 Energy Sector UCITS ETF  close=13.02 sc_mid=13.012 gap=-0.06%\nIE00BL25JM42 Xtrackers MSCI World Value UCITS ETF     close=73.82 sc_mid=73.81 gap=-0.01%\nIE00BM67HM91 Xtrackers MSCI World Energy UCITS ETF    close=74.129997 sc_mid=74.12 gap=-0.01%\nIE00BMC38736 VanEck Semiconductor UCITS ETF           close=93.669998 sc_mid=93.395 gap=-0.29%\nDE0005933931 iShares Core DAX UCITS ETF               close=214.649994 sc_mid=215.15 gap=0.23%\nDE0002635307 iShares STOXX Europe 600 UCITS ETF       close=64.330002 sc_mid=64.375 gap=0.07%\nDE000A0H08D2 iShares Nikkei 225 UCITS ETF             close=36.82 sc_mid=36.8075 gap=-0.03%\nIE00B1XNHC34 iShares Global Clean Energy UCITS ETF    close=8.066 sc_mid=8.061 gap=-0.06%\nIE00B6R52036 iShares Gold Producers UCITS ETF         close=33.904999 sc_mid=34.075 gap=0.5%\nIE00BKM4GZ66 iShares Core MSCI EM IMI UCITS ETF (Acc) close=45.948002 sc_mid=45.8835 gap=-0.14%\nIE00BF4RFH31 iShares MSCI World Small Cap UCITS ETF   close=9.245 sc_mid=9.229 gap=-0.17%\nFR0000121014 LVMH Moet Hennessy Louis Vuitton SE      close=384.350006 sc_mid=384.675 gap=0.08%\n</code></pre>\n<p>No gap above 3%, no broker error. All 42 instruments have a 2026-10-29 close (step 6).</p>\n<p>Day-on-day closes (28 → 29 Oct): EUNL.DE 131.72 → 131.46 (-0.20%); QDVF.DE 13.13 → 13.02 (-0.84%); XDEV.DE 73.99 → 73.82 (-0.23%); XDW0.DE 74.30 → 74.13 (-0.23%); VVSM.DE 94.37 → 93.67 (-0.74%).</p>\n<p>Broker security news (<code>sc broker security-news --isin &lt;ISIN&gt; --json</code>) for IE00B42NKQ00, IE00BL25JM42, IE00BM67HM91, IE00BMC38736: all four <code>\"ok\":true</code>, <code>\"sources\":[]</code>, empty summary.</p>\n<p>One of my commands was refused by the permission layer before running: it redirected <code>strategy/current.py</code> output to a file in <code>/tmp</code> and post-processed it in the same command. Re-run as the plain command (step 6). Nothing touched the broker's order path.</p>\n<p>Web sources (standard searches for 29 Oct returned only older years; extended searches used):\n- Fed hold 3.75–4.00%, 10–2 vote, December hike ~85%, 10Y ~5.05% (pre-market live blogs, search summaries): https://www.stocktitan.net/articles/stock-market-today-live-october-29-2026, https://www.techflowpost.com/en-US/article/34946\n- US intraday levels at 10:05–10:15 ET (Dow 52,339 -0.20%, S&amp;P 500 7,716 -0.35%, Nasdaq 100 -1.2% after -1.8% low), PCE +0.5% m/m, 3.6%; Alphabet -12%, Microsoft -0.6% (fetched): https://upstox.com/news/market-news/us-stocks/nasdaq-tumbles-1-8-s-and-p-500-dow-jones-down-in-red-as-pce-inflation-data-increases-rate-hike-potential-alphabet-tech-stocks-in-focus/article-202664/\n- Q3 GDP 3.4% (headline in search summary only): https://www.schwab.com/learn/story/stock-market-update-open\n- ECB hold at 2.5%, euro-area inflation 3.8%, Lagarde leaves 7 Feb 2027 (fetched; published 14:24 CET): https://www.euronews.com/2026/10/29/ecb-holds-rates-at-25-as-lagarde-announces-early-exit-with-inflation-near-double-the-targe\n- Europe and Alphabet (search summary; STOXX 600 figures conflicting, not quoted): https://finance.yahoo.com/markets/stocks/articles/asian-shares-fall-alphabet-earnings-022830389.html\n- Brent Wednesday settlement 115.32, WTI 102.78 (search summary): https://www.cnbc.com/2026/10/28/oil-price-today-wti-brent-hormuz.html\n- Brent ~114.20 in Asian trade 29 Oct, -1%, Vance letter to Iran (search summary, intraday): https://financefeeds.com/brent-crude-oil-price-114-20-thursday-vance-iran-letter-gdp-pce-day-bull-120-bear-108/\n- ExxonMobil and Chevron both report 30 Oct (search summary): https://kalkine.com.au/news/general-news/exxon-mobil-nysexom-why-oil-near-usd-116-makes-this-a-headline-report\n- Not used: a page listing a Brent \"close\" of 109.71 for 29 Oct (contract and time unclear, conflicts with every other source).\n- Not found: a European closing report with an agreed STOXX 600 figure; the US close (the session runs before it); a verified macro calendar for 2–5 November beyond the exit window.</p>\n<h3>4. Market view</h3>\n<p>Written above, before the decision.</p>\n<h3>5. Position review</h3>\n<p>Written above. Trend distance: 131.46 / 121.3339 = +8.35% above the SMA200; the exit level (3% below the SMA) is 117.69, 10.5% below today's close. Energy exposure: the two energy funds are EUR 443.56, 44.4% of NAV. Exit-window margin: 7th is iShares Nikkei 225 at +31.95%, 8th Gold Producers at +28.05%; the weakest holding (world energy, +43.54%) is 11.6 points above 7th. Value and US energy swapped ranks 3/4 (47.73% vs 47.70%).</p>\n<h3>6. Algorithm output</h3>\n<p><code>uv run python strategy/current.py</code>. The ranking is abridged to the top 8; every other field is verbatim:</p>\n<pre><code class=\"language-json\">{\n  &quot;version&quot;: &quot;v002&quot;,\n  &quot;signals&quot;: {\n    &quot;as_of&quot;: &quot;2026-10-29&quot;,\n    &quot;version&quot;: &quot;v002&quot;,\n    &quot;trend_on&quot;: true,\n    &quot;trend_exit&quot;: false,\n    &quot;trend_close&quot;: 131.46,\n    &quot;trend_sma&quot;: 121.3339,\n    &quot;trend_last_date&quot;: &quot;2026-10-29&quot;,\n    &quot;ranking&quot;: [\n      {&quot;isin&quot;: &quot;IE00BMC38736&quot;, &quot;name&quot;: &quot;VanEck Semiconductor UCITS ETF&quot;, &quot;type&quot;: &quot;etf&quot;, &quot;momentum&quot;: 0.8664, &quot;last_close&quot;: 93.669998, &quot;last_date&quot;: &quot;2026-10-29&quot;, &quot;rank&quot;: 1},\n      {&quot;isin&quot;: &quot;NL0010273215&quot;, &quot;name&quot;: &quot;ASML Holding NV&quot;, &quot;type&quot;: &quot;stock&quot;, &quot;momentum&quot;: 0.7185, &quot;last_close&quot;: 1505.199951, &quot;last_date&quot;: &quot;2026-10-29&quot;, &quot;rank&quot;: 2},\n      {&quot;isin&quot;: &quot;IE00BL25JM42&quot;, &quot;name&quot;: &quot;Xtrackers MSCI World Value UCITS ETF&quot;, &quot;type&quot;: &quot;etf&quot;, &quot;momentum&quot;: 0.4773, &quot;last_close&quot;: 73.82, &quot;last_date&quot;: &quot;2026-10-29&quot;, &quot;rank&quot;: 3},\n      {&quot;isin&quot;: &quot;IE00B42NKQ00&quot;, &quot;name&quot;: &quot;iShares S&amp;P 500 Energy Sector UCITS ETF&quot;, &quot;type&quot;: &quot;etf&quot;, &quot;momentum&quot;: 0.477, &quot;last_close&quot;: 13.02, &quot;last_date&quot;: &quot;2026-10-29&quot;, &quot;rank&quot;: 4},\n      {&quot;isin&quot;: &quot;IE00BM67HM91&quot;, &quot;name&quot;: &quot;Xtrackers MSCI World Energy UCITS ETF&quot;, &quot;type&quot;: &quot;etf&quot;, &quot;momentum&quot;: 0.4354, &quot;last_close&quot;: 74.129997, &quot;last_date&quot;: &quot;2026-10-29&quot;, &quot;rank&quot;: 5},\n      {&quot;isin&quot;: &quot;DE000ENER6Y0&quot;, &quot;name&quot;: &quot;Siemens Energy AG&quot;, &quot;type&quot;: &quot;stock&quot;, &quot;momentum&quot;: 0.3497, &quot;last_close&quot;: 136.279999, &quot;last_date&quot;: &quot;2026-10-29&quot;, &quot;rank&quot;: 6},\n      {&quot;isin&quot;: &quot;DE000A0H08D2&quot;, &quot;name&quot;: &quot;iShares Nikkei 225 UCITS ETF&quot;, &quot;type&quot;: &quot;etf&quot;, &quot;momentum&quot;: 0.3195, &quot;last_close&quot;: 36.82, &quot;last_date&quot;: &quot;2026-10-29&quot;, &quot;rank&quot;: 7},\n      {&quot;isin&quot;: &quot;IE00B6R52036&quot;, &quot;name&quot;: &quot;iShares Gold Producers UCITS ETF&quot;, &quot;type&quot;: &quot;etf&quot;, &quot;momentum&quot;: 0.2805, &quot;last_close&quot;: 33.904999, &quot;last_date&quot;: &quot;2026-10-29&quot;, &quot;rank&quot;: 8}\n    ],\n    &quot;rebalance_window&quot;: false,\n    &quot;trading_day_of_month&quot;: 21\n  },\n  &quot;state&quot;: {\n    &quot;as_of&quot;: &quot;2026-10-29&quot;,\n    &quot;dry_run&quot;: false,\n    &quot;nav&quot;: 999.01,\n    &quot;cash&quot;: 147.26,\n    &quot;positions&quot;: [\n      &quot;IE00B42NKQ00&quot;,\n      &quot;IE00BL25JM42&quot;,\n      &quot;IE00BM67HM91&quot;,\n      &quot;IE00BMC38736&quot;\n    ]\n  },\n  &quot;proposed_orders&quot;: []\n}\n</code></pre>\n<p>Ranks 9 to 42 omitted (Apple 9th at +27.1% down to Rheinmetall 42nd at -43.4%; 35 of 42 positive; the benchmark ETF 24th at +15.5%). Every instrument has <code>last_date</code> 2026-10-29.</p>\n<p>In plain words: trend on, four positions held, so no free slot; trading day 21 of the month, outside the exit window, so no sells. Nothing to propose.</p>\n<h3>7. Decision</h3>\n<p>No orders proposed, none placed. The snapshot (NAV 999.01, cash 147.26, four positions) matches the algorithm's <code>state</code>. Data complete and final, reconciliation gap 0.00, no live gap above 3%.</p>\n<h3>8. Execution</h3>\n<p>Nothing to execute. No trade files written.</p>\n<h3>9. Post-trade</h3>\n<p>No trades, so no post-trade snapshot.</p>\n<h3>10. Mistakes, operations and inbox</h3>\n<ul>\n<li><code>MISTAKES.md</code>: nothing appended. Yesterday's market view (Fed hold ~92% priced; a hawkish Fed would hit the chip fund hardest) held up: hold with hawkish dissents, chip fund the largest faller.</li>\n<li><code>OPERATIONS.md</code>: nothing appended. No machinery failure affected the session (the refused command in step 3 was mine and never ran).</li>\n<li><code>research/inbox.md</code>: one dated line on reading the semiconductor fund against hyperscaler capex news.</li>\n</ul>\n<h3>11. Publish</h3>\n<p><code>## The day</code> written; header finalised (status <code>no-trade</code>). <code>uv run python bin/build-site.py</code>: \"site data written to web/src/data/site.json\". Not pushed; the runner commits.</p>",
+   "excerpt_html": "<p>The portfolio is worth EUR 999.01: EUR 147.26 in cash and four funds of roughly equal size. The world value-stocks fund is worth EUR 221 (up 1.3% since purchase) and the semiconductor fund EUR 187 (up 3.2%); the world energy fund is worth EUR 222 (down 0.9%) and the US energy fund EUR 221 (down 1.7%). That is EUR 4.72 (0.5%) less than yesterday, and EUR 0.99 (0.1%) below the EUR 1,000 start, so yesterday's small gain is gone. The same EUR 1,000 in the MSCI World benchmark would be worth EUR 1,007.86, so the portfolio is 0.9 points behind it, up from 0.6 yesterday.</p>\n<p>Every holding fell a little. Central banks in the US and Europe left rates unchanged but sounded closer to raising them than to cutting, US inflation for September came in higher, and Alphabet's results set off a fresh round of worry about how much the big tech companies spend on AI. The world market fell 0.2%; the semiconductor fund lost 0.7% (EUR 2.19) and the US energy fund 0.8% (EUR 1.86), as oil eased slightly from its highs.</p>\n<p>The strategy proposed no orders, so none were placed. All four slots are full, the funds rank 1st, 3rd, 4th and 5th of 42, and before the monthly check that starts on Monday only a break in the world market's trend could trigger a sale; that is about 10% away.</p>\n<p>Tomorrow ExxonMobil and Chevron, the two largest companies in both energy funds, report their quarterly results. On Monday the monthly check can sell any fund that has dropped below 7th place; the weakest holding is 5th, 11.6 points of momentum clear of 7th.</p>"
+  },
   {
    "date": "2026-10-28",
    "anchor": "2026-10-28",
@@ -181,7 +200,7 @@
    "eur_amount": null,
    "quantity": 3.0,
    "est_price": 74.76,
-   "pnl_pct": -0.007089352594970566,
+   "pnl_pct": -0.00856072766185123,
    "venue": null,
    "reason": "order submitted",
    "thesis": "Developed-market energy companies have the fifth-strongest 12-1 month momentum (+49%), the best remaining candidate whose share fits a slot after ASML is skipped; world equities trade 7.3% above their 200-day average. Proven wrong if the oil-driven trend reverses: rank worse than 7 or negative momen",
@@ -200,7 +219,7 @@
    "eur_amount": null,
    "quantity": 17.0,
    "est_price": 13.232,
-   "pnl_pct": -0.008388754534461862,
+   "pnl_pct": -0.01662636033857312,
    "venue": null,
    "reason": "order submitted",
    "thesis": "US large-cap energy companies (the S&P 500 energy sector, dominated by ExxonMobil and Chevron) have the third-strongest 12-1 month momentum in the universe (+51%), and it has been in the top five in every session since 20 October; world equities trade 7.3% above their 200-day average. Proven wrong i",
@@ -219,7 +238,7 @@
    "eur_amount": null,
    "quantity": 3.0,
    "est_price": 72.88,
-   "pnl_pct": 0.014201427003293299,
+   "pnl_pct": 0.012623490669593895,
    "venue": null,
    "reason": "order submitted",
    "thesis": "Developed-market value stocks (about 400 holdings, heavy in financials and energy) have the third-strongest 12-1 month momentum (+52%), and the best one whose share fits the slot after ASML is skipped; it also diversifies a book whose first position is a concentrated semiconductor fund. Proven wrong",
@@ -238,7 +257,7 @@
    "eur_amount": null,
    "quantity": 2.0,
    "est_price": 90.46,
-   "pnl_pct": 0.04455007738226846,
+   "pnl_pct": 0.03244527968162725,
    "venue": null,
    "reason": "order submitted",
    "thesis": "The semiconductor ETF has the strongest 12-1 month momentum in the universe (+96%) while world equities trade 8% above their 200-day average; v002 holds such leaders for months, until the monthly exit window finds momentum negative or rank worse than 7, or the trend filter exits. Proven wrong if the",
@@ -249,8 +268,8 @@
  ],
  "portfolio": {
   "state": {
-   "as_of": "2026-10-28",
-   "nav": 1003.73,
+   "as_of": "2026-10-29",
+   "nav": 999.01,
    "cash": 147.26,
    "buying_power": 147.26
   },
@@ -259,11 +278,11 @@
     "isin": "IE00B42NKQ00",
     "name": "iShares S&P 500 Energy Sector (Acc)",
     "quantity": 17.0,
-    "price": 13.121,
-    "value_eur": 223.06,
-    "weight": 0.2222310780787662,
+    "price": 13.012,
+    "value_eur": 221.2,
+    "weight": 0.22141920501296283,
     "fifo_price": 13.232,
-    "unrealised": -0.008388754534461862,
+    "unrealised": -0.01662636033857312,
     "thesis": "US large-cap energy companies (the S&P 500 energy sector, dominated by ExxonMobil and Chevron) have the third-strongest 12-1 month momentum in the universe (+51%), and it has been in the top five in every session since 20 October; world equities trade 7.3% above their 200-day average. Proven wrong i",
     "trade_id": "2026-10-23-01"
    },
@@ -271,11 +290,11 @@
     "isin": "IE00BL25JM42",
     "name": "Xtrackers MSCI World Value (Acc)",
     "quantity": 3.0,
-    "price": 73.915,
-    "value_eur": 221.74,
-    "weight": 0.2209159833819852,
+    "price": 73.8,
+    "value_eur": 221.4,
+    "weight": 0.22161940320917708,
     "fifo_price": 72.88,
-    "unrealised": 0.014201427003293299,
+    "unrealised": 0.012623490669593895,
     "thesis": "Developed-market value stocks (about 400 holdings, heavy in financials and energy) have the third-strongest 12-1 month momentum (+52%), and the best one whose share fits the slot after ASML is skipped; it also diversifies a book whose first position is a concentrated semiconductor fund. Proven wrong",
     "trade_id": "2026-10-20-02"
    },
@@ -283,11 +302,11 @@
     "isin": "IE00BM67HM91",
     "name": "Xtrackers MSCI World Energy (Acc)",
     "quantity": 3.0,
-    "price": 74.23,
-    "value_eur": 222.69,
-    "weight": 0.22186245305012303,
+    "price": 74.12,
+    "value_eur": 222.36,
+    "weight": 0.2225803545510055,
     "fifo_price": 74.76,
-    "unrealised": -0.007089352594970566,
+    "unrealised": -0.00856072766185123,
     "thesis": "Developed-market energy companies have the fifth-strongest 12-1 month momentum (+49%), the best remaining candidate whose share fits a slot after ASML is skipped; world equities trade 7.3% above their 200-day average. Proven wrong if the oil-driven trend reverses: rank worse than 7 or negative momen",
     "trade_id": "2026-10-23-02"
    },
@@ -295,11 +314,11 @@
     "isin": "IE00BMC38736",
     "name": "VanEck Semiconductor (Acc)",
     "quantity": 2.0,
-    "price": 94.49,
-    "value_eur": 188.98,
-    "weight": 0.18827772408914747,
+    "price": 93.395,
+    "value_eur": 186.79,
+    "weight": 0.18697510535430076,
     "fifo_price": 90.46,
-    "unrealised": 0.04455007738226846,
+    "unrealised": 0.03244527968162725,
     "thesis": "The semiconductor ETF has the strongest 12-1 month momentum in the universe (+96%) while world equities trade 8% above their 200-day average; v002 holds such leaders for months, until the monthly exit window finds momentum negative or rank worse than 7, or the trend filter exits. Proven wrong if the",
     "trade_id": "2026-10-20-01"
    }
@@ -309,9 +328,9 @@
    "name": "iShares Core MSCI World UCITS ETF (Acc)",
    "start_date": "2026-10-20",
    "last": {
-    "date": "2026-10-27",
-    "close": 131.604996,
-    "value": 1008.97
+    "date": "2026-10-28",
+    "close": 131.720001,
+    "value": 1009.85
    }
   }
  },
