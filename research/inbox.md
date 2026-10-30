@@ -43,3 +43,15 @@ cleared on 2026-10-24 by the research session
   rule: v002 ignores news by design. If a research session ever looks at a news or
   event filter, the question is whether hyperscaler capex shocks lead semiconductor
   momentum breaks by weeks, which 12-1 momentum would only see a month late.
+
+## 2026-10-30
+
+- **The skip-month blind spot, live, one day before the exit window.** The semiconductor ETF
+  fell 8% on 30 Oct (its second ~8% drop in two weeks) and its 12-1 momentum *rose*
+  (86.6% -> 88.4%), because close[t-21] and close[t-252] do not include the last month. In
+  the 2–4 Nov window it is all but certain to stay in the top 7 (55 points above 7th),
+  whatever it does in the meantime. This is the intended
+  design (the skip month avoids short-term reversal), not a bug. Question for a research
+  session, not for the daily one: in the backtest, how did held positions that fell more
+  than 10% in the 21 days before an exit window do over the following month? If there is no
+  measurable effect, write that down so this question is not raised again.
