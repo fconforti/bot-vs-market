@@ -92,6 +92,22 @@ Chart: `research/backtests/v002.png`. The period ends 2026-10-19 for v002 and
 
 ## Changelog
 
+### Research 2026-10-31 (no new version)
+
+Tested one hypothesis, from the daily session's question about the skipped month: at
+the monthly check, sell any holding whose last-month return is below -10%, and do not
+buy such an instrument on any day. One threshold, fixed before the run. Rejected on the
+pre-set bar: full-period CAGR 15.7% vs 16.4%, max drawdown -27.6% vs -25.1%, turnover
+5.6x vs 3.4x NAV per year (+63%), 358 vs 262 trades. Out of sample it was higher (24.7%
+vs 18.7%, mostly 2023), in sample much lower (12.2% vs 15.6%); worse in 9 of 14 years.
+Conclusion recorded so the question is not reopened on every sharp down day: over this
+history, acting on the skipped month cost money. Details: `research/2026-10-31.md`,
+`research/candidates/2026-10-31_crash_exit.*`.
+
+The stale-instrument ranking fix queued on 2026-10-24 was dismissed: the observed
+staleness shifts a 231-day window by 1-2 days, and the obvious fix would sell held
+instruments as "no longer rankable" or rank half the universe on partial-day rows.
+
 ### Research 2026-10-24 (no new version)
 
 Tested one hypothesis: at most one holding per group of near-duplicate instruments
