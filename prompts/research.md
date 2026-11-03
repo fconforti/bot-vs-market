@@ -76,7 +76,7 @@ Copy `strategy/current.py` (and `params.toml` if changed) to a candidate file un
 `research/candidates/YYYY-MM-DD_<name>.py` (and `.toml`), implement the change, then run
 
 ```
-uv run python strategy/backtest.py --version current --label current_check
+uv run python strategy/backtest.py --version current --label current_check_YYYY-MM-DD
 uv run python strategy/backtest.py --version research/candidates/YYYY-MM-DD_<name>.py --params <toml> --label candidate_<name>
 ```
 
