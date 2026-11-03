@@ -104,3 +104,17 @@ about +50% and dropped from rank 4 to 11. It blocked nothing and changed no orde
 slots were full and it was not a monthly exit day. On an exit day, rank 11 would have
 sold the fund. The row leaves the calculation the next day and cannot return to it. The
 cache was not edited; a check for one-day spikes is filed in the research inbox.
+
+## 2026-11-02: the weekly login ran out, on the first exit day of the month
+
+The owner logged in on 2026-10-23 at about 21:13. The keep-alive check at 22:10 on
+2026-10-30 got `invalid_grant`: Scalable's seven-day maximum, not a bug. Nobody was told
+(email alerts still not configured), so the 2026-11-02 session, the first of the three
+days in which the strategy may sell, aborted with "not logged in". Separately, the
+2026-10-31 research commit had been refused since Saturday: the research prompt reran
+`research/backtests/current_check.*` under the same name, which the append-only hook
+forbids, and every later commit carried the same change. That output is now
+`current_check_2026-10-31.*`, the prompt asks for a dated label, and both commits went
+out on 2026-11-03. Every broker check now records when it first sees a new login
+(`~/.local/state/finance/login.json`), and the keep-alive emails the owner a day before
+the seven days are up.

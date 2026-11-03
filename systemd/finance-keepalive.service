@@ -14,7 +14,7 @@ WorkingDirectory=%h/personal/bot-vs-market
 EnvironmentFile=%h/.secrets/finance.env
 Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
 Environment=XDG_STATE_HOME=%h/.local/state
-ExecStart=/usr/bin/uv run python bin/broker-check.py
+ExecStart=/usr/bin/uv run python bin/broker-check.py --remind
 SuccessExitStatus=8
 TimeoutStartSec=15min
 Nice=10

@@ -25,7 +25,7 @@ The build spec is `CLAUDE_BRIEF.md`. This file describes the machine as it actua
 
 ## Tools already installed
 
-- `sc` 1.2.0 (Scalable CLI) at `~/.local/bin/sc` (upgraded from 1.1.0 on 2026-10-23): the official release binary, checksum and minisign signature verified. Only the owner can log it in (`sc login`, interactive). A login lasts at most 7 days and dies after 24 hours idle; `finance-keepalive.timer` covers the idle limit.
+- `sc` 1.2.0 (Scalable CLI) at `~/.local/bin/sc` (upgraded from 1.1.0 on 2026-10-23): the official release binary, checksum and minisign signature verified. Only the owner can log it in (`sc login`, interactive). A login lasts at most 7 days and dies after 24 hours idle; `finance-keepalive.timer` covers the idle limit and emails a reminder a day before the 7 days are up.
 - `gitleaks` 8.30.1 (system package): use it for the pre-commit secret scan, as a local hook calling the system binary.
 - `uv` (system package). Python 3.13 is installed through uv; uv downloads 3.12 by itself if the project pins it.
 - Not installed: `pre-commit`. Use `uv tool run pre-commit` or `uvx pre-commit` rather than installing it system-wide.
