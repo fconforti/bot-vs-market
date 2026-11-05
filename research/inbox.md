@@ -30,3 +30,14 @@ the two weeks before an exit window while still passing the rank test, and what 
 to it over the following month? That says whether the skip month is protecting against
 short-term reversal noise (its usual justification) or, for headline-driven sectors, just
 delaying the exit.
+
+## 2026-11-05: a second data point for the skip-month question (semiconductors)
+
+The day after the exit window closed, the semiconductor fund (VVSM.DE) fell 8.2% at the close
+(PHLX semiconductor index about -11% intraday on post-election AI-spending worries). It has
+now fallen four sessions in a row, 86.19 (30 Oct) → 75.57, -12.3%, and is 18% below cost.
+It still ranks 1st at +95.4%. The same question as the 2026-11-04 item applies to a second
+sector within a week. One more thing to measure: in the backtest, how often does the
+held book lose more than ~10% between two exit windows while every holding stays inside
+rank 7 and the trend filter stays on (today the MSCI World ETF is +5.0% above its SMA200)?
+That is the case where v002 can do nothing for a month by construction.
