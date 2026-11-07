@@ -92,6 +92,19 @@ Chart: `research/backtests/v002.png`. The period ends 2026-10-19 for v002 and
 
 ## Changelog
 
+### Research 2026-11-07 (no new version)
+
+No hypothesis. The worst live week so far (-7.5% vs -1.8% for MSCI World: oil reversal
+on the energy funds, then an 8% one-day fall in the semiconductor fund) raised the
+skip-month question again. It was tested and rejected on 2026-10-31, with the condition
+that it is reopened only for a new mechanism, not a new threshold; this week gave new
+instances, not a new mechanism. The exit window stays defined in calendar trading days,
+not "sessions that ran": an uptime-dependent rule cannot be backtested, and the window's
+three days already absorb one lost session. The descriptive measurements the daily
+sessions asked for are written (`research/candidates/2026-11-07_study.py`) but were not
+run. One week moved the backtest's out-of-sample CAGR from 18.7% to 17.0%; differences
+between candidates of that size are noise. Details: `research/2026-11-07.md`.
+
 ### Research 2026-10-31 (no new version)
 
 Tested one hypothesis, from the daily session's question about the skipped month: at
