@@ -92,6 +92,22 @@ Chart: `research/backtests/v002.png`. The period ends 2026-10-19 for v002 and
 
 ## Changelog
 
+### Research 2026-11-14 (no new version)
+
+Tested one hypothesis, from the daily sessions' question after the Nvidia CEO exit hit
+the semiconductor fund: a per-position stop between monthly checks. On any day, sell a
+holding that closes more than 10% below its 21-day high, and do not buy an instrument
+in that state. A stop from the purchase price, as asked, cannot be backtested (the
+harness gives the strategy no entry price); the 21-day high is the stateless proxy.
+Values fixed before the run, not swept. Rejected on the pre-set bar (four of five
+conditions failed): CAGR 10.9% vs 16.1%, max drawdown -27.4% vs -25.1%, turnover 12.1x
+vs 3.5x NAV per year, 758 vs 264 trades, EUR 750 vs 261 in fees; out of sample 17.1% vs
+17.9%. Better in 7 of 14 years (the choppy ones), much worse in the trending years
+(2020, 2021, 2024). A 10% fall from a recent high is routine for the instruments this
+strategy buys, so a stop fires about 18 extra round trips a year. Not to be retested
+with another threshold; reopen only if the harness gains entry prices. Details:
+`research/2026-11-14.md`, `research/candidates/2026-11-14_trailing_stop.*`.
+
 ### Research 2026-11-07 (no new version)
 
 No hypothesis. The worst live week so far (-7.5% vs -1.8% for MSCI World: oil reversal
