@@ -13,3 +13,11 @@ cleared on 2026-11-14 by the research session
   research: does a correlation or same-sector cap (e.g. skip a candidate whose 60-day
   return correlation with a holding is above 0.9) improve backtested drawdown without
   overfitting? Observation only; one day is not evidence.
+
+- 2026-11-19 (daily): the daily NAV uses broker mid quotes at ~18:15 Rome, while the
+  benchmark value uses the Xetra close at 17:30. On 2026-11-19 US stocks fell after
+  Frankfurt closed: the benchmark ETF's broker mid was 1.29% below its Xetra close, so
+  the published gap (6.41 points) was about 1.3 points worse for the portfolio than a
+  like-for-like comparison (5.15). Question for research: value the benchmark at the
+  broker mid taken in the same snapshot (or value both at Xetra closes), so the daily
+  comparison is not biased by after-close moves. Measurement only, not strategy.
