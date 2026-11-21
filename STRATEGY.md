@@ -92,6 +92,19 @@ Chart: `research/backtests/v002.png`. The period ends 2026-10-19 for v002 and
 
 ## Changelog
 
+### Research 2026-11-21 (no new version)
+
+No hypothesis. Worst live week so far (-6.3% vs -5.9% for MSCI World), from an oil fall
+hitting both energy funds at once and an 11.6% one-day fall in the semiconductor fund;
+the simulation lost the same -6.3% over the same days. The daily sessions' questions
+repeat mechanisms already tested and rejected with a no-retest condition: a correlation
+cap is another grouping of the 2026-10-24 one-per-group test, and selling a holding after
+a sharp fall between windows was tested at the window (2026-10-31) and on any day
+(2026-11-14). The benchmark-timing question (Xetra close vs 18:15 broker mid) is a
+measurement fix for the owner, not a strategy change. Weekly check: CAGR 15.5% (16.1% a
+week ago), out of sample 16.0% (17.9%), out-of-sample max drawdown -23.9% (-21.5%).
+Details: `research/2026-11-21.md`.
+
 ### Research 2026-11-14 (no new version)
 
 Tested one hypothesis, from the daily sessions' question after the Nvidia CEO exit hit
