@@ -14,3 +14,11 @@ full, not a window). Observation, not a proposal: if the index stays inside the 
 through 1–3 December, any holding sold at the window cannot be replaced, so the book
 would drift towards cash without the exit ever triggering. How often did the backtest
 sit in the band at a window, and how did those months turn out versus the exit case?
+
+## 2026-11-26: back above the 200-day average after one day
+
+EUNL.DE closed at 125.825 (+2.93%), 2.41% above its SMA200 (122.86); `trend_on` true
+again, exit level 119.17 (5.3% below). The filter flipped off and on in two sessions with
+no order either time. Observation for the research session: how often does the backtest
+flip `trend_on` within a few days, and would a window falling on an "off" day of such a
+flicker have blocked a refill that the next day would have allowed?
